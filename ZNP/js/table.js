@@ -723,7 +723,7 @@ var Table = {
         var ppack = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')];
         var lpack = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')];
 
-        var u = Math.round(parseFloat(val) / parseFloat(lpack));
+        var u = Math.round(parseFloat(val) / parseFloat(lpack)) * parseFloat(lpack);
 
         if (val != u) {
             $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').addClass('text-danger bg-warning font-weight-bold');
@@ -740,13 +740,13 @@ var Table = {
                 u = old;
             }
         }
-        u = parseFloat(u).toFixed(3);
+        u = parseFloat(u).toFixed(2);
         $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val(parseFloat(u).toFixed(0));
 
         p = parseFloat(u) / parseFloat(ppack);
         l = parseFloat(u) / parseFloat(lpack);
-        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.pack').val(parseFloat(p.toFixed(3)));
-        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.logistic').val(parseFloat(l.toFixed(3)));
+        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.pack').val(parseFloat(p.toFixed(2)));
+        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.logistic').val(parseFloat(l.toFixed(2)));
     },
     onFocus: function () {
         var el = $(this);
