@@ -1,4 +1,5 @@
 var Table = {
+    StateOrder: -1,
     globalCurrentRow: -1,
     JSON: {},
     OriginalTableJSON: "",
@@ -8,7 +9,7 @@ var Table = {
     prevBrand: '',
     isSuppplier: false,
     renderSettings: [],
-    getData: function (withRender) {
+    getData: function (withRender, sendMail) {
         var type = $('#tableContent').attr("data-type");
         var data = {};
         var coockieHouse = Cookies.get('Warehouse');
@@ -77,6 +78,7 @@ var Table = {
                 }
                 if (typeof Table.JSON.StateOrder != typeof undefined) {
                     var arrLength = Table.JSON.StateOrder.length;
+                    Table.StateOrder = Table.JSON.OrderHead.STATE_ORDER;
                     var options = '';
                     for (var i = 0; i < arrLength; i++) {
                         options += '<option value="' + Table.JSON.StateOrder[i].CODE + '" ' + (Table.JSON.OrderHead.STATE_ORDER === Table.JSON.StateOrder[i].CODE ? 'selected="selected"' : '') + '>' + Table.JSON.StateOrder[i].NAME + '</option>';
@@ -148,6 +150,9 @@ var Table = {
                     }
                     return result;
                 };
+                if (sendMail) {
+                    Table.sendMail(true);
+                }
                 if ($('#logistic').prop('checked')) {
                     Table.sortByLogistic();
                 } else {
@@ -1003,10 +1008,6 @@ var Table = {
         $('#SendMailModal').modal('show');
     },
     sendMail: function (save) {
-
-        if (save) {
-            Table.getData(false);
-        }
         var data = {};
         var html = '<body>';
         html += '<style> body,table{font:12px Helvetica}@media screen{#page{width:800px}}@media print{#page{width:100%}}*{margin:0;padding:0}body{margin:10px}td.right{text-align:right}td.left{text-align:left}td.center{text-align:center}table{width:100%}td.caption{text-align:right;padding-right:8px}table.detail,table.detail td,table.detail th{border:1px solid #000;border-collapse:collapse;padding:2px 3px;font-size:11px}table.summary,table.summary td{border:1px solid #fff;border-collapse:collapse;padding:3px;text-align:right}h3,h4{display:block;text-align:center}h4{font:14px Tahoma;font-weight:700;margin-top:5px;margin-bottom:5px}h3{font:18px Tahoma;font-weight:700;margin-top:10px;margin-bottom:25px}strong{font:16px Tahoma}';
@@ -1097,8 +1098,11 @@ var Table = {
                 if (JSON.parse(data).TextError == "Ok") {
                     alert('Дані успішно збережено.');
                     $('#send_mail_addr').val(Table.JSON.OrderHead.GROUP_EMAIL);
-                    Table.sendMail(true);
-					Table.getData(true);
+                    var sendmail = false;
+                    if (Table.StateOrder == 0 && parseInt($('#stateOrder').val()) == 1) {
+                        sendmail = true;
+                    }
+					Table.getData(true, sendmail);
                 } else {
                     alert(JSON.parse(data).TextError);
                     Table.getData(true);
