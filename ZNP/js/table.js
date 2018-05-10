@@ -706,7 +706,7 @@ var Table = {
                 u = old;
             }
         }
-        u = parseFloat(u).toFixed(3);
+       
         $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val(u);
 
         p = parseFloat(u) / parseFloat(ppack);
@@ -717,16 +717,22 @@ var Table = {
     quantytyCalculate: function (val) {
         var maxedit = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('MAX_EDIT')];
         var minedit = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('MIN_EDIT')];
+        var unit = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('UNIT')];
 
         var old = $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val();
 
         var ppack = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')];
         var lpack = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')];
 
-        var u = Math.round(parseFloat(val) / parseFloat(lpack)) * parseFloat(lpack);
+        var u = parseFloat(val) / parseFloat(lpack);
+
+        if (lpack != 1)
+            u = Math.round(parseFloat(val) / parseFloat(lpack)) * parseFloat(lpack);
 
         if (val != u) {
             $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').addClass('text-danger bg-warning font-weight-bold');
+        } else {
+            $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').removeClass('text-danger bg-warning font-weight-bold');
         }
 
         if (!maxedit == '') {
@@ -740,7 +746,12 @@ var Table = {
                 u = old;
             }
         }
-        u = parseFloat(u).toFixed(2);
+        if (unit == "шт") {
+            u = u.toFixed(0);
+        }
+        else {
+            u = u.toFixed(3);
+        }
         $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val(parseFloat(u).toFixed(0));
 
         p = parseFloat(u) / parseFloat(ppack);
