@@ -724,7 +724,7 @@ var Table = {
         var ppack = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')];
         var lpack = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')];
 
-        var u = parseFloat(val) / parseFloat(lpack);
+        var u = parseFloat(val);
 
         if (lpack != 1)
             u = Math.round(parseFloat(val) / parseFloat(lpack)) * parseFloat(lpack);
