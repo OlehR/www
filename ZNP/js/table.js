@@ -168,8 +168,6 @@ var Table = {
     },
     changeRndSetting: function () {
         var el = $(this);
-        console.log(parseInt(el.attr('data-field-code')));
-        console.log(Table.renderSettings.length);
         
         Table.renderSettings.__proto__.indexOfW = function (search) {
             for (var i = 0; i < this.length; i++) {
@@ -180,16 +178,16 @@ var Table = {
         }
         Table.renderSettings[Table.renderSettings.indexOfW(el.attr('data-field-code'))][1] = parseInt(el.val());
         Cookies.set('renderSettings', Table.renderSettings, { expires: 99999 });
-        if (parseInt(el.attr('data-field-code')) == Table.renderSettings.length - 1 && parseInt(el.val()) != 1) {
-            var nextEl = $('.rnd_setting_control[data-field-code="' + (Table.renderSettings.length) + '"]:checked');
+        if (parseInt(el.attr('data-field-code')) == Table.JSON.OrderDetail.InfoColumn.indexOf("PACK_SUPPLY") + 1 && parseInt(el.val()) != 1) {
+            var nextEl = $('.rnd_setting_control[data-field-code="' + (Table.JSON.OrderDetail.InfoColumn.indexOf("PACK") + 1) + '"]:checked');
             if (nextEl.val() != 1) {
-                $('.rnd_setting_control[data-field-code="' + (Table.renderSettings.length) + '"][value="1"]').change();
+                $('.rnd_setting_control[data-field-code="' + (Table.JSON.OrderDetail.InfoColumn.indexOf("PACK") + 1) + '"][value="1"]').change();
             }
         }
-        if (parseInt(el.attr('data-field-code')) == Table.renderSettings.length && parseInt(el.val()) != 1) {
-            var prevEl = $('.rnd_setting_control[data-field-code="' + (Table.renderSettings.length-1) + '"]:checked');
+        if (parseInt(el.attr('data-field-code')) == Table.JSON.OrderDetail.InfoColumn.indexOf("PACK") + 1 && parseInt(el.val()) != 1) {
+            var prevEl = $('.rnd_setting_control[data-field-code="' + (Table.JSON.OrderDetail.InfoColumn.indexOf("PACK_SUPPLY") + 1) + '"]:checked');
             if (prevEl.val() != 1) {
-                $('.rnd_setting_control[data-field-code="' + (Table.renderSettings.length-1) + '"][value="1"]').change();
+                $('.rnd_setting_control[data-field-code="' + (Table.JSON.OrderDetail.InfoColumn.indexOf("PACK_SUPPLY") + 1) + '"][value="1"]').change();
             }
         }
         Table.renderTable();
@@ -236,8 +234,10 @@ var Table = {
 
             var renderSettings = Cookies.get('renderSettings');
             Table.JSON.OrderField = JSON.parse(Table.OriginalTableJSON).OrderField;
+            /*
             Table.JSON.OrderField.Data.push([Table.JSON.OrderField.Data.length + 1, "PPACK", "заказ упаковок", "заказ уп.", 1, 3, "", ""]);
             Table.JSON.OrderField.Data.push([Table.JSON.OrderField.Data.length + 1, "LPACK", "логістична к-сть пакування", "логістична к-сть п.", 1, 3, "", ""]);
+            */
             if (typeof renderSettings == typeof undefined || JSON.parse(renderSettings).length != Table.JSON.OrderField.Data.length) {
                 if (typeof Table.JSON.OrderField != typeof undefined) {
                     var arrlength = Table.JSON.OrderField.Data.length;
@@ -572,13 +572,13 @@ var Table = {
                 table += '<div class="col-8">' + arr[i][32] + '</div>';
             }
             table += '<div class="col-4">заказ уп.:</div>';
-            table += '<div class="col-8"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" type="number" value="' + (parseFloat(arr[i][4]) / parseFloat(arr[i][32])) + '" \/></div>';
+            table += '<div class="col-8"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" data-field-type="pack" type="number" value="' + (parseFloat(arr[i][4]) / parseFloat(arr[i][32])) + '" \/></div>';
             if (Table.renderSettings[17][1] == 1) {
                 table += '<div class="col-4">кратно п.:</div>';
                 table += '<div class="col-8">' + arr[i][33] + '</div>';
             }
             table += '<div class="col-4">заказ логістична к-сть п.:</div>';
-            table += '<div class="col-8"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" type="number" value="' + (parseFloat(arr[i][4]) * parseFloat(arr[i][33])) + '" /></div>';
+            table += '<div class="col-8"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" data-field-type="logistic" type="number" value="' + (parseFloat(arr[i][4]) * parseFloat(arr[i][33])) + '" /></div>';
             table += '</div>';
         }
         return table;

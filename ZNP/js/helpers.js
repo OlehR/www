@@ -143,14 +143,14 @@ $(document).ready(function () {
     $(document).on('keydown', '#tableContent input', function (e) {
         var mEvent = e || window.event;
         var mPressed = mEvent.keyCode || mEvent.which;
-        console.log(mPressed);
         if (mPressed == 13 || mPressed == 40 || mPressed == 38) {
             var el = $(this);
             var parentRow = el.closest('div.dataRow');
-            var Class = el.attr('class');
-            var Inputs = $('input[class="' + Class + '"]');
+            var fieldType = el.attr('data-field-type');
+            var Inputs = $('input[data-field-type="' + fieldType + '"]');
             var Index = Inputs.index(el);
 
+            console.log(Index);
             if (mPressed == 13 && Index == Inputs.length - 1) {
                 el.blur();
                 return false;

@@ -62,13 +62,12 @@
                     if (Table.sort != 'days')
                         table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                     break;
-                case Table.JSON.OrderField.Data.length -2:
+                case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY'):
+                    table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                     table += '<th>заказ уп.</th>';
                     break;
                 case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
                     table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderField.Data.length - 1:
                     table += '<th>логістична к-сть п.</th>';
                     break;
                 default:
@@ -153,7 +152,7 @@ Table.renderRawDsc = function (arrLength, arr, title) {
                 switch (j) {
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY'):
                         classes.push('orderCount');
-                        table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '><input ' + (!isEdit ? 'readonly' : '') + '  class="form-control quantyty" type="number" value="' + arr[i][j] + '"/></td>';
+                        table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '><input ' + (!isEdit ? 'readonly' : '') + '  class="form-control quantyty" data-field-type="quantyty" type="number" value="' + arr[i][j] + '"/></td>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
                         if(Table.sort == 'days')
@@ -195,14 +194,13 @@ Table.renderRawDsc = function (arrLength, arr, title) {
                         if (Table.sort != 'days')
                             table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
                         break;
-                    case Table.JSON.OrderField.Data.length -2:
-                        table += '<td><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></td>';
+                    case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY'):
+                        table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                        table += '<td><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" data-field-type="pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></td>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
                         table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
-                        break;
-                    case Table.JSON.OrderField.Data.length-1:
-                        table += '<td><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></td>';
+                        table += '<td><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" data-field-type="logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></td>';
                         break;
                     default:
                         table += '<td '+(classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '')+'>' + arr[i][j] + '</td>';
@@ -277,7 +275,7 @@ Table.renderRawMob = function (arrLength, arr, title) {
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY'):
                         classes.push('orderCount');
                         table += '<div id="sort_by_title" class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + '  class="form-control quantyty" type="number" value="' + arr[i][j] + '"/></div>';
+                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + '  class="form-control quantyty" data-field-type="quantyty" type="number" value="' + arr[i][j] + '"/></div>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
                         if (Table.sort == 'days') {
@@ -341,11 +339,11 @@ Table.renderRawMob = function (arrLength, arr, title) {
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
                         table += '<div class="col-4">заказ уп.:</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></div>';
+                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" data-field-type="pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></div>';
                         table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
                         table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
                         table += '<div class="col-4">логістична к-сть п.:</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) * parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></div>';
+                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" data-field-type="logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) * parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></div>';
                         break;
                     default:
                         table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
