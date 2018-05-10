@@ -750,9 +750,9 @@ var Table = {
             u = u.toFixed(0);
         }
         else {
-            u = u.toFixed(3);
+            u = parseFloat(u.toFixed(3));
         }
-        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val(parseFloat(u).toFixed(0));
+        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val(u);
 
         p = parseFloat(u) / parseFloat(ppack);
         l = parseFloat(u) / parseFloat(lpack);
