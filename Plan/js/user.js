@@ -23,7 +23,7 @@ var User = {
                     Cookies.set('isLogin', 'true');
                     window.isLogin = true;
                     $('#loginForm').hide();
-                    Table.init();
+                    Plane.init();
                     btn.prop('disabled', false);
                     btn.html('Вхід');
                 } else {

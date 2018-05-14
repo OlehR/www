@@ -19,12 +19,14 @@
             },
             success: function (data) {
                 var result = JSON.parse(data);
-                var arrLength = result.Warehouse.Data.length;
-                var options = '<option value="-1">--Вибрати ТЗ--</option>';
-                for (var i = 0; i < arrLength; i++) {
-                    options += '<option value="' + result.Warehouse.Data[i][0] + '">' + result.Warehouse.Data[i][1] + '</option>';
+                if (typeof result.Warehouse != typeof undefined) {
+                    var arrLength = result.Warehouse.Data.length;
+                    var options = '<option value="-1">--Вибрати ТЗ--</option>';
+                    for (var i = 0; i < arrLength; i++) {
+                        options += '<option value="' + result.Warehouse.Data[i][0] + '">' + result.Warehouse.Data[i][1] + '</option>';
+                    }
+                    $("#warehouse").html(options);
                 }
-                $("#warehouse").html(options);
 
                 arrLength = result.GroupWares.length;
                 options = '<option value="-1">--Вибрати ГП--</option>';
@@ -101,13 +103,17 @@
             $("#tableContent").html('<h1 class="text-center">По даній групі товарів відсутні дані в АМ.</h1>');
             return;
         }
-
+        var date = '01-' + $('#date').val();
+        var dateArr = date.split("-");
+        date = dateArr[2] + '-' + dateArr[1] + '-' + dateArr[0];
+        var MonthMaxDays = moment(date).endOf('month').toDate().getDate();
+        
         var table = '<table class="table table-responcive table-stripped table-bordered"><tr>';
         table += '<th>код</th>';
         table += '<th>назва</th>';
         table += '<th>буд.</th>';
         table += '<th class="table-success">вих.</th>';
-        for (var i = 0; i < Plane.JSON.DataPlan[0].length - 2; i++) {
+        for (var i = 0; i < MonthMaxDays; i++) {
             var date = (i+1 < 10 ? ('0' + (i+1)) : (i+1)) + '-' + $('#date').val();
             var dateArr = date.split("-");
             date = dateArr[2] + '-' + dateArr[1] + '-' + dateArr[0];
@@ -120,7 +126,7 @@
         table += '</tr>';
         for (var i = 0; i < Plane.JSON.DataPlan.length; i++) {
             table += '<tr class="dataRow">';
-            for (var j = 0; j < Plane.JSON.DataPlan[i].length; j++) {
+            for (var j = 0; j < MonthMaxDays + 2; j++) {
                 if(j==2){
                     table += '<td><input data-day="today" col="0" class="form-control" value="0"/></td>';
                     table += '<td class="table-success"><input col="1" data-day="week" class="form-control" value="0"/></td>';
