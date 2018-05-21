@@ -378,7 +378,7 @@ Table.onFocus = function () {
     infoContent += '</span>';
     infoContent += '</div></div>';
     if (!el.prop('readonly'))
-        el.val('');
+        el.select();
     $('#info .container').html(infoContent);
     $('#info').css('display','block');
 }
