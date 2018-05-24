@@ -1019,20 +1019,22 @@ var Table = {
         $('#SendMailModal').modal('show');
     },
     sendMail: function (save) {
-        var data = {};
+        var obj = {};
+        obj.data = {};
         var html = '<body>';
         html += '<style> body,table{font:12px Helvetica}@media screen{#page{width:800px}}@media print{#page{width:100%}}*{margin:0;padding:0}body{margin:10px}td.right{text-align:right}td.left{text-align:left}td.center{text-align:center}table{width:100%}td.caption{text-align:right;padding-right:8px}table.detail,table.detail td,table.detail th{border:1px solid #000;border-collapse:collapse;padding:2px 3px;font-size:11px}table.summary,table.summary td{border:1px solid #fff;border-collapse:collapse;padding:3px;text-align:right}h3,h4{display:block;text-align:center}h4{font:14px Tahoma;font-weight:700;margin-top:5px;margin-bottom:5px}h3{font:18px Tahoma;font-weight:700;margin-top:10px;margin-bottom:25px}strong{font:16px Tahoma}';
         html += '</style>';
         html += Table.renderOrderDoc() + '</body>';
-        data.CodeData = 9;
-        data.NumberOrder = Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY;
-        data.EMail = $('#send_mail_addr').val();
-        data.Boby = html;
+        obj.data.CodeData = 9;
+        obj.data.NumberOrder = Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY;
+        obj.data.EMail = $('#send_mail_addr').val();
+        obj.data.Boby = html;
+        obj.data = JSON.stringify(obj.data);
 
         $.ajax({
-            url: apiUrl,
+            url: mailUrl,
             method: "POST",
-            data: data,
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
