@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="css/fontawesome-all.css" rel="stylesheet" />
+    <link href="css/style.css" type="text/css" rel="stylesheet" />
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/cookie.js"></script>
+    <script src="js/config.js"></script>
+    <script>
+        window.isLogin = typeof Cookies.get('isLogin') != typeof undefined;
+    </script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#TopMenu" aria-controls="TopMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="TopMenu">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="javascript:void(0)">Добавити заказ</a>
+                        </li>
+                    </ul>
+                    <ul class="form-inline my-2 my-md-0 navbar-nav" href="#">
+                        <li class="nav-item active">
+                            <a id="change_password" class="nav-link" href="javascript:void(0)">Змінити пароль</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a id="logout" class="nav-link" href="javascript:void(0)">Вихід</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>          
+        </nav>
+    </header>
+
+    <div class="">
+        <div class="container-fluid">
+            <form>
+                <div id="filters" class="row hidden-sm-down">
+                    <div class="col-md-2 col-sm-12 form-group">
+                        <div class="dropdown" id="Warehouse">
+                            <button class="btn btn-default dropdown-toggle form-control" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><span class="dropdowntree-name">--Виберіть ГП--</span><span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li role="presentation"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-12 form-group">
+                        <input id="code_group_tag" type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-2 col-sm-12 form-group">
+                        <select id="managers" class="form-control"></select>
+                    </div>
+                    <div class="col-md-1 col-sm-12 form-group">
+                        <button id="import_xl" class="btn btn-primary" type="button">XL</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="" id="tableContent" data-type="orders">
+                <!--<div class="loader"></div>-->
+                <div class="row no-gutters">
+                    <div id="col-1" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>код</h7></div>
+                    </div>
+                    <div id="col-2" class="col-md-2 text-center">
+                        <div class="table_header table-bordered"><h7>назва</h7></div>
+                    </div>
+                    <div id="col-3" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>ст. код</h7></div>
+                    </div>
+                    <div id="col-4" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>зат.</h7></div>
+                    </div>
+                    <div id="col-5" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>1</h7></div>
+                    </div>
+                    <div id="col-6" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>2</h7></div>
+                    </div>
+                    <div id="col-7" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>3</h7></div>
+                    </div>
+                    <div id="col-8" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>4</h7></div>
+                    </div>
+                    <div id="col-9" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>5</h7></div>
+                    </div>
+                    <div id="col-10" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>6</h7></div>
+                    </div>
+                    <div id="col-11" class="col-md-1 text-center">
+                        <div class="table_header table-bordered"><h7>7</h7></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginForm">
+        <form class="form-signin">
+            <h2 class="form-signin-heading">Зайдіть в кабінет</h2>
+            <label for="inputLogin" class="sr-only">Логин</label>
+            <input type="text" id="inputLogin" class="form-control" placeholder="Логин" required="" autofocus="" />
+            <label for="inputPassword" class="sr-only">Пароль</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="" />
+           
+            <button id="loginButton" class="btn btn-lg btn-primary btn-block" type="button">Вхід</button>
+        </form>
+    </div>
+    <div id="ChangePasswordModal" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Зміна пароля</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="change_password1">Введіть новий пароль</label>
+                        <input id="change_password1" type="password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="change_password2">Новий пароль повторно</label>
+                        <input id="change_password2" type="password" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="change_password_accept" type="button" class="btn btn-primary">Змінити пароль</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Відміна</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="HistoryModal" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Список подій</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="loader"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        if (isLogin) {
+            $('#loginForm').hide();
+        }
+    </script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/helpers.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $.widget("custom.combobox", {
+                _create: function () {
+                    this.wrapper = $("<span>")
+                        .addClass("custom-combobox col-md-9 col-sm-12")
+                        .insertAfter(this.element);
+
+                    this.element.hide();
+                    this._createAutocomplete();
+                    this._createShowAllButton();
+                },
+
+                _createAutocomplete: function () {
+                    var selected = this.element.children(":selected"),
+                        value = selected.val() ? selected.text() : "";
+
+                    this.input = $("<input>")
+                        .appendTo(this.wrapper)
+                        .val(value)
+                        .attr("title", "")
+                        .addClass("custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left")
+                        .autocomplete({
+                            delay: 0,
+                            minLength: 0,
+                            source: $.proxy(this, "_source")
+                        })
+                        .tooltip({
+                            classes: {
+                                "ui-tooltip": "ui-state-highlight"
+                            }
+                        });
+
+                    this._on(this.input, {
+                        autocompleteselect: function (event, ui) {
+                            ui.item.option.selected = true;
+                            this._trigger("select", event, {
+                                item: ui.item.option
+                            });
+                            this._trigger("change");
+                        },
+
+                        autocompletechange: "_removeIfInvalid"
+                    });
+                },
+
+                _createShowAllButton: function () {
+                    var input = this.input,
+                        wasOpen = false;
+
+                    $("<a>")
+                        .attr("tabIndex", -1)
+                        .attr("title", "Показати всі записи")
+                        .tooltip()
+                        .appendTo(this.wrapper)
+                        .button({
+                            icons: {
+                                primary: "ui-icon-triangle-1-s"
+                            },
+                            text: false
+                        })
+                        .removeClass("ui-corner-all")
+                        .addClass("custom-combobox-toggle ui-corner-right")
+                        .on("mousedown", function () {
+                            wasOpen = input.autocomplete("widget").is(":visible");
+                        })
+                        .on("click", function () {
+                            input.trigger("focus");
+
+                            // Close if already visible
+                            if (wasOpen) {
+                                return;
+                            }
+
+                            // Pass empty string as value to search for, displaying all results
+                            input.autocomplete("search", "");
+                        });
+                },
+
+                _source: function (request, response) {
+                    var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+                    response(this.element.children("option").map(function () {
+                        var text = $(this).text();
+                        if (this.value && (!request.term || matcher.test(text)))
+                            return {
+                                label: text,
+                                value: text,
+                                option: this
+                            };
+                    }));
+                },
+
+                _removeIfInvalid: function (event, ui) {
+
+                    // Selected an item, nothing to do
+                    if (ui.item) {
+                        return;
+                    }
+
+                    // Search for a match (case-insensitive)
+                    var value = this.input.val(),
+                        valueLowerCase = value.toLowerCase(),
+                        valid = false;
+                    this.element.children("option").each(function () {
+                        if ($(this).text().toLowerCase() === valueLowerCase) {
+                            this.selected = valid = true;
+                            return false;
+                        }
+                    });
+
+                    // Found a match, nothing to do
+                    if (valid) {
+                        return;
+                    }
+
+                    // Remove invalid value
+                    this.input
+                        .val("")
+                        .attr("title", value + " не знайдено жодного запису")
+                        .tooltip("open");
+                    this.element.val("");
+                    this._delay(function () {
+                        this.input.tooltip("close").attr("title", "");
+                    }, 2500);
+                    this.input.autocomplete("instance").term = "";
+                },
+
+                _destroy: function () {
+                    this.wrapper.remove();
+                    this.element.show();
+                }
+            });
+        });
+    </script>
+<script src="js/am_matrix.js"></script>
+<script src="js/user.js"></script>
+</body>
