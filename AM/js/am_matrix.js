@@ -19,6 +19,18 @@ var AMatrix = {
                     var tree = AMatrix.createTree(AMatrix.JSON.GroupWares);
                     $('#Warehouse li').html(tree);
                 }
+
+                if (typeof AMatrix.JSON.Manager != typeof undefined) {
+                    var options = '<option>--Вибрати менеджера--</option>';
+                    var arr = AMatrix.JSON.Manager;
+                    var arrLength = arr.length;
+
+                    for (var i = 0; i < arrLength; i++) {
+                        options += '<option value="' + arr[i][0] + '">' + arr[i][1] + '</option>';
+                    }
+
+                    $('#managers').html(options);
+                }
             },
             error: function () {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
@@ -63,11 +75,22 @@ var AMatrix = {
         );
         return tree;
     },
-    getAM: function (val) {
+    getAM: function (val, manager, groups) {
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 111;
         obj.data.GodeGroup = val;
+
+        if (val === -1) {
+            delete obj.data.GodeGroup;
+            obj.data.CodeManager = manager;
+        }
+        if (manager === -1 && val === -1) {
+            delete obj.data.GodeGroup;
+            delete obj.data.CodeManager;
+            obj.data.CodeWares = groups;
+        }
+
         obj.data = JSON.stringify(obj.data);
 
         $.ajax({
@@ -91,77 +114,175 @@ var AMatrix = {
     renderAM: function () {
         var columnTitles = AMatrix.JSON.Warehouse;
         var arrLenth = columnTitles.length;
-        var tHead = '<div class="row no-gutters">';
-
-        tHead += '<div data-column="col-1" class="col-md-1 text-center"><div class="table_header table-bordered"><h7>код</h7></div></div>';
-        tHead += '<div data-column="col-2" class="col-md-2 text-center"><div class="table_header table-bordered"><h7>назва</h7></div></div>';
-        tHead += '<div data-column="col-3" class="col-md-1 text-center"><div class="table_header table-bordered"><h7>ст. код</h7></div></div>';
-        tHead += '<div data-column="col-4" class="col-md-1 text-center"><div class="table_header table-bordered"><h7>зат.</h7></div></div>';
-        for (var i = 0; i < arrLenth; i++){
-            tHead += '<div data-column="col-'+(i+4)+'" class="col-md-1 text-center"><div class="table_header table-bordered"><h7>' + columnTitles[i][1] + '</h7></div></div>';
+        var tableSort = Cookies.get('tableSort');
+        if (typeof tableSort == typeof undefined) {
+            tableSort = [];
+            for (var k = 0; k < columnTitles.length + 5; k++) {
+                tableSort.push(k+1);
+            }
+        } else {
+            tableSort = JSON.parse(tableSort);
         }
-        tHead += '<div/>';
+        
+        var tHead = '<thead>';
 
-        var tBody = '';
+        tHead += '<tr>';
+        tHead += '<th data-header="1" class="text-center dragtable-drag-boundary"><div class="thead">код</div>код</th>';
+        tHead += '<th data-header="2" class="text-center dragtable-drag-boundary"><div class="thead">назва</div>назва</th>';
+        tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead">ст. код</div>ст. код</th>';
+        tHead += '<th data-header="4" class="text-center dragtable-drag-boundary"><div class="thead">зат.</div>ст. код</th>';
+        for (var i = 0; i < arrLenth; i++){
+            tHead += '<th data-ewh="' + columnTitles[i][0] + '" data-header="' + (i + 5) + '" class="text-center dragtable-drag-handle"><div class="thead">' + columnTitles[i][1] + '</div>' + columnTitles[i][1] + '</th>';
+        }
+        tHead += '</tr>';
+        tHead += '</thead>';
+
+        var tBody = '<tbody>';
         var Data = AMatrix.JSON.Data.Data;
         arrLenth = Data.length;
         for (var j = 0; j < arrLenth; j++) {
 
-            tBody += '<div class="row no-gutters">';
+            tBody += '<tr>';
 
-            var Catch = '';
+            var Catch = [];
             for (var i = 0; i < Data[j].length; i++) {
-                switch (i) {
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('NAME_WARES'):
-                        tBody += '<div data-column="col-4" class="col-md-2 text-center"><div class="table-bordered">' + Data[j][i] + '</div></div>';
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('EWH_3'):
-                        Catch = Data[j][i];
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('WH_3'):
-                        tBody += '<div data-column="col-' + (i - 1) + '" class="col-md-1 text-center"><div class="table-bordered">' + (Data[j][i] +'/'+ Catch) + '</div></div>';
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('EWH_9'):
-                        Catch = Data[j][i];
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('WH_9'):
-                        tBody += '<div data-column="col-' + (i - 1) + '" class="col-md-1 text-center"><div class="table-bordered">' + (Data[j][i] + '/' + Catch) + '</div></div>';
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('EWH_15'):
-                        Catch = Data[j][i];
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('WH_15'):
-                        tBody += '<div data-column="col-' + (i - 1) + '" class="col-md-1 text-center"><div class="table-bordered">' + (Data[j][i] + '/' + Catch) + '</div></div>';
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('EWH_22'):
-                        Catch = Data[j][i];
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('WH_22'):
-                        tBody += '<div data-column="col-' + (i - 1) + '" class="col-md-1 text-center"><div class="table-bordered">' + (Data[j][i] + '/' + Catch) + '</div></div>';
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('EWH_57'):
-                        Catch = Data[j][i];
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('WH_57'):
-                        tBody += '<div data-column="col-' + (i - 1) + '" class="col-md-1 text-center"><div class="table-bordered">' + (Data[j][i] + '/' + Catch) + '</div></div>';
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('EWH_68'):
-                        Catch = Data[j][i];
-                        break
-                    case AMatrix.JSON.Data.InfoColumn.indexOf('WH_68'):
-                        tBody += '<div data-column="col-' + (i - 1) + '" class="col-md-1 text-center"><div class="table-bordered">' + (Data[j][i] + '/' + Catch) + '</div></div>';
-                        break
-                    default:
-                        tBody += '<div data-column="col-' + (i + 1) + '" class="col-md-1 text-center"><div class="table-bordered">' + Data[j][i] + '</div></div>';
+                var readOnly = '';
+                if (!AMatrix.JSON.IsAccept) {
+                    readOnly = 'disabled';
+                }
+                var reg1 = new RegExp('^EWH', 'i');
+                var isEWH = reg1.test(AMatrix.JSON.Data.InfoColumn[i]);
+                if (isEWH) {
+                    var colnumber = AMatrix.JSON.Data.InfoColumn[i].split(/_/)[1];
+                    var colIndex = 0;
+                    for (var t = 0; t < AMatrix.JSON.Warehouse.length; t++){
+                        if (AMatrix.JSON.Warehouse[t][0] == parseInt(colnumber)) {
+                            colIndex = t + 5;
+                        }
+                    }
+                    Catch = [Data[j][i],colIndex];
+                }
+                var reg2 = new RegExp('^WH', 'i');
+                var isWH = reg2.test(AMatrix.JSON.Data.InfoColumn[i]);
+                if (isWH) {
+                    tBody += '<td><input type="number" class="form-control" value="' + Catch[0] + '"/><span class="text-small old-value">' + Data[j][i] + '<span></td>';
+                }
+                if (!isEWH && !isWH && i != 3 && i != 2 && i != 4) {
+                    tBody += '<td>' + Data[j][i] + '</td>';
+                }
+                if (!isEWH && !isWH && i == 2) {
+                    tBody += '<td title="' + Data[j][3]  + '">' + Number(Data[j][i]) + '</td>';
+                }
+                if (!isEWH && !isWH && i == 3) {
+                    tBody += '<td class="status"><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></td>';
                 }
             }
 
-        tBody += '<div/>';
+            tBody += '</tr>';
+        }
+        tBody += '</tbody>';
+
+        $('#tableContent').html('<table class="table table-bordered table-fixed">' + tHead + tBody + '</table>');
+        $('#tableContent table').dragtable();
+        $('#tableContent table .thead').each(function () {
+            var el = $(this);
+            el.width(el.closest('th').outerWidth()-2);
+            el.height(el.closest('th').outerHeight()-2);
+        });
+        $('#tableContent table').dragtable('order', tableSort);
+    },
+    onFocus: function(el){
+        $(el).select();
+    },
+    saveAM: function () {
+        var rows = $('tr[is-change="true"]');
+        var titles = $('th');
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 112;
+        obj.data.Data = [];
+        obj.data.Warehouse = [];
+
+        if (rows.length <= 0) {
+            alert('Данні не змінилися!');
+            return;
         }
 
-        $('#tableContent').html(tHead + tBody);
+        for (var j = 4; j < titles.length; j++){
+            obj.data.Warehouse.push($(titles[j]).data('ewh'));
+        }
+
+        rows.each(function (index) {
+            var el = $(this);
+            var cells = el.find('td');
+            obj.data.Data[index] = [];
+            obj.data.Data[index].push($(cells[0]).text());
+            obj.data.Data[index].push($(cells[2]).text());
+            if ($(cells[3]).find('input:checked').length > 0) {
+                obj.data.Data[index].push($($(cells[3]).find('input:checked')[0]).val());
+            } else {
+                obj.data.Data[index].push(0);
+            }
+
+            for (var i = 4; i < cells.length; i++) {
+                obj.data.Data[index].push($(cells[i]).find('input').val());
+            }
+        });
+
+        console.log(obj.data);
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                var result = JSON.parse(data);
+                console.log(result);
+                if (result.TextError == "Ok") {
+                    alert('Данні успішно збережено!');
+                } else {
+                    alert('Помилка: ' + result.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
     },
     controlsInit: function () {
+        $('#tableContent').on('change', '.status input', function () {
+            var el = $(this);
+            var sibling = el.siblings('input')[0];
+            if ($(sibling).prop('checked')) {
+                $(sibling).prop('checked', false);
+            }
+        });
+        $('#tableContent').on('change', 'input', function () {
+            var el = $(this);
+            $(el.closest('tr')).attr('is-change','true');
+        });
+        $('#tableContent').on('change', 'input[type="number"]', function () {
+            var el = $(this);
+            var old = parseInt(el.siblings('.old-value').text());
+            var curent = parseInt(el.val());
+
+            if (curent < old) {
+                el.removeClass('text-danger').addClass('text-success font-weight-bold');
+            }
+            if (curent > old) {
+                el.removeClass('text-success').addClass('text-danger font-weight-bold');
+            }
+            if (curent == old) {
+                el.removeClass('text-success text-danger font-weight-bold');
+            }
+        });
+        $('#tableContent').on('focus', 'input[type="number"]', function () {
+            AMatrix.onFocus(this);
+        });
         $(document)
             .on('show.bs.collapse', 'ul[role="menu"]', function (e) {
                 $(e.target).prev('a[role="menuitem"]').addClass('active');
@@ -183,6 +304,15 @@ var AMatrix = {
             $(col_id).collapse('toggle');
 
         });
+        $(document).on('dragtablestop', '#tableContent table', function (event) {
+            var items = $('#tableContent th');
+            var table_sort = [];
+            items.each(function () {
+                table_sort.push($(this).data('header'));
+            });
+            console.log(table_sort);
+            Cookies.set('tableSort', table_sort, { expires: 9999 });
+        });
 
         $(document).on('click', '.last_child_warhause', function (event) {
             var el = $(this);
@@ -192,6 +322,22 @@ var AMatrix = {
             AMatrix.getAM(val);
 
         });
+
+        $('#managers').change(function () {
+            AMatrix.getAM(-1, $(this).val());
+        });
+
+        $('#code_group_tag').keyup(function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var mEvent = e || window.event;
+            var mPressed = mEvent.keyCode || mEvent.which;
+            if (mPressed == 13) {
+                AMatrix.getAM(-1, -1, $('#code_group_tag').val());
+            }
+        });
+
+        $('#saveAM').click(AMatrix.saveAM);
     },
     init: function () {
         if (window.isLogin){

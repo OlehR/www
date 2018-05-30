@@ -5,6 +5,7 @@
     <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="css/fontawesome-all.css" rel="stylesheet" />
     <link href="css/style.css" type="text/css" rel="stylesheet" />
+    <link href="css/dragtable-default.css" type="text/css" rel="stylesheet" />
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/cookie.js"></script>
     <script src="js/config.js"></script>
@@ -23,7 +24,7 @@
                 <div class="collapse navbar-collapse" id="TopMenu">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="javascript:void(0)">Добавити заказ</a>
+                            <a id="saveAM" class="nav-link" href="javascript:void(0)">Записати</a>
                         </li>
                     </ul>
                     <ul class="form-inline my-2 my-md-0 navbar-nav" href="#">
@@ -41,21 +42,22 @@
 
     <div class="">
         <div class="container-fluid">
-            <form>
+            <form onsubmit="return false;">
                 <div id="filters" class="row hidden-sm-down">
                     <div class="col-md-2 col-sm-12 form-group">
                         <div class="dropdown" id="Warehouse">
                             <button class="btn btn-default dropdown-toggle form-control" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><span class="dropdowntree-name">--Виберіть ГП--</span><span class="caret"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li role="presentation"></li>
+                                <li role="presentation"><div class="loader"></div></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-md-2 col-sm-12 form-group">
-                        <input id="code_group_tag" type="text" class="form-control" />
+                        <input id="code_group_tag" type="text" class="form-control" placeholder="Введіть коди через (,) та натисніть Enter" title="Введіть коди через (,) та натисніть Enter"/>
                     </div>
                     <div class="col-md-2 col-sm-12 form-group">
-                        <select id="managers" class="form-control"></select>
+                        <select id="managers" class="form-control">
+                        </select>
                     </div>
                     <div class="col-md-1 col-sm-12 form-group">
                         <button id="import_xl" class="btn btn-primary" type="button">XL</button>
@@ -168,6 +170,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/helpers.js"></script>
     <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.dragtable.js"></script>
     <script>
         $(function () {
             $.widget("custom.combobox", {

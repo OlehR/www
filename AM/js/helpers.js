@@ -145,12 +145,10 @@ $(document).ready(function () {
         var mPressed = mEvent.keyCode || mEvent.which;
         if (mPressed == 13 || mPressed == 40 || mPressed == 38) {
             var el = $(this);
-            var parentRow = el.closest('div.dataRow');
-            var fieldType = el.attr('data-field-type');
-            var Inputs = $('input[data-field-type="' + fieldType + '"]');
+            var parentRow = el.closest('tr');
+            var Inputs = $('#tableContent input[type="number"]');
             var Index = Inputs.index(el);
 
-            console.log(Index);
             if (mPressed == 13 && Index == Inputs.length - 1) {
                 el.blur();
                 return false;
@@ -167,11 +165,6 @@ $(document).ready(function () {
                 }, 300);
                 next.focus();
             } else {
-                if ((next.offset().top + 30) >= $('#info').offset().top) {
-                    $('html, body').animate({
-                        scrollTop: next.offset().top - (document.documentElement.clientHeight - 125)
-                    }, 300);
-                }
                 next.focus();
             }
             return false;
