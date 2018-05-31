@@ -1,5 +1,6 @@
 var AMatrix = {
     JSON: {},
+    prevSort:-2,
     getData: function () {
         var obj = {};
         obj.data = {};
@@ -102,7 +103,6 @@ var AMatrix = {
             },
             success: function (data) {
                 AMatrix.JSON = JSON.parse(data);
-                console.log(AMatrix.JSON);
                 AMatrix.renderAM();
             },
             error: function () {
@@ -116,10 +116,11 @@ var AMatrix = {
         var arrLenth = columnTitles.length;
         var tableSort = Cookies.get('tableSort');
         if (typeof tableSort == typeof undefined) {
-            tableSort = [];
-            for (var k = 0; k < columnTitles.length + 5; k++) {
+            tableSort = [1,3,2,4];
+            for (var k = 4; k < columnTitles.length + 5; k++) {
                 tableSort.push(k+1);
             }
+            Cookies.set('tableSort', tableSort, { expires: 9999 });
         } else {
             tableSort = JSON.parse(tableSort);
         }
@@ -141,6 +142,21 @@ var AMatrix = {
         var Data = AMatrix.JSON.Data.Data;
         arrLenth = Data.length;
         for (var j = 0; j < arrLenth; j++) {
+            var colspan = ((Data[j].length - 9) / 3) + 4;
+            if (AMatrix.prevSort != Data[j][5]) {
+                switch (parseInt(Data[j][5])) {
+                    case -1:
+                        tBody += '<tr class="text-left"><th class="text-left table-warning" colspan="' + colspan + '">добавили</th></tr>';
+                        break;
+                    case 0:
+                        tBody += '<tr class="text-left"><th class="text-left table-warning" colspan="' + colspan + '">видалили</th></tr>';
+                        break;
+                    default:
+                        tBody += '<tr class="text-left"><th class="text-left table-warning" colspan="' + colspan + '">без змін</th></tr>';
+                        console.log(AMatrix.prevSort != Data[j][5]);
+                }
+                AMatrix.prevSort = Data[j][5];
+            }
 
             tBody += '<tr>';
 
@@ -160,21 +176,47 @@ var AMatrix = {
                             colIndex = t + 5;
                         }
                     }
-                    Catch = [Data[j][i],colIndex];
+                    Catch.push(Data[j][i],colIndex);
+                }
+                var reg3 = new RegExp('^DWH', 'i');
+                var isDWH = reg3.test(AMatrix.JSON.Data.InfoColumn[i]);
+                if (isDWH) {
+                    var tableClass = '';
+                    switch (parseInt(Data[j][i])) {
+                        case -1:
+                            tableClass = 'table-danger';
+                            break;
+                        case 1:
+                            tableClass = 'table-success';
+                            break;
+                        default:
+                            tableClass = '';
+                            break;
+                    }
+
+                    Catch = [tableClass];
                 }
                 var reg2 = new RegExp('^WH', 'i');
                 var isWH = reg2.test(AMatrix.JSON.Data.InfoColumn[i]);
                 if (isWH) {
-                    tBody += '<td><input type="number" class="form-control" value="' + Catch[0] + '"/><span class="text-small old-value">' + Data[j][i] + '<span></td>';
+                    tBody += '<td class="' + Catch[0] + '"><input type="number" class="form-control" value="' + Catch[1] + '"/><span class="text-small old-value">' + Data[j][i] + '<span></td>';
+                    colspan++;
                 }
-                if (!isEWH && !isWH && i != 3 && i != 2 && i != 4) {
+                if (!isEWH && !isWH && !isDWH && i < 4 && i != 1 && i != 2 && i != 3) {
                     tBody += '<td>' + Data[j][i] + '</td>';
+                    colspan++;
                 }
-                if (!isEWH && !isWH && i == 2) {
-                    tBody += '<td title="' + Data[j][3]  + '">' + Number(Data[j][i]) + '</td>';
+                if (!isEWH && !isWH && !isDWH && i == 1) {
+                    tBody += '<td title="' + Data[j][7] + ' / ' + Data[j][6] + '">' + Data[j][i] + '</td>';
+                    colspan++;
                 }
-                if (!isEWH && !isWH && i == 3) {
-                    tBody += '<td class="status"><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></td>';
+                if (!isEWH && !isWH && !isDWH && i == 2) {
+                    tBody += '<td title="' + Data[j][3] + '"><input class="form-control" value="' + Number(Data[j][i]) + '" title="' + Data[j][3] + '"/></td>';
+                    colspan++;
+                }
+                if (!isEWH && !isWH && !isDWH && i == 3) {
+                    tBody += '<td class="status" title="' + Data[j][8] + '"><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></td>';
+                    colspan++;
                 }
             }
 
@@ -196,7 +238,7 @@ var AMatrix = {
     },
     saveAM: function () {
         var rows = $('tr[is-change="true"]');
-        var titles = $('th');
+        var titles = $('thead th');
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 112;
