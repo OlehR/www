@@ -32,8 +32,8 @@ var User = {
                     btn.html('Вхід');
                 }
             },
-            error: function () {
-                alert('Неправельний логін, або пароль.');
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Неправельний логін, або пароль.');
                 btn.prop('disabled', false);
                 btn.html('Вхід');
             }

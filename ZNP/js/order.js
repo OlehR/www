@@ -24,8 +24,8 @@
                     change: Order.selectWarehouse
                 });
             },
-            error: function () {
-                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
             }
         });
     },
@@ -56,8 +56,8 @@
                 });
                 $('.ui-widget.GP').show();
             },
-            error: function () {
-                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
             }
         });
     },
@@ -82,8 +82,8 @@
                 var result = JSON.parse(data);
                 document.location = 'order.html?order=' + result.Order;
             },
-            error: function () {
-                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
             }
         });
     },
