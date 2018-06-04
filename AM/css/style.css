@@ -422,3 +422,12 @@ ul {
     font-size: 12px;
     font-weight: 500;
 }
+.hidden{
+    display:none;
+}
+.loader-adaptive{
+    width: 100%;
+    border-top-width: 10px;
+    border-width: 10px;
+    height: 100%;
+}

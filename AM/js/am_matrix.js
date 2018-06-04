@@ -76,7 +76,7 @@ var AMatrix = {
         );
         return tree;
     },
-    getAM: function (val, manager, groups) {
+    getAM: function (val, manager, groups, xls) {
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 111;
@@ -91,6 +91,12 @@ var AMatrix = {
             delete obj.data.CodeManager;
             obj.data.CodeWares = groups;
         }
+        if (manager === -1 && val === -1 && groups == -1) {
+            delete obj.data.GodeGroup;
+            delete obj.data.CodeManager;
+            delete obj.data.CodeWares;
+            obj.data.ImportXls = xls;
+        }
 
         obj.data = JSON.stringify(obj.data);
 
@@ -103,6 +109,7 @@ var AMatrix = {
             },
             success: function (data) {
                 AMatrix.JSON = JSON.parse(data);
+                console.log(AMatrix.JSON);
                 AMatrix.renderAM();
             },
             error: function () {
@@ -295,7 +302,31 @@ var AMatrix = {
             }
         });
     },
+    importXL: function () {
+        $input = $(this);
+        var inputFiles = this.files;
+        if (inputFiles == undefined || inputFiles.length == 0) return;
+        var inputFile = inputFiles[0];
+
+        var reader = new FileReader();
+        reader.onloadstart = function (event) {
+            $('#import_xl').html('<div class="loader loader-adaptive"></div>');
+        };
+        reader.onload = function (event) {
+            AMatrix.getAM(-1, -1, -1, event.target.result);
+            $('#import_xl').html('CSV');
+        };
+        reader.onerror = function (event) {
+            alert("Сталася помилка: " + event.target.error.code);
+        };
+        reader.readAsText(inputFile);
+
+    },
     controlsInit: function () {
+        $('#import_xl').click(function () {
+            $('#file-upload').click();
+        });
+        $('#file-upload').change(AMatrix.importXL);
         $('#tableContent').on('change', '.status input', function () {
             var el = $(this);
             var sibling = el.siblings('input')[0];
