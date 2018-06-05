@@ -29,7 +29,7 @@ var User = {
                     btn.prop('disabled', false);
                     btn.html('Вхід');
                 } else {
-                    alert('Неправельний логін, або пароль.');
+                    alert(JSON.parse(data).TextError);
                     btn.prop('disabled', false);
                     btn.html('Вхід');
                 }
