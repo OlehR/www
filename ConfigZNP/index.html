@@ -136,6 +136,9 @@
             </div>
         </div>
     </div>
+    <div id="overlay">
+        <div class="loader"></div>
+    </div>
     <script>
         if (isLogin) {
             $('#loginForm').hide();
@@ -276,6 +279,14 @@
                 _destroy: function () {
                     this.wrapper.remove();
                     this.element.show();
+                },
+                autocomplete: function (value) {
+                    this.element.val(value);
+
+                    var selected = this.element.children(":selected"),
+                            value = selected.val() ? selected.text() : "";
+                    this.input.val(value);
+                    this._trigger("change");
                 }
             });
         });
