@@ -35,49 +35,57 @@ form{
 #tableContent .table .status{
     vertical-align:middle;
 }
-#tableContent .table .status input{
+#tableContent .table .status div{
     cursor:pointer;
 }
-#tableContent .table .status input:first-child{
-    margin-right:5px;
+#tableContent .table .status input{
+    visibility:hidden;
 }
-#tableContent .table .status input:first-child:before{
+#tableContent .table .status div:first-child{
+    float:left;
+    margin-left:5px;
+}
+#tableContent .table .status div:first-child:before{
     content: "\221A";
     position: absolute;
     width: 15px;
     height: 15px;
     background: #fff;
-    border: 1px solid gainsboro;
+    border: 2px solid gainsboro;
     border-radius: 3px;
     color:#28a745;
-    line-height: 13px;
-    text-indent: 2px;
+    line-height: 12px;
+    text-indent: 1px;
     font-weight: bold;
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
+    opacity:0.5;
 }
-#tableContent .table .status input:last-child{
-    margin-left:5px;
+#tableContent .table .status div:last-child{
+    float:right;
+    margin-right:5px;
 }
-#tableContent .table .status input:last-child:before{
+#tableContent .table .status div:last-child:before{
     content: "\00d7";
     position: absolute;
     width: 15px;
     height: 15px;
     background: #fff;
-    border: 1px solid gainsboro;
+    border: 2px solid gainsboro;
     border-radius: 3px;
     color: #dc3545;
-    line-height: 9px;
-    text-indent: -1px;
+    line-height: 6px;
+    text-indent: -2px;
     font-weight: bold;
     font-size: 22px;
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
+    opacity:0.5;
 }
-#tableContent .table .status input:checked:before, #tableContent .table .status input:hover:before{
+#tableContent .table .status div.checked:before , #tableContent .table .status div:hover:before{
     -webkit-filter: grayscale(0%);
     filter: grayscale(0%);
+    opacity:1;
 }
 .old-value{
     margin-left:5px;

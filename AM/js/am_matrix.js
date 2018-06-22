@@ -218,11 +218,11 @@ var AMatrix = {
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 2) {
-                    tBody += '<td title="' + Data[j][3] + '"><input class="form-control" value="' + Number(Data[j][i]) + '" title="' + Data[j][3] + '"/></td>';
+                    tBody += '<td title="' + Data[j][3] + '"><div><input class="form-control" value="' + Number(Data[j][i]) + '" title="' + Data[j][3] + '"/></div></td>';
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 3) {
-                    tBody += '<td class="status" title="' + Data[j][8] + '"><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></td>';
+                    tBody += '<td class="status" title="' + Data[j][8] + '"><div class=" ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + '"><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class=" ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + '"><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></td>';
                     colspan++;
                 }
             }
@@ -327,16 +327,24 @@ var AMatrix = {
             $('#file-upload').click();
         });
         $('#file-upload').change(AMatrix.importXL);
-        $('#tableContent').on('change', '.status input', function () {
+        $('#tableContent').on('click', '.status div', function () {
             var el = $(this);
-            var sibling = el.siblings('input')[0];
+            if (el.hasClass("disabled")) return;
+            var sibling = el.siblings('div').find('input')[0];
+            var input = el.find('input');
             if ($(sibling).prop('checked')) {
                 $(sibling).prop('checked', false);
             }
+            input.prop('checked', true);
+            input.change();
         });
         $('#tableContent').on('change', 'input', function () {
             var el = $(this);
-            $(el.closest('tr')).attr('is-change','true');
+            $(el.closest('tr')).attr('is-change', 'true');
+            $(el.closest('td')).find('div').each(function () {
+                $(this).removeClass('checked');
+            });
+            el.closest('div').addClass('checked');
         });
         $('#tableContent').on('change', 'input[type="number"]', function () {
             var el = $(this);
