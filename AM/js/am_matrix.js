@@ -222,7 +222,7 @@ var AMatrix = {
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 3) {
-                    tBody += '<td class="status" title="' + Data[j][8] + '"><div class=" ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + '"><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class=" ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + '"><input ' + (Data[j][4] == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></td>';
+                    tBody += '<td class="status" title="' + Data[j][8] + '"><div class=" ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + '"><input ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class=" ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + '"><input ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></td>';
                     colspan++;
                 }
             }
