@@ -167,7 +167,7 @@ var Report = {
 
         tHead += '<tr>';
         for (var i = 0; i < arrLen; i++) {
-            tHead += '<th title="' + arr[i] + '">' + arr[i] + '</th>';
+            tHead += '<th title="' + arr[i] + '">' + arr[i] + '<div>' + arr[i] + '</div></th>';
         }  
         tHead += '</tr>';
         tHead += '</thead>';

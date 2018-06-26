@@ -513,3 +513,15 @@ ul {
 #run{
     float:left;
 }
+#tableContent thead th{
+    position:relative;
+}
+#tableContent thead th div{
+    position:absolute;
+    width:calc(100% + 1px);
+    height:calc(100% + 3px);
+    top:0;
+    left:0;
+    border: 1px solid #e9ecef;
+    background:#fff;
+}

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
@@ -300,6 +300,12 @@
                     this.wrapper.remove();
                     this.element.show();
                 }
+            });
+        });
+
+        $('#tableContent').scroll(function () {
+            $('#tableContent thead th').css({
+                'transform': 'translate3d(0,' + ($('#tableContent').scrollTop() - 1) + 'px,0)'
             });
         });
     </script>
