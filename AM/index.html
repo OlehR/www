@@ -309,6 +309,18 @@ Code,Code,3,9,15,22,57,68
                 }
             });
         });
+
+        $('#tableContent').scroll(function () {
+            $('#tableContent thead th:not(th:nth-child(-n+4))').css({
+                'transform': 'translate3d(0,' + ($('#tableContent').scrollTop() - 1) + 'px,0)'
+            });
+            $('#tableContent thead th:nth-child(-n+4)').css({
+                'transform': 'translate3d(' + ($(this).scrollLeft() - 1) + 'px,' + ($('#tableContent').scrollTop()-1) + 'px,0)'
+            });
+            $('#tableContent td:nth-child(-n+4)').css({
+                'transform': 'translate3d(' + ($(this).scrollLeft() - 1) + 'px,0,0)'
+            });
+        });
     </script>
 <script src="js/am_matrix.js"></script>
 <script src="js/user.js"></script>

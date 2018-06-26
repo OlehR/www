@@ -210,11 +210,11 @@ var AMatrix = {
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i < 4 && i != 1 && i != 2 && i != 3) {
-                    tBody += '<td>' + Data[j][i] + '</td>';
+                    tBody += '<td><div>' + Data[j][i] + '</div></td>';
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 1) {
-                    tBody += '<td title="' + Data[j][7] + ' / ' + Data[j][6] + '">' + Data[j][i] + '</td>';
+                    tBody += '<td title="' + Data[j][7] + ' / ' + Data[j][6] + '">' + Data[j][i] + '<div>' + Data[j][i] + '<div></td>';
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 2) {
@@ -222,7 +222,7 @@ var AMatrix = {
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 3) {
-                    tBody += '<td class="status" title="' + Data[j][8] + '"><div class=" ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + '"><input ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class=" ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + '"><input ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></td>';
+                    tBody += '<td class="status" title="' + Data[j][8] + '"><div class="flex"><div class=" ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + '"><input ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class=" ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + '"><input ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></div></td>';
                     colspan++;
                 }
             }
@@ -239,6 +239,7 @@ var AMatrix = {
             el.height(el.closest('th').outerHeight()-2);
         });
         $('#tableContent table').dragtable('order', tableSort);
+
     },
     onFocus: function(el){
         $(el).select();

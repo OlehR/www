@@ -13,7 +13,10 @@ form{
 }
 #tableContent{
     padding-top:52px;
-    padding-bottom:56px;
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow-y: auto;
+    height: calc(100vh - 42px - 1rem);
 }
 #tableContent div.row > div {
     font-size: 13px;
@@ -22,12 +25,14 @@ form{
     position:relative;
 }
 #tableContent .thead{
-    position:fixed;
-    margin-top:-2px;
-    margin-left: -5px;
-    border: 1px solid #e9ecef;
+    position:absolute;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0;
+    left: 0;
     background:#fff;
     z-index:10;
+    border: 1px solid #e9ecef;
 }
 #tableContent .form-control{
     display:inline-block;
@@ -41,11 +46,10 @@ form{
 #tableContent .table .status input{
     visibility:hidden;
 }
-#tableContent .table .status div:first-child{
-    float:left;
-    margin-left:5px;
+#tableContent .table .status .flex div:first-child{
+    margin-right:10px;
 }
-#tableContent .table .status div:first-child:before{
+#tableContent .table .status .flex div:first-child:before{
     content: "\221A";
     position: absolute;
     width: 15px;
@@ -61,11 +65,10 @@ form{
     filter: grayscale(100%);
     opacity:0.5;
 }
-#tableContent .table .status div:last-child{
-    float:right;
-    margin-right:5px;
+#tableContent .table .status .flex div:last-child{
+    margin-left:10px;
 }
-#tableContent .table .status div:last-child:before{
+#tableContent .table .status .flex div:last-child:before{
     content: "\00d7";
     position: absolute;
     width: 15px;
@@ -80,9 +83,9 @@ form{
     font-size: 22px;
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
-    opacity:0.5;
+    opacity:0.4;
 }
-#tableContent .table .status div.checked:before , #tableContent .table .status div:hover:before{
+#tableContent .table .status .flex div.checked:before , #tableContent .table .status .flex div:hover:before{
     -webkit-filter: grayscale(0%);
     filter: grayscale(0%);
     opacity:1;
@@ -438,4 +441,56 @@ ul {
     border-top-width: 10px;
     border-width: 10px;
     height: 100%;
+}
+#tableContent th, #tableContent td{
+    min-width:180px;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    vertical-align: middle;
+    position:relative;
+    z-index: 19;
+}
+.flex{
+    display:flex;
+    width:100%;
+    justify-content:center;
+}
+#tableContent th:nth-child(-n+4), #tableContent td:nth-child(-n+4){
+    position:relative;
+    z-index: 20;
+    border:none;
+}
+#tableContent th:nth-child(-n+4) > div, #tableContent td:nth-child(-n+4) > div{
+    display:flex;
+    position: absolute;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    background: #fff;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    z-index:10;
+    border: 1px solid #e9ecef;
+}
+#tableContent th:first-child, #tableContent td:first-child,
+#tableContent th:nth-child(3), #tableContent td:nth-child(3),
+#tableContent th:nth-child(4), #tableContent td:nth-child(4){
+    min-width:100px;
+}
+#tableContent th:nth-child(2), #tableContent td:nth-child(2){
+    min-width:370px;
+}
+#tableContent tbody{
+    position:relative;
+    opacity:0.98;
+    z-index:10;
+}
+#tableContent thead{
+    position:relative;
+    z-index:11;
+}
+#tableContent thead th{
+    border:none;
+    border-spacing: 0;
 }
