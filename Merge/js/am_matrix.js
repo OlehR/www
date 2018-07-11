@@ -222,7 +222,7 @@ var AMatrix = {
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 3) {
-                    tBody += '<td class="status" title="' + Data[j][8] + '"><div class="flex"><div class=" ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + '"><input ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class=" ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + '"><input ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></div></td>';
+                    tBody += '<td class="status" title="' + Data[j][8] + '"><div class="flex"><div class="' + (parseInt(Data[j][4]) == 1 ? 'checked ' : '') + readOnly + '"><input ' + (parseInt(Data[j][4]) == 1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class="' + (parseInt(Data[j][4]) == -1 ? 'checked ' : '') + readOnly + '"><input ' + (parseInt(Data[j][4]) == -1 ? 'checked ' : ' ') + readOnly + ' name="status' + j + '" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></div></td>';
                     colspan++;
                 }
             }
@@ -268,8 +268,10 @@ var AMatrix = {
             obj.data.Data[index] = [];
             obj.data.Data[index].push($(cells[0]).text());
             obj.data.Data[index].push($(cells[2]).text());
-            if ($(cells[3]).find('input:checked').length > 0) {
-                obj.data.Data[index].push($($(cells[3]).find('input:checked')[0]).val());
+
+            if ($(cells[3]).find('div.checked').length > 0) {
+                obj.data.Data[index].push($(cells[3]).find('div.checked input').val());
+                console.log($(cells[3]).find('div.checked input').val());
             } else {
                 obj.data.Data[index].push(0);
             }
@@ -277,6 +279,7 @@ var AMatrix = {
             for (var i = 4; i < cells.length; i++) {
                 obj.data.Data[index].push($(cells[i]).find('input').val());
             }
+            console.log(obj.data.Data);
         });
 
         console.log(obj.data);
@@ -328,7 +331,7 @@ var AMatrix = {
             $('#file-upload').click();
         });
         $('#file-upload').change(AMatrix.importXL);
-        $('#tableContent').on('click', '.status div', function () {
+        $('#tableContent').on('click', '.status div > div', function () {
             var el = $(this);
             if (el.hasClass("disabled")) return;
             var sibling = el.siblings('div').find('input')[0];
@@ -342,9 +345,7 @@ var AMatrix = {
         $('#tableContent').on('change', 'input', function () {
             var el = $(this);
             $(el.closest('tr')).attr('is-change', 'true');
-            $(el.closest('td')).find('div').each(function () {
-                $(this).removeClass('checked');
-            });
+            $(el.closest('td')).find('div.checked').removeClass('checked');
             el.closest('div').addClass('checked');
         });
         $('#tableContent').on('change', 'input[type="number"]', function () {
