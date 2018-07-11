@@ -1,15 +1,21 @@
 var User = {
     login: function () {
-
+        var apiUrl = window.apiUrl;
         var btn = $(this);
         var loginData = {};
+        loginData.data = {};
 
         btn.prop('disabled', true);
         btn.html('Зачекайте');
 
-        loginData.Login = $('#inputLogin').val();
-        loginData.PassWord = $('#inputPassword').val();
-        loginData.CodeData = 1;
+        loginData.data.Login = $('#inputLogin').val();
+        loginData.data.PassWord = $('#inputPassword').val();
+        loginData.data.CodeData = 1;
+        loginData.data = JSON.stringify(loginData.data);
+
+        if (typeof window.loginUrl != typeof undefined) {
+            apiUrl = loginUrl;
+        }
 
         $.ajax({
             url: apiUrl,
