@@ -153,12 +153,9 @@ var Table = {
                 if (sendMail) {
                     Table.sendMail(true);
                 }
-                if ($('#logistic').prop('checked')) {
-                    Table.sortByLogistic();
-                } else {
-                    if (withRender) {
-                        Table.renderTable();
-                    }
+                Table.sortByLogistic();
+                if (withRender) {
+                    Table.renderTable();
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -370,6 +367,13 @@ var Table = {
             var newArr = [];
             for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
                 if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISLC')] == 1)
+                    newArr.push(Table.JSON.OrderDetail.Data[i]);
+            }
+            Table.JSON.OrderDetail.Data = newArr;
+        } else {
+            var newArr = [];
+            for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
+                if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISLC')] == 0)
                     newArr.push(Table.JSON.OrderDetail.Data[i]);
             }
             Table.JSON.OrderDetail.Data = newArr;
