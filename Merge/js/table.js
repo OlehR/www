@@ -153,6 +153,7 @@ var Table = {
                 if (sendMail) {
                     Table.sendMail(true);
                 }
+                if (type == "orders")
                 Table.sortByLogistic();
                 if (withRender) {
                     Table.renderTable();
