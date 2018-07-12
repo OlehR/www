@@ -47,6 +47,7 @@ var User = {
                             break;
                         case "Index":
                             Index.init();
+                            $('.login_logout').html('<a id="index_logout_btn" class="nav-link" href="javascript:void(0)">Вихід</a>');
                             break;
                     }
                     btn.prop('disabled', false);

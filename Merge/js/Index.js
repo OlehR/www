@@ -36,8 +36,10 @@
 
     },
     init: function () {
+        if (window.isLogin) {
         Index.getMenuList();
         Index.controlsInit();
+        }
     }
 };
 

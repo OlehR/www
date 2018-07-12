@@ -25,13 +25,21 @@
                     <ul class="navbar-nav mr-auto">
                     </ul>
                     <ul class="form-inline my-2 my-md-0 navbar-nav" href="#">
-                       
+                       <li class="login_logout nav-item active">
+                           
+                       </li>
                     </ul>
                 </div>
             </div>          
         </nav>
     </header>
-
+    <script>
+        if (!window.isLogin) {
+            $('.login_logout').html('<a id="index_login_btn" class="nav-link" href="javascript:void(0)">Вхід</a>');
+        } else {
+            $('.login_logout').html('<a id="index_logout_btn" class="nav-link" href="javascript:void(0)">Вихід</a>');
+        }
+    </script>
     <div class="">
         <div class="container-fluid">
             <div class="row">
@@ -46,10 +54,22 @@
             </div>
             <div id="tableContent" data-type="orders">
                 <div id="menuBox">
-                    <div class="loader"></div>
+                    <h3 class="text-center">Ввійдіть в кабінет</h3>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="loginForm" style="display:none;">
+        <form class="form-signin">
+            <h2 class="form-signin-heading">Зайдіть в кабінет</h2>
+            <label for="inputLogin" class="sr-only">Логин</label>
+            <input type="text" id="inputLogin" class="form-control" placeholder="Логин" required="" autofocus="" />
+            <label for="inputPassword" class="sr-only">Пароль</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="" />
+
+            <button id="loginButton" class="btn btn-lg btn-primary btn-block" type="button">Вхід</button>
+        </form>
     </div>
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
@@ -62,4 +82,12 @@
 </script>
 <script src="js/index.js"></script>
 <script src="js/user.js"></script>
+    <script>
+        $(document).on('click', '#index_login_btn', function () {
+            $('#loginForm').css('display', 'flex');
+        });
+        $(document).on('click','#index_logout_btn',function () {
+            User.logout();
+        });
+    </script>
 </body>
