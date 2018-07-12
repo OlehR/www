@@ -133,7 +133,7 @@ function printData(data) {
     var link = newWin.document.createElement("link");
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("type", "text/css");
-    link.setAttribute("href", "css/print.css");
+    link.setAttribute("href", "/css/print.css");
     newWin.document.getElementsByTagName("head")[0].appendChild(link);
     //newWin.print();
     //newWin.close();

@@ -295,3 +295,12 @@ header{
 #send_mail_start{
     display:none;
 }
+.flex{
+    display:flex;
+    align-items:center;
+}
+#not_entered{
+    margin-right:2px;
+    position:relative;
+    top:2px;
+}
