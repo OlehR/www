@@ -304,3 +304,7 @@ header{
     position:relative;
     top:2px;
 }
+.clearfix{
+    width:100%;
+    clear:both;
+}

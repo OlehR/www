@@ -119,6 +119,10 @@ var AMatrix = {
 
     },
     renderAM: function () {
+        var readOnly = '';
+        if (!AMatrix.JSON.IsAccept) {
+            readOnly = 'disabled';
+        }
         var columnTitles = AMatrix.JSON.Warehouse;
         var arrLenth = columnTitles.length;
         var tableSort = Cookies.get('tableSort');
@@ -138,7 +142,7 @@ var AMatrix = {
         tHead += '<th data-header="1" class="text-center dragtable-drag-boundary"><div class="thead">код</div>код</th>';
         tHead += '<th data-header="2" class="text-center dragtable-drag-boundary"><div class="thead">назва</div>назва</th>';
         tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead">ст. код</div>ст. код</th>';
-        tHead += '<th data-header="4" class="text-center dragtable-drag-boundary"><div class="thead">зат.</div>ст. код</th>';
+        tHead += '<th data-header="4" class="text-center dragtable-drag-boundary"><div class="thead status status_all"><div class="clearfix">зат. </div><div class="flex"><div class="'+ readOnly + ' st_all"><input ' + readOnly + ' name="status" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class="' + readOnly + ' st_all"><input ' + readOnly + ' name="status" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></div></div>ст. код</th>';
         for (var i = 0; i < arrLenth; i++){
             tHead += '<th data-ewh="' + columnTitles[i][0] + '" data-header="' + (i + 5) + '" class="text-center dragtable-drag-handle"><div class="thead">' + columnTitles[i][1] + '</div>' + columnTitles[i][1] + '</th>';
         }
@@ -169,10 +173,6 @@ var AMatrix = {
 
             var Catch = [];
             for (var i = 0; i < Data[j].length; i++) {
-                var readOnly = '';
-                if (!AMatrix.JSON.IsAccept) {
-                    readOnly = 'disabled';
-                }
                 var reg1 = new RegExp('^EWH', 'i');
                 var isEWH = reg1.test(AMatrix.JSON.Data.InfoColumn[i]);
                 if (isEWH) {
@@ -331,7 +331,7 @@ var AMatrix = {
             $('#file-upload').click();
         });
         $('#file-upload').change(AMatrix.importXL);
-        $('#tableContent').on('click', '.status div > div', function () {
+        $('#tableContent').on('click', '.status div > div:not(.st_all)', function () {
             var el = $(this);
             if (el.hasClass("disabled")) return;
             var sibling = el.siblings('div').find('input')[0];
@@ -342,7 +342,23 @@ var AMatrix = {
             input.prop('checked', true);
             input.change();
         });
-        $('#tableContent').on('change', 'input', function () {
+        $('#tableContent').on('click', '.st_all', function () {
+            var el = $(this);
+            if (el.hasClass("disabled")) return;
+            var sibling = el.siblings('div').find('input')[0];
+            var input = el.find('input');
+            if ($(sibling).prop('checked')) {
+                $(sibling).prop('checked', false);
+            }
+            $(input.closest('th')).find('div.checked').removeClass('checked');
+            input.closest('div').addClass('checked');
+            $('.status input[value="' + input.val() + '"]').each(function () {
+                var item = $(this);
+                item.prop('checked', true);
+                item.change();
+            });
+        });
+        $('#tableContent').on('change', 'input:not(input[name="status"])', function () {
             var el = $(this);
             $(el.closest('tr')).attr('is-change', 'true');
             $(el.closest('td')).find('div.checked').removeClass('checked');

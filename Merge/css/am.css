@@ -192,7 +192,7 @@ ul {
     z-index: 20;
     border:none;
 }
-#tableContent th:nth-child(-n+4) > div, #tableContent td:nth-child(-n+4) > div{
+#tableContent th:nth-child(-n+4) > div:not(.status_all), #tableContent td:nth-child(-n+4) > div:not(.status_all){
     display:flex;
     position: absolute;
     width: calc(100% + 2px);
