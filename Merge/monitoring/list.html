@@ -5,7 +5,7 @@
     <link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="../css/fontawesome-all.css" rel="stylesheet" />
     <link href="../css/style.css" type="text/css" rel="stylesheet" />
-    <link href="../css/report.css" type="text/css" rel="stylesheet" />
+    <link href="../css/docList.css" type="text/css" rel="stylesheet" />
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/cookie.js"></script>
     <script src="config/config.js"></script>
@@ -42,12 +42,39 @@
 
     <div class="">
         <div class="container-fluid">
-            
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-6">
+                                <input id="date_from" class="form-control" />
+                            </div>
+                            <div class="col-6">
+                                <input id="date_to" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-6">
+                                <button id="load_list_doc_wares" type="button" class="btn btn-block btn-success">Отримати</button>
+                                <!--<button id="import_xl" type="button" class="btn btn-block btn-primary">Імпорт XL</button>
+                                <input id="file-upload" hidden="hidden" type="file" />-->
+                            </div>
+                            <div class="col-6">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-12">
                     <div id="tableContent">
-                        <div class="loader"></div>
+                        
                     </div>
                 </div>
             </div>
@@ -90,9 +117,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div id="overlay">
-        <div class="loader"></div>
     </div>
     <script>
         if (isLogin) {
