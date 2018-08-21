@@ -194,7 +194,7 @@ ul {
     display:none;
 }
 #tableContent{
-    height:calc(100vh - 80px - 1.5rem);
+    height:calc(100vh - 120px - 1.5rem);
     overflow-y:auto;
 }
 #select_all{
@@ -246,4 +246,7 @@ ul {
     left:0;
     border: 1px solid #e9ecef;
     background:#fff;
+}
+.custom-combobox-input{
+    padding:.5rem .75rem;
 }

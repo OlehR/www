@@ -48,6 +48,9 @@ var User = {
                         case "Monitoring":
                             Monitoring.init();
                             break;
+                        case "ConcurentsMonitoring":
+                            Monitoring.mobileInit();
+                            break;
                         case "Index":
                             Index.init();
                             $('.login_logout').html('<a id="index_logout_btn" class="nav-link" href="javascript:void(0)">Вихід</a>');

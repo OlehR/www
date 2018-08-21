@@ -272,6 +272,8 @@ var Monitoring = {
             el.find('input').change();
         });
         $('#tableContent').on('change', '.status input', Monitoring.changeStatus);
+        $('#concurents').change(Monitoring.getMonitoringList);
+        $('#monitoring').change(Monitoring.getDataMonitoring);
     },
     init: function () {
         if (window.isLogin) {
@@ -285,9 +287,111 @@ var Monitoring = {
             }
         }
         this.controlsInit();
+    },
+    getMonitoringList: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 131;
+        obj.data.Concurrent = $('#concurents').val();
+
+        if (parseInt(obj.data.Concurrent) == -1) {
+            $('#monitoring').val(-1).prop('disabled', true);
+            return;
+        }
+
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                var result = JSON.parse(data);
+                console.log(result);
+
+                var html = '<option value="-1">--Моніторинг--</option>';
+
+                for (var i = 0; i < result.Concurent.length; i++) {
+                    html += '<option value="' + result.Concurent[i][0] + '">' + result.Concurent[i][1] + '</option>';
+                }
+
+                $('#monitoring').html(html).prop('disabled', false);
+
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    getDataMonitoring: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 132;
+        obj.data.Concurrent = $('#concurents').val();
+        obj.data.Monitoring = $('#monitoring').val();
+
+        if (parseInt(obj.data.Monitoring) == -1) {
+            return;
+        }
+
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                var result = JSON.parse(data);
+                console.log(result);
+
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    mobileInit: function () {
+        Monitoring.controlsInit();
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 130;
+
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                var result = JSON.parse(data);
+                console.log(result);
+
+                var html = '<option value="-1">--Конкурент--</option>';
+
+                for (var i = 0; i < result.Concurent.length; i++) {
+                    html += '<option value="' + result.Concurent[i][0] + '">' + result.Concurent[i][1] + '</option>';
+                }
+
+                $('#concurents').html(html);
+
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
     }
 }
 
 $(document).ready(function () {
+    if ($('body').attr('data-page') != 'ConcurentsMonitoring')
     Monitoring.init();
 });

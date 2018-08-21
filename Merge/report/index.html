@@ -50,29 +50,15 @@
                         </select>
                     </div>
                 </div>
-                <div id="reports_list_select_container" class="col-sm-3 col-xs-12">
-                    <div class="form-group">
-                        <select id="reports_list_select" name="code_firm" class="form-control">
-                            <option value="-1">--Пошук--</option>
-                        </select>
+                    <div id="param_container">
+
                     </div>
-                </div>
-                <div id="reports_date_begin_container" class="col-sm-3 col-xs-12">
-                    <div class="form-group">
-                        <input id="reports_date_begin" name="date_begin" class="form-control" />
+                <div class="col-sm-3 col-xs-12">
+                    <div id="run_container" class="form-group">
+                        <button id="run" type="button" class="btn btn-success">Отримати</button>
+                        <button id="export_to_csv" type="button" class="btn btn-success">Експорт CSV</button>
                     </div>
-                </div>
-                <div id="reports_date_end_container" class="col-sm-3 col-xs-12">
-                    <div class="form-group">
-                        <input id="reports_date_end" name="date_end" class="form-control" />
-                    </div>
-                </div>
-                <div id="run_container" class="col-sm-3 col-xs-12">
-                    <div class="form-group">
-                       <button id="run" type="button" class="btn btn-success">Отримати</button> 
-                       <button id="export_to_csv" type="button" class="btn btn-success">Експорт CSV</button> 
-                    </div>
-                </div>
+                </div>        
             </div>
            
             <div class="row">
@@ -150,26 +136,12 @@
     </script>
 <script src="../js/popper.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/bootstrap-datepicker.js"></script>
-<script src="../js/bootstrap-datepicker.uk.js"></script>
-<link href="../css/datepicker/bootstrap-datepicker.css" type="text/css" rel="stylesheet" />
-    <script>
-        $('#reports_date_begin').datepicker({
-            format: 'dd-mm-yyyy',
-            language: 'uk',
-            autoclose: true
-        });
-        $('#reports_date_begin').datepicker("update", new Date());
-        $('#reports_date_end').datepicker({
-            format: 'dd-mm-yyyy',
-            language: 'uk',
-            autoclose: true
-        });
-        $('#reports_date_end').datepicker("update", new Date());
-    </script>
 <script src="config/helpers.js"></script>
     <script src="../js/jquery-ui.js"></script>
     <script src="../js/table2csv.js"></script>
+    <script src="../js/bootstrap-datepicker.js"></script>
+    <script src="../js/bootstrap-datepicker.uk.js"></script>
+    <link href="../css/datepicker/bootstrap-datepicker.css" type="text/css" rel="stylesheet" />
     <script>
         $(function () {
             $.widget("custom.combobox", {
@@ -187,7 +159,7 @@
                     var selected = this.element.children(":selected"),
                         value = selected.val() ? selected.text() : "";
 
-                    this.input = $("<input>")
+                    this.input = $("<input>").addClass('form-control')
                         .appendTo(this.wrapper)
                         .val(value)
                         .attr("title", "")
