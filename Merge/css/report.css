@@ -250,3 +250,8 @@ ul {
 .custom-combobox-input{
     padding:.5rem .75rem;
 }
+.ui-menu-item:hover{
+    cursor:pointer;
+    color: #856404;
+    background: #fff3cd;
+}
