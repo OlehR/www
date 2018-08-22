@@ -1,10 +1,4 @@
-﻿var REQUEST = {
-    getField: function (name) {
-        if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
-            return decodeURIComponent(name[1]);
-    }
-};
-var Monitoring = {
+﻿var Monitoring = {
     codeDoc:0,
     getListWares: function () {
         var obj = {};
@@ -274,6 +268,13 @@ var Monitoring = {
         $('#tableContent').on('change', '.status input', Monitoring.changeStatus);
         $('#concurents').change(Monitoring.getMonitoringList);
         $('#monitoring').change(Monitoring.getDataMonitoring);
+        $('#filter_settings').click(function () {
+            $('.form-wrapper').toggle();
+        });
+        $('#tableContent').on('focus', 'input', Monitoring.onFocus);
+        $('#tableContent').on('blur', 'input', Monitoring.onBlur);
+        $('#not_entered').change(Monitoring.changeDisplayMonitoringItems);
+        $('#save_monitoring_data').click(Monitoring.saveMonitoringData);
     },
     init: function () {
         if (window.isLogin) {
@@ -293,7 +294,7 @@ var Monitoring = {
         obj.data = {};
         obj.data.CodeData = 131;
         obj.data.Concurrent = $('#concurents').val();
-
+        $('#tableContent').html('');
         if (parseInt(obj.data.Concurrent) == -1) {
             $('#monitoring').val(-1).prop('disabled', true);
             return;
@@ -338,6 +339,85 @@ var Monitoring = {
         }
 
         obj.data = JSON.stringify(obj.data);
+        $('#tableContent').html('<div class="loader"></div>');
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                var result = JSON.parse(data);
+                console.log(result);
+                var arr = result.Data;
+                var arrLen = arr.length;
+                var html = '';
+
+                for (var i = 0; i < arrLen; i++) {
+                    html += '<div id="' + arr[i][0] + '" class="row dataRow" ' + (parseInt(arr[i][2]) != 0 && $('#not_entered').prop('checked') ? 'style="display: none;"' : '') + '>';
+                    html += '<div class="col-8">' + arr[i][1] + '</div>';
+                    html += '<div class="col-4"><input type="number" class="form-control" value="' + arr[i][2] + '"/></div>';
+                    html += '</div>';
+                }
+
+                $('#tableContent').html(html);
+                $('.form-wrapper').hide();
+
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    onFocus: function () {
+        var el = $(this);
+        el.select();
+    },
+    onBlur: function () {
+        var el = $(this);
+        if (parseInt(el.val()) != 0 && $('#not_entered').prop('checked'))
+            el.closest('.dataRow').css('display', 'none').attr('is-changed', 'true');
+        else
+            el.closest('.dataRow').css('display', 'flex').removeAttr('is-changed');
+    },
+    changeDisplayMonitoringItems: function () {
+        if (!$('#not_entered').prop('checked')) {
+            $('#tableContent div[style="display: none;"]').css('display', 'flex');
+        } else {
+            $('#tableContent div[style="display: flex;"]').css('display', 'none');
+        }
+    },
+    saveMonitoringData: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 133;
+        obj.data.Concurrent = parseInt($('#concurents').val());
+        obj.data.Monitoring = parseInt($('#monitoring').val());
+        obj.data.Data = [];
+
+        if (obj.data.Concurrent == -1) {
+            alert('Не вибраний конкурент!');
+            return;
+        }
+
+        if (obj.data.Concurrent == -1) {
+            alert('Не вибраний моніторинг!');
+            return;
+        }
+
+        var items = $('div[is-changed="true"]');
+        if (items.length <= 0) {
+            alert('Відсутні дані для збереження!');
+            return;
+        }
+
+        items.each(function () {
+            var el = $(this);
+            obj.data.Data.push([el.attr('id'),el.find('input').val()]);
+        });
+
+        obj.data = JSON.stringify(obj.data);
 
         $.ajax({
             url: apiUrl,
@@ -349,6 +429,12 @@ var Monitoring = {
             success: function (data) {
                 var result = JSON.parse(data);
                 console.log(result);
+
+                if (parseInt(result.State) == 1) {
+                    alert('Дані успішно збережено!');
+                } else {
+                    alert('Помилка: ' + result.TextError);
+                }
 
             },
             error: function () {
