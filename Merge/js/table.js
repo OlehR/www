@@ -228,6 +228,12 @@ var Table = {
             } else {
                 Table.renderDesctopOrders();
             }
+            $("html, body").animate({
+                scrollTop: ($('#' + REQUEST.getField('last_order')).offset().top -110 )+ "px"
+            }, {
+                duration: 500,
+                easing: "swing"
+            });
         } else {
 
             var renderSettings = Cookies.get('renderSettings');
@@ -331,7 +337,7 @@ var Table = {
             if (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('SENDMAILTOSUPPLIER')] == 1) {
                 mark = '<i class="fas fa-envelope"></i>';
             }
-            table += '<tr class="clickable-row ' + (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] == 2 ? 'table-warning' : '') + '" data-href="order.html?order=' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '" data-order="' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '">';
+            table += '<tr id="' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '" class="clickable-row ' + (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] == 2 ? 'table-warning' : '') + '" data-href="order.html?order=' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '" data-order="' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '">';
             table += '<td class="history">' + mark + '</td>';
             table += '<td>' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '</td>';
             table += '<td>' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('DATE_ORDER')] + '</td>';
@@ -362,7 +368,14 @@ var Table = {
         Table.renderTable();
     },
     sortByLogistic: function () {
-        var isLogistic = $('#logistic').prop('checked');
+        var isLogistic = Cookies.get('isLogistick');
+        if (typeof isLogistic == typeof undefined) {
+            isLogistic = false;
+            $('#logistic').prop('checked', false);
+        } else {
+            isLogistic = true;
+            $('#logistic').prop('checked', true);
+        }
         Table.JSON = JSON.parse(Table.OriginalTableJSON);
         if (isLogistic) {
             var newArr = [];
@@ -1184,6 +1197,15 @@ var Table = {
             }
         });
     },
+    changeLogistic: function () {
+        if ($('#logistic').prop('checked')) {
+            Cookies.set('isLogistick', true);
+        } else {
+            Cookies.remove('isLogistick');
+        }
+
+        Table.sortByLogistic();
+    },
     controlsInit: function () {
         $(document).on('focus', '#tableContent input', Table.onFocus);
         $(document).on('change', '#tableContent input', Table.onChange);
@@ -1230,13 +1252,16 @@ var Table = {
             $('#TopMenu').collapse('hide');
             $('#filters').toggleClass('hidden-sm-down');
         });
-        $('#logistic').change(Table.sortByLogistic);
+        $('#logistic').change(Table.changeLogistic);
         $('#stateOrder').change(Table.changeStateOrder);
         $('#status').change(Table.changeStateStatus);
         $('#print_form').click(Table.printForm);
         $('#print_doc').click(Table.printDoc);
         $('#send_mail_start').click(Table.startSendMail);
         $('#send_mail').click(function () { Table.sendMail(false); });
+        $('#orders_log').click(function () {
+            location.href = "index.html?last_order=" + Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY;
+        });
     },
     init: function () {
         if (window.isLogin){
