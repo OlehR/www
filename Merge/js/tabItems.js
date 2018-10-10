@@ -327,20 +327,35 @@ var Delivery = {
 
         var tBody = '<tbody>';
         for (var i = 0; i < arrLen; i++) {
+            var isDay = false;
+            for (var j = 4; j < 10; j++) {
+                if (data[i][j] !== '') {
+                    isDay = true;
+                }
+            }
+
+            var isOther = false;
+
+            for (var k = 11; k < 13; k++) {
+                if (data[i][k] !== '') {
+                    isOther = true;
+                }
+            }
+
             tBody += '<tr>';
             tBody += '<td>' + data[i][infoColumn.indexOf('CODE_GROUP_SUPPLY')] + '</td>';
             tBody += '<td>' + data[i][infoColumn.indexOf('NAME_GROUP_SUPPLY')] + '</td>';
             tBody += '<td>' + data[i][infoColumn.indexOf('DATA_NAME')] + '</td>';
-            tBody += '<td> <input class="form-control Day" value="' + data[i][infoColumn.indexOf('D_1')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" value="' + data[i][infoColumn.indexOf('D_2')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" value="' + data[i][infoColumn.indexOf('D_3')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" value="' + data[i][infoColumn.indexOf('D_4')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" value="' + data[i][infoColumn.indexOf('D_5')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" value="' + data[i][infoColumn.indexOf('D_6')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" value="' + data[i][infoColumn.indexOf('D_7')] + '" /></td>';
-            tBody += '<td> <input class="form-control Sub" value="' + data[i][infoColumn.indexOf('PERIOD_SUPPLY')] + '" /></td>';
-            tBody += '<td> <input class="form-control Sub" value="' + data[i][infoColumn.indexOf('DAY_TO_SUPPLY')] + '" /></td>';
-            tBody += '<td> <input class="form-control DateStart Sub" value="' + data[i][infoColumn.indexOf('DATE_START')] + '" /></td>';
+            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_1')] + '" /></td>';
+            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_2')] + '" /></td>';
+            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_3')] + '" /></td>';
+            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_4')] + '" /></td>';
+            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_5')] + '" /></td>';
+            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_6')] + '" /></td>';
+            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_7')] + '" /></td>';
+            tBody += '<td> <input class="form-control Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('PERIOD_SUPPLY')] + '" /></td>';
+            tBody += '<td> <input class="form-control Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DAY_TO_SUPPLY')] + '" /></td>';
+            tBody += '<td> <input class="form-control DateStart Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DATE_START')] + '" /></td>';
             tBody += '</tr>';
         }
         tBody += '</tbody>';
@@ -350,6 +365,45 @@ var Delivery = {
             format: 'dd-mm-yyyy',
             language: 'uk'
         });
+
+    },
+    onChange: function () {
+        var tr = $(this).closest('tr');
+        tr.attr('is-change', true);
+
+        var isDayEmpty = true;
+
+        $(tr.find('.Day')).each(function () {
+            console.log($(this).val());
+            if ($(this).val() !== "") {
+                isDayEmpty = false;
+            }
+        });
+
+        var isOtherEmpty = true;
+
+        $(tr.find('.Sub')).each(function () {
+            if ($(this).val() !== "") {
+                isOtherEmpty = false;
+            }
+        });
+
+        if (isDayEmpty && isOtherEmpty) {
+            $(tr.find('.Day, .Sub')).each(function () {
+                $(this).prop('disabled', false);
+            });
+        } else {
+            if (!isDayEmpty) {
+                $(tr.find('.Sub')).each(function () {
+                    $(this).prop('disabled', true);
+                });
+            }
+            if (!isOtherEmpty) {
+                $(tr.find('.Day')).each(function () {
+                    $(this).prop('disabled', true);
+                });
+            }
+        }
 
     },
     filter: function (search) {
@@ -374,7 +428,65 @@ var Delivery = {
         Delivery.renderDeliveryShedule(data, Delivery.JSON.DeliverySchedule.InfoColumn);
 
     },
+    saveDelivery: function () {
+        var rows = $('tr[is-change="true"]');
+
+        var arrLen = rows.length;
+        var items = [];
+
+        for (var i = 0; i < arrLen; i++) {
+            var row = $(rows[i]);
+            var item = [row.find('td:first-child').text()];
+            var isValid = false;
+
+            $(row.find('input')).each(function () {
+                var el = $(this);
+
+                if (el.val() !== '') {
+                    isValid = true;
+                }
+
+                item.push(el.val());
+            });
+
+            if (!isValid) {
+                alert('В ГП ' + row.find('td:first + td').text() + 'відсутнє значення!');
+                return;
+            }
+
+            items.push(item);
+        }
+
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 212;
+        obj.data.Warehouse = $('#Delivery .Warehouse').val();
+        obj.data.DeliverySchedule = items;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                data = JSON.parse(data)
+                if (parseInt(data.State) == 1) {
+                    alert('Дані успішно збережено.');
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
     controlsInit: function () {
+        $('#saveDelivery').click(Delivery.saveDelivery);
+
         $('#Delivery .Warehouse').change(Delivery.getDeliverySchedule);
 
         $('#Delivery .Route, #Delivery .Type').change(function () {
@@ -384,6 +496,8 @@ var Delivery = {
         $('#Delivery .GP').keyup(function () {
             Delivery.filter($(this).val());
         });
+
+        $('#Delivery').on('change','input', Delivery.onChange);
 
         $('#tableContent' + Delivery.contextKey).scroll(function () {
             $('#tableContent' + Delivery.contextKey + ' thead').css({

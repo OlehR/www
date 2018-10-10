@@ -236,7 +236,7 @@ body[data-page="ConfigZNP"] .nav-tabs{
 
 #tableContentDelivery{
     width:100%;
-    height:calc(100vh - 141px);
+    height:calc(100vh - 186px);
     overflow-y:auto;
     margin-top:5px;
 }
