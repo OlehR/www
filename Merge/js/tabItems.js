@@ -450,8 +450,25 @@ var Delivery = {
             });
 
             if (!isValid) {
-                alert('В ГП ' + row.find('td:first + td').text() + 'відсутнє значення!');
+                alert('В ГП ' + row.find('td:first + td').text() + 'відсутні значення!');
                 return;
+            }
+
+            if (item[item.length - 3] === '' && item[item.length - 2] === '' && item[item.length - 1] === '') {
+                
+            } else {
+                if (item[item.length - 3] === '') {
+                    alert('Поле П-сть має бути заповнене.');
+                    return;
+                }
+                if (item[item.length - 2] === '') {
+                    alert('Поле ДДП має бути заповнене.');
+                    return;
+                }
+                if (item[item.length - 1] === '') {
+                    alert('Поле Дата старту має бути заповнене.');
+                    return;
+                }
             }
 
             items.push(item);
