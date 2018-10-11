@@ -37,7 +37,8 @@ var User = {
                             AMatrix.init();
                             break;
                         case "ConfigZNP":
-                            Checker.init();
+                            ZnpConfig.getAccessTab();
+                            ZnpConfig.Run();
                             break;
                         case "Plan":
                             Plane.init();

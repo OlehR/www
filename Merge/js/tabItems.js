@@ -87,13 +87,14 @@ var Checker = {
         Checker.WR = el.data('val');
         var arr = Checker.JSON.Wares;
         var arrLength = arr.length;
+        var readOnly = $('#Cheker').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
         var tBody = '';
         var tHead = '<tr>';
 
         tHead += '<th>Код товару</th>';
         tHead += '<th>Код бренду</th>';
         tHead += '<th>Назва</th>';
-        tHead += '<th>Заблокувати<br/><div class="form-check"><lable for="select_all" class="form-check-label small"><input id="select_all" type="checkbox" class="form-check-input"/> Всі</lable></div></th>';
+        tHead += '<th>Заблокувати<br/><div class="form-check"><lable for="select_all" class="form-check-label small"><input ' + readOnly + ' id="select_all" type="checkbox" class="form-check-input"/> Всі</lable></div></th>';
         tHead += '</tr>';
 
         var checked = 'checked';
@@ -103,7 +104,7 @@ var Checker = {
                 tBody += '<td>' + arr[i][0] + '</td>';
                 tBody += '<td>' + arr[i][1] + '</td>';
                 tBody += '<td>' + arr[i][2] + '</td>';
-                tBody += '<td><input data-old="' + arr[i][3] + '" type="checkbox" class="checkbox" ' + (parseInt(arr[i][3]) == 1 ? 'checked' : '') + ' value="' + arr[i][3] + '"/></td>';
+                tBody += '<td><input ' + readOnly + ' data-old="' + arr[i][3] + '" type="checkbox" class="checkbox" ' + (parseInt(arr[i][3]) == 1 ? 'checked' : '') + ' value="' + arr[i][3] + '"/></td>';
                 tBody += '</tr>';
                 if (parseInt(arr[i][3]) != 1) {
                     checked = '';
@@ -308,6 +309,7 @@ var Delivery = {
         });
     },
     renderDeliveryShedule: function (data, infoColumn) {
+        var readOnly = $('#Delivery').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
         var arrLen = data.length;
         var tHead = '<thead><tr>';
         tHead += '<th>Код гр.пост.</th>';
@@ -346,16 +348,16 @@ var Delivery = {
             tBody += '<td>' + data[i][infoColumn.indexOf('CODE_GROUP_SUPPLY')] + '</td>';
             tBody += '<td>' + data[i][infoColumn.indexOf('NAME_GROUP_SUPPLY')] + '</td>';
             tBody += '<td>' + data[i][infoColumn.indexOf('DATA_NAME')] + '</td>';
-            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_1')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_2')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_3')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_4')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_5')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_6')] + '" /></td>';
-            tBody += '<td> <input class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_7')] + '" /></td>';
-            tBody += '<td> <input class="form-control Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('PERIOD_SUPPLY')] + '" /></td>';
-            tBody += '<td> <input class="form-control Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DAY_TO_SUPPLY')] + '" /></td>';
-            tBody += '<td> <input class="form-control DateStart Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DATE_START')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_1')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_2')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_3')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_4')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_5')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_6')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_7')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('PERIOD_SUPPLY')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DAY_TO_SUPPLY')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control DateStart Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DATE_START')] + '" /></td>';
             tBody += '</tr>';
         }
         tBody += '</tbody>';
@@ -527,5 +529,5 @@ var Delivery = {
     }
 };
 
-ZnpConfig.addTab('Checker', Checker);
 ZnpConfig.addTab('Delivery', Delivery);
+ZnpConfig.addTab('Checker', Checker);
