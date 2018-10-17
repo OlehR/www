@@ -132,7 +132,7 @@
         obj.data = {};
         obj.data.CodeData = 31;
         obj.data.DateBegin = $('#date_from').val();
-        obj.data.DateBegin = $('#date_to').val();
+        obj.data.DateEnd = $('#date_to').val();
 
         obj.data = JSON.stringify(obj.data);
 
