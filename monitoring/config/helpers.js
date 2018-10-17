@@ -13,10 +13,9 @@ $(document).ready(function () {
         if (mPressed == 13 || mPressed == 40 || mPressed == 38) {
             var el = $(this);
             var parentRow = el.closest('div.dataRow');
-            var Inputs = $('#tableContent input');
+            var Inputs = $('#tableContent input:visible');
             var Index = Inputs.index(el);
 
-            console.log(Index);
             if (mPressed == 13 && Index == Inputs.length - 1) {
                 el.blur();
                 return false;
@@ -28,9 +27,11 @@ $(document).ready(function () {
             }
             var next = $(Inputs[Index]);
             if (parentRow.length > 0) {
+                if(!$('#not_entered').prop('checked')){
                 $('html, body').animate({
-                    scrollTop: next.offset().top -38
+                    scrollTop: next.offset().top
                 }, 300);
+                }
                 next.focus();
             } else {
                 next.focus();
