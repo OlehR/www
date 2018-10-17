@@ -5,7 +5,7 @@
     <link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="../css/fontawesome-all.css" rel="stylesheet" />
     <link href="../css/style.css" type="text/css" rel="stylesheet" />
-    <link href="../css/report.css" type="text/css" rel="stylesheet" />
+    <link href="../css/docList.css" type="text/css" rel="stylesheet" />
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/cookie.js"></script>
     <script src="config/config.js"></script>
@@ -24,7 +24,7 @@
                 <div class="collapse navbar-collapse" id="TopMenu">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="list.html">Список документів</a>
+                            <a class="nav-link" href="add_doc.html">Додати документ</a>
                         </li>
                     </ul>
                     <ul class="form-inline my-2 my-md-0 navbar-nav" href="#">
@@ -45,20 +45,6 @@
             <div class="row">
                 <div class="col-md-3 col-sm-12">
                     <div class="form-group">
-                        <select id="code_type_select" class="form-control">
-                            <option value="-1">--Виберіть кодування--</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-12">
-                    <div class="form-group">
-                        <select id="warhouse_select" class="form-control">
-                            <option value="-1">--Виберіть кодування--</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-12">
-                    <div class="form-group">
                         <div class="row">
                             <div class="col-6">
                                 <input id="date_from" class="form-control" />
@@ -67,19 +53,20 @@
                                 <input id="date_to" class="form-control" />
                             </div>
                         </div>
-                    </div>      
+                    </div>
                 </div>
                 <div class="col-md-3 col-sm-12">
                     <div class="form-group">
-                       <div class="row">
-                           <div class="col-6">
-                               <button id="import_xl" type="button" class="btn btn-block btn-primary">Імпорт XL</button>
-                               <input id="file-upload" hidden="hidden" type="file" />
-                           </div>
-                           <div class="col-6">
-                               <button id="save_doc_wares" type="button" class="btn btn-block btn-success">Зберегти</button>
-                           </div>
-                       </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <button id="load_list_doc_wares" type="button" class="btn btn-block btn-success">Отримати</button>
+                                <!--<button id="import_xl" type="button" class="btn btn-block btn-primary">Імпорт XL</button>
+                                <input id="file-upload" hidden="hidden" type="file" />-->
+                            </div>
+                            <div class="col-6">
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,7 +74,7 @@
             <div class="row">
                 <div class="col-12">
                     <div id="tableContent">
-
+                        
                     </div>
                 </div>
             </div>
@@ -130,9 +117,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div id="overlay">
-        <div class="loader"></div>
     </div>
     <script>
         if (isLogin) {

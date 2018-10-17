@@ -153,6 +153,7 @@
                 tHead += "<th>№</th>";
                 tHead += "<th>Статус</th>";
                 tHead += "<th>Склад</th>";
+                tHead += "<th>NAME_WARES_CHAR</th>";
                 tHead += "<th>Дата початку</th>";
                 tHead += "<th>Кінцева дата</th>";
                 tHead += "<th>Змінив</th>";
@@ -163,13 +164,14 @@
                 for (var i = 0; i < ListLength; i++) {
                     var link = '';
                     if (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == 0)
-                        link = '<a href="index.html?code=' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '">' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '</a>';
+                        link = '<a href="add_doc.html?code=' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '">' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '</a>';
                     else
-                        link = List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')];
+                        link = '<a href="add_doc.html?code=' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '&readOnly">' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '</a>';
                     tBody += '<tr>';
                     tBody += '<td>' + link + '</td>';
                     tBody += '<td class="status"><div class="flex">' + List[i][result.Data.InfoColumn.indexOf('NAME_STATE_DOC')] + '<div class="' + (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == 9 ? 'checked' : '') + '" title="затвердити"><input data-number="' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '" ' + (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == 9 ? 'checked' : '') + ' name="status1" type="checkbox" class="checkbox" value="9"></div><div class="' + (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == -1 ? 'checked' : '') + '" title="відмовити"><input data-number="' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '" ' + (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == -1 ? 'checked' : '') + ' name="status1" type="checkbox" class="checkbox" value="-1"></div></div></td>';
                     tBody += '<td>' + List[i][result.Data.InfoColumn.indexOf('NAME_WAREHOUSE')] + '</td>';
+                    tBody += '<td>' + List[i][result.Data.InfoColumn.indexOf('NAME_WARES_CHAR')] + '</td>';
                     tBody += '<td>' + List[i][result.Data.InfoColumn.indexOf('DATE_BEGIN')] + '</td>';
                     tBody += '<td>' + List[i][result.Data.InfoColumn.indexOf('DATE_END')] + '</td>';
                     tBody += '<td>' + List[i][result.Data.InfoColumn.indexOf('NAME_USER_CHANGE')] + '</td>';
@@ -223,7 +225,7 @@
         });
 
     },
-    getListByCode: function (code) {
+    getListByCode: function (code, readOnly) {
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 34;
@@ -244,6 +246,10 @@
                 $('#warhouse_select').val(result.Head.CODEWAREHOUSE);
                 $('#date_from').val(result.Head.DATEBEGIN.replace(/\./g,'-'));
                 $('#date_to').val(result.Head.DATEEND.replace(/\./g, '-'));
+                if (readOnly === 'readOnly') {
+                    $('#code_type_select, #warhouse_select, #date_from, #date_to').prop('readonly', true);
+                    $('#import_xl, #save_doc_wares').click(function () { return false;});
+                }
                 Monitoring.renderDoc(result);
 
             },
@@ -279,11 +285,12 @@
     init: function () {
         if (window.isLogin) {
             var code = REQUEST.getField('code');
+            var readOnly = REQUEST.getField('readOnly');
             this.getListWares(true);
             if (typeof code != typeof undefined) {
                 Monitoring.codeDoc = code;
                 setTimeout(function () {
-                    Monitoring.getListByCode(Monitoring.codeDoc);
+                    Monitoring.getListByCode(Monitoring.codeDoc, readOnly);
                 }, 120);
             }
         }
