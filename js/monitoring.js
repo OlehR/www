@@ -1,6 +1,6 @@
 ﻿var Monitoring = {
     codeDoc:0,
-    getListWares: function () {
+    getListWares: function (withRender) {
         var obj = {};
         obj.data = {}
         obj.data.CodeData = 32;
@@ -30,6 +30,10 @@
                 }
 
                 $('#warhouse_select').html(html);
+
+                if (withRender) {
+                    Monitoring.getListByCode(Monitoring.codeDoc);
+                }
             },
             error: function () {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
@@ -163,10 +167,9 @@
                 var tBody = '<tbody>';
                 for (var i = 0; i < ListLength; i++) {
                     var link = '';
-                    if (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == 0)
+                    
                         link = '<a href="add_doc.html?code=' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '">' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '</a>';
-                    else
-                        link = '<a href="add_doc.html?code=' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '&readOnly">' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '</a>';
+                    
                     tBody += '<tr>';
                     tBody += '<td>' + link + '</td>';
                     tBody += '<td class="status"><div class="flex">' + List[i][result.Data.InfoColumn.indexOf('NAME_STATE_DOC')] + '<div class="' + (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == 9 ? 'checked' : '') + '" title="затвердити"><input data-number="' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '" ' + (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == 9 ? 'checked' : '') + ' name="status1" type="checkbox" class="checkbox" value="9"></div><div class="' + (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == -1 ? 'checked' : '') + '" title="відмовити"><input data-number="' + List[i][result.Data.InfoColumn.indexOf('CODE_DOC_WARES')] + '" ' + (List[i][result.Data.InfoColumn.indexOf('STATE_DOC')] == -1 ? 'checked' : '') + ' name="status1" type="checkbox" class="checkbox" value="-1"></div></div></td>';
@@ -225,7 +228,7 @@
         });
 
     },
-    getListByCode: function (code, readOnly) {
+    getListByCode: function (code) {
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 34;
@@ -242,15 +245,20 @@
             },
             success: function (data) {
                 var result = JSON.parse(data);
-                $('#code_type_select').val(result.Head.CODECHAR);
-                $('#warhouse_select').val(result.Head.CODEWAREHOUSE);
-                $('#date_from').val(result.Head.DATEBEGIN.replace(/\./g,'-'));
-                $('#date_to').val(result.Head.DATEEND.replace(/\./g, '-'));
-                if (readOnly === 'readOnly') {
-                    $('#code_type_select, #warhouse_select, #date_from, #date_to').prop('readonly', true);
-                    $('#import_xl, #save_doc_wares').click(function () { return false;});
+
+                if (parseInt(result.Head.STATEDOC) != 0) {
+                    $('#code_type_select, #warhouse_select, #date_from, #date_to').attr('disabled', 'disabled');
+                    $('#import_xl, #save_doc_wares, #code_type_select, #warhouse_select, #date_from, #date_to').click(function () { return false; });
                 }
+              
+               
+                    $('#code_type_select').val(result.Head.CODECHAR);
+                    $('#warhouse_select').val(result.Head.CODEWAREHOUSE);
+                    $('#date_from').val(result.Head.DATEBEGIN.replace(/\./g, '-'));
+                    $('#date_to').val(result.Head.DATEEND.replace(/\./g, '-'));
+
                 Monitoring.renderDoc(result);
+
 
             },
             error: function () {
@@ -285,13 +293,12 @@
     init: function () {
         if (window.isLogin) {
             var code = REQUEST.getField('code');
-            var readOnly = REQUEST.getField('readOnly');
-            this.getListWares(true);
             if (typeof code != typeof undefined) {
                 Monitoring.codeDoc = code;
-                setTimeout(function () {
-                    Monitoring.getListByCode(Monitoring.codeDoc, readOnly);
-                }, 120);
+                Monitoring.getListWares(true);
+            }
+            else {
+                this.getListWares();
             }
         }
         this.controlsInit();
