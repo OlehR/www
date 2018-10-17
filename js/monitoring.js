@@ -247,8 +247,7 @@
                 var result = JSON.parse(data);
 
                 if (parseInt(result.Head.STATEDOC) != 0) {
-                    $('#code_type_select, #warhouse_select, #date_from, #date_to').attr('disabled', 'disabled');
-                    $('#import_xl, #save_doc_wares, #code_type_select, #warhouse_select, #date_from, #date_to').click(function () { return false; });
+                    $('#import_xl, #save_doc_wares,#code_type_select, #warhouse_select, #date_from, #date_to').attr('disabled', 'disabled');
                 }
               
                
