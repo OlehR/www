@@ -29,7 +29,7 @@ $(document).ready(function () {
             if (parentRow.length > 0) {
                 if(!$('#not_entered').prop('checked')){
                 $('html, body').animate({
-                    scrollTop: next.offset().top
+                    scrollTop: next.offset().top -38
                 }, 300);
                 }
                 next.focus();
