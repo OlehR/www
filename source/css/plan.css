@@ -1,0 +1,16 @@
+#tableContent{
+    padding-bottom:auto;
+}
+.brand_name{
+    margin-bottom:auto;
+}
+@media (max-width: 991px){
+	.secondary-btns{
+        position:absolute;
+        right:0;
+        top:4px;
+    }
+    .nav-item{
+        text-align:center;
+    }
+}

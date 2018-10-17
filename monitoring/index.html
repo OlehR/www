@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="../css/fontawesome-all.css" rel="stylesheet" />
+    <link href="../css/style.css" type="text/css" rel="stylesheet" />
+    <link href="../css/monitoring.css" type="text/css" rel="stylesheet" />
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/cookie.js"></script>
+    <script src="config/config.js"></script>
+    <script>
+        window.isLogin = typeof Cookies.get('isLogin') != typeof undefined;
+    </script>
+</head>
+<body data-page="ConcurentsMonitoring">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#TopMenu" aria-controls="TopMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="TopMenu">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/waresDoc/list.html">Список документів</a>
+                        </li>
+                    </ul>
+                    <ul class="form-inline my-2 my-md-0 navbar-nav" href="#">
+                        <li class="nav-item active">
+                            <a id="change_password" class="nav-link" href="javascript:void(0)">Змінити пароль</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a id="logout" class="nav-link" href="javascript:void(0)">Вихід</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="secondary-btns">
+                    <ul class="navbar-nav flex-row mr-auto">
+                        <li class="nav-item active hidden-sm-up">
+                            <a id="filter_settings" class="nav-link" href="javascript:void(0)"><i class="fas fa-filter"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="">
+        <div class="container-fluid">
+            <div class="form-wrapper row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-8">
+                                <select id="concurents" class="form-control">
+                                    <option value="-1">--Конкурент--</option>
+                                </select>
+                            </div>
+                            <div class="col-4 flex">
+                                <label for="not_entered"><input checked id="not_entered" type="checkbox" class="checkbox" />невведені</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="">
+                            <select id="monitoring" class="form-control" disabled>
+                                <option value="-1">--Моніторинг--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="">
+                            <button id="save_monitoring_data" type="button" class="btn btn-block btn-success">Зберегти</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div id="tableContent">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginForm">
+        <form class="form-signin">
+            <h2 class="form-signin-heading">Зайдіть в кабінет</h2>
+            <label for="inputLogin" class="sr-only">Логин</label>
+            <input type="text" id="inputLogin" class="form-control" placeholder="Логин" required="" autofocus="" />
+            <label for="inputPassword" class="sr-only">Пароль</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="" />
+
+            <button id="loginButton" class="btn btn-lg btn-primary btn-block" type="button">Вхід</button>
+        </form>
+    </div>
+    <div id="ChangePasswordModal" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Зміна пароля</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="change_password1">Введіть новий пароль</label>
+                        <input id="change_password1" type="password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="change_password2">Новий пароль повторно</label>
+                        <input id="change_password2" type="password" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="change_password_accept" type="button" class="btn btn-primary">Змінити пароль</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Відміна</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        if (isLogin) {
+            $('#loginForm').hide();
+        }
+    </script>
+    <script src="../js/popper.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap-datepicker.js"></script>
+    <script src="../js/bootstrap-datepicker.uk.js"></script>
+    <link href="../css/datepicker/bootstrap-datepicker.css" type="text/css" rel="stylesheet" />
+    <script>
+        $('#date_from').datepicker({
+            format: 'dd-mm-yyyy',
+            language: 'uk',
+            autoclose: true
+        });
+        $('#date_from').datepicker("update", new Date());
+        $('#date_to').datepicker({
+            format: 'dd-mm-yyyy',
+            language: 'uk',
+            autoclose: true
+        });
+        $('#date_to').datepicker("update", new Date());
+    </script>
+    <script src="config/helpers.js"></script>
+    <script src="../js/monitoring.js"></script>
+    <script src="../js/user.js"></script>
+    <script>
+        if (isLogin)
+        Monitoring.mobileInit();
+    </script>
+</body>

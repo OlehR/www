@@ -1,0 +1,310 @@
+table{
+    font-size:16px;
+}
+table td, table th{
+    text-align:center;
+}
+#tableContent[data-type="order"] table td:nth-child(1), #tableContent[data-type="order"] table td:nth-child(2),
+#tableContent[data-type="order"] table th:nth-child(1), #tableContent[data-type="order"] table th:nth-child(2){
+    text-align:left;
+}
+form{
+    margin-top:1rem;
+}
+#tableContent{
+    padding-bottom:56px;
+}
+#tableContent div {
+    padding-bottom: 5px;
+    font-size: 14px;
+}
+#tableContent .col-6:last-child{
+
+}
+#tableContent .row {
+    padding-top: 15px;
+    border-bottom: 1px solid #e9ecef;
+    border-top: 1px solid #f1ecef;
+}
+    #tableContent .row:nth-of-type(odd):not(.no_bg_style) {
+        background-color: rgba(0,0,0,.05);
+    }
+#info {
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+    color: #fff;
+    display:none;
+}
+.desctopInfo{
+    bottom:0;
+    left:0;
+    height:56px;
+}
+.mobileInfo {
+    top: 38px;
+    left: 0;
+    height: 120px;
+    overflow:scroll;
+}
+#loginForm {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #eee;
+    align-items: center;
+    display: flex;
+    z-index:1000;
+}
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+    font-weight: 400;
+}
+
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom:10px;
+}
+
+    .form-signin .form-control:focus {
+        z-index: 2;
+    }
+
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+	margin: 0 auto;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.navbar{
+    padding:0;
+}
+.table td, .table th{
+    padding:1px 5px;
+}
+#tableContent[data-type="order"] .table th {
+    max-width: 71px;
+}
+    #tableContent[data-type="order"] .table th:nth-child(11) {
+        max-width: 50px;
+    }
+    #tableContent[data-type="order"] .table th:nth-child(10) {
+        max-width: 56px;
+    }
+    #tableContent[data-type="order"] .table th:nth-child(13) {
+        width: 84px;
+    }
+    #tableContent[data-type="order"] .table th:nth-child(14) {
+        max-width: 58px;
+    }
+    #tableContent[data-type="order"] .table th:last-child {
+        width: 96px;
+    }
+    .table td input, .table th input {
+        padding:3px 5px;
+        max-width:86px;
+        margin:0 auto;
+    }
+.col-4 {
+    padding-right: 0;
+}
+.col-8{
+    padding:0;
+}
+
+#sort_by_title, #sort_by_brand{
+    cursor:pointer;
+}
+.date-delivery-col{
+    padding-left:15px;
+    margin-bottom: 1rem;
+}
+#stateOrderWrapper{
+    display:none;
+}
+.custom-combobox {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+}
+
+.custom-combobox-input {
+    margin: 0;
+    padding: 5px 10px;
+    width:100%;
+}
+.ui-widget.GP{
+    display:none;
+}
+#add_order{
+    display:none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+.clickable-row{
+    cursor:pointer;
+}
+#print_doc{
+    display:none;
+}
+.secondary-btns {
+  float: left;
+  padding: 0 15px;
+}
+#render_settings_bar{
+    background:#fff;
+    position:fixed;
+    right:0;
+    top:0;
+    z-index:99;
+    min-width:480px;
+    height:100%;
+    overflow-y:scroll;
+    display:none;
+}
+#render_settings_bar td, #render_settings_bar th{
+    vertical-align:middle;
+    width:25%;
+}
+.brand_name{
+    margin-bottom:15px;
+}
+@media (max-width: 991px){
+    #render_settings_bar{
+        width:100%;
+        position:fixed;
+        height:100%;
+        min-width:unset;
+        overflow-y:scroll;
+    }
+    .secondary-btns{
+        position:absolute;
+        right:0;
+        top:4px;
+    }
+    .nav-item{
+        text-align:center;
+    }
+    .navbar-nav.flex-row{
+      flex-direction:row;
+  }
+    .navbar-nav.flex-row li:first-child{
+        margin-right:10px;
+    }
+    .navbar-nav.flex-row li:last-child{
+        margin-right:0;
+    }
+}
+@media (min-width: 767px) {
+  .hidden-sm-up {
+    display: none !important;
+  }
+  #orderHeader{
+      padding-top:48px;
+  }
+}
+#HistoryModal .modal-dialog{
+    min-width:600px;
+}
+@media (max-width: 767px) {
+  .hidden-sm-down {
+    display: none !important;
+  }
+  #HistoryModal .modal-dialog{
+    min-width:300px;
+}
+  #HistoryModal .modal-body{
+      min-width:300px;
+    overflow-x: scroll;
+}
+}
+
+ body{
+        padding-top:40px;
+    }
+header{
+        position:fixed;
+        top:0;
+        right:0;
+        width:100%;
+        z-index:99;
+    }
+#filters{
+    position:fixed;
+    top:38px;
+    background:#fff;
+    z-index:79;
+    padding-top:1rem;
+    width:100%;
+}
+#send_mail_start{
+    display:none;
+}
+.flex{
+    display:flex;
+    align-items:center;
+}
+#not_entered{
+    margin-right:2px;
+    position:relative;
+    top:2px;
+}
+.clearfix{
+    width:100%;
+    clear:both;
+}
