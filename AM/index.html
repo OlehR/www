@@ -2,18 +2,19 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-    <link href="css/fontawesome-all.css" rel="stylesheet" />
-    <link href="css/style.css" type="text/css" rel="stylesheet" />
-    <link href="css/dragtable-default.css" type="text/css" rel="stylesheet" />
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/cookie.js"></script>
-    <script src="js/config.js"></script>
+    <link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="../css/fontawesome-all.css" rel="stylesheet" />
+    <link href="../css/style.css" type="text/css" rel="stylesheet" />
+    <link href="../css/am.css" type="text/css" rel="stylesheet" />
+    <link href="../css/dragtable-default.css" type="text/css" rel="stylesheet" />
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/cookie.js"></script>
+    <script src="config/config.js"></script>
     <script>
         window.isLogin = typeof Cookies.get('isLogin') != typeof undefined;
     </script>
 </head>
-<body>
+<body data-page="AM">
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container-fluid">
@@ -171,11 +172,11 @@ Code,Code,3,9,15,22,57,68
             $('#loginForm').hide();
         }
     </script>
-<script src="js/popper.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/helpers.js"></script>
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/jquery.dragtable.js"></script>
+<script src="../js/popper.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="config/helpers.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.dragtable.js"></script>
     <script>
         $(function () {
             $.widget("custom.combobox", {
@@ -322,6 +323,6 @@ Code,Code,3,9,15,22,57,68
             });
         });
     </script>
-<script src="js/am_matrix.js"></script>
-<script src="js/user.js"></script>
+<script src="../js/am_matrix.js"></script>
+<script src="../js/user.js"></script>
 </body>
