@@ -370,7 +370,7 @@
                 for (var i = 0; i < arrLen; i++) {
                     html += '<div id="' + arr[i][0] + '" class="row dataRow" ' + (parseInt(arr[i][2]) != 0 && $('#not_entered').prop('checked') ? 'style="display: none;"' : '') + '>';
                     html += '<div class="col-8">' + arr[i][1] + '</div>';
-                    html += '<div class="col-4"><input type="number" class="form-control" data-old="' + arr[i][2] + '" value="' + arr[i][2] + '"/></div>';
+                    html += '<div class="col-4"><input type="number" class="form-control" value="' + arr[i][2] + '"/></div>';
                     html += '</div>';
                 }
 
@@ -389,14 +389,10 @@
     },
     onBlur: function () {
         var el = $(this);
-        if ($('#not_entered').prop('checked'))
-            el.closest('.dataRow').css('display', 'none');
+        if (parseInt(el.val()) != 0 && $('#not_entered').prop('checked'))
+            el.closest('.dataRow').css('display', 'none').attr('is-changed', 'true');
         else
-            el.closest('.dataRow').css('display', 'flex');
-
-        if (el.val() != el.attr('data-old')) {
-            el.closest('.dataRow').attr('is-changed', 'true');
-        }
+            el.closest('.dataRow').css('display', 'flex').removeAttr('is-changed');
     },
     changeDisplayMonitoringItems: function () {
         if (!$('#not_entered').prop('checked')) {
@@ -431,7 +427,7 @@
 
         items.each(function () {
             var el = $(this);
-            obj.data.Data.push([el.attr('id'), el.find('input').val().replace(/,/g, '.')]);
+            obj.data.Data.push([el.attr('id'),el.find('input').val()]);
         });
 
         obj.data = JSON.stringify(obj.data);
@@ -449,7 +445,6 @@
 
                 if (parseInt(result.State) == 1) {
                     alert('Дані успішно збережено!');
-                    Monitoring.getDataMonitoring();
                 } else {
                     alert('Помилка: ' + result.TextError);
                 }

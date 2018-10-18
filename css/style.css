@@ -308,3 +308,6 @@ header{
     width:100%;
     clear:both;
 }
+.table-info, .table-info>td, .table-info>th {
+    background-color: #bee5eb;
+}

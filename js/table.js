@@ -886,7 +886,7 @@ var Table = {
     if (el.val() != '' && !el.prop('readonly'))
         el.attr('data-old', el.val());
     var row = el.closest('.dataRow');
-    row.addClass('table-warning');
+    row.addClass('table-info');
     var rowIndex = parseInt(row.attr('rowIndex'));
     Table.globalCurrentRow = rowIndex;
     var infoContent = '<div class="row"><div class="col-12">';
@@ -909,7 +909,7 @@ var Table = {
     onBlur: function () {
         var el = $(this);
         var row = el.closest('.dataRow');
-        row.removeClass('table-warning');
+        row.removeClass('table-info');
         if (el.attr('data-old') != el.val() && el.val() != '') {
             row.attr('data-is-change', 'true');
         } else {

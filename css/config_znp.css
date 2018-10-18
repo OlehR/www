@@ -2,14 +2,14 @@
     padding-top:52px;
     padding-bottom:56px;
 }
-#tableContentChecker div.row > div {
+#tableContent div.row > div {
     font-size: 13px;
 	padding-bottom: auto;
 }
-#tableContentChecker th{
+#tableContent th{
     position:relative;
 }
-#tableContentChecker .thead{
+#tableContent .thead{
     position:fixed;
     margin-top:-2px;
     margin-left: -5px;
@@ -17,19 +17,19 @@
     background:#fff;
     z-index:10;
 }
-#tableContentChecker .form-control{
+#tableContent .form-control{
     display:inline-block;
 }
-#tableContentChecker .table .status{
+#tableContent .table .status{
     vertical-align:middle;
 }
-#tableContentChecker .table .status input{
+#tableContent .table .status input{
     cursor:pointer;
 }
-#tableContentChecker .table .status input:first-child{
+#tableContent .table .status input:first-child{
     margin-right:5px;
 }
-#tableContentChecker .table .status input:first-child:before{
+#tableContent .table .status input:first-child:before{
     content: "\221A";
     position: absolute;
     width: 15px;
@@ -44,10 +44,10 @@
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
 }
-#tableContentChecker .table .status input:last-child{
+#tableContent .table .status input:last-child{
     margin-left:5px;
 }
-#tableContentChecker .table .status input:last-child:before{
+#tableContent .table .status input:last-child:before{
     content: "\00d7";
     position: absolute;
     width: 15px;
@@ -63,7 +63,7 @@
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
 }
-#tableContentChecker .table .status input:checked:before, #tableContentChecker .table .status input:hover:before{
+#tableContent .table .status input:checked:before, #tableContent .table .status input:hover:before{
     -webkit-filter: grayscale(0%);
     filter: grayscale(0%);
 }
@@ -140,7 +140,7 @@ ul {
     width:calc(100% - 10px);
     overflow:hidden;
 }
-#tableContentChecker h7{
+#tableContent h7{
     font-size: 12px;
     font-weight: 500;
 }
@@ -156,7 +156,7 @@ ul {
 #sidebar{
     display:flex;
     align-items:center;
-    min-height: calc(100vh - 87px);
+    min-height: calc(100vh - 40px);
     flex-direction: column;
     border-right:2px solid #007bff;
 }
@@ -168,7 +168,7 @@ ul {
     width:100%;
 }
 #brand_menu{
-    height:calc(100vh - 4.5rem - 198px);
+    height:calc(100vh - 4.5rem - 151px);
     overflow-y:auto;
     margin:0;
     padding:0;
@@ -209,8 +209,8 @@ ul {
 .ui-helper-hidden-accessible{
     display:none;
 }
-#tableContentChecker{
-    height:calc(100vh - 127px);
+#tableContent{
+    height:calc(100vh - 80px);
     overflow-y:auto;
 }
 #select_all{
@@ -228,39 +228,4 @@ ul {
     display: flex;
     align-items: center;
     display:none;
-}
-body[data-page="ConfigZNP"] .nav-tabs{
-    width:100%;
-    margin-top:5px;
-}
-
-#tableContentDelivery{
-    width:100%;
-    height:calc(100vh - 186px);
-    overflow-y:auto;
-    margin-top:5px;
-}
-#tableContentDelivery th{
-    background:#fff;
-    border: 1px solid #e9ecef;
-    z-index: 5;
-    position: relative;
-}
-#tableContentDelivery th:before{
-    content:"";
-    position:absolute;
-    background:#e9ecef;
-    width:100%;
-    height:1px;
-    top:-1px;
-    left:0;
-}
-#tableContentDelivery th:after{
-    content:"";
-    position:absolute;
-    background:#e9ecef;
-    width:100%;
-    height:1px;
-    bottom:-1px;
-    left:0;
 }
