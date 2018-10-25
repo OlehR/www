@@ -36,31 +36,73 @@ var Report = {
                     }
                     return -1;
                 };
+                Report.JSON.ReportParam.__proto__.findParamByParName = function (name) {
+                    for (var i = 0; i < this.length; i++) {
+                        if (this[i][1] == name) {
+                            return this[i];
+                        }
+                    }
+                    return -1;
+                };
             },
             error: function () {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
             }
         });
     },
+    renderListParam: function (param) {
+        var lable = '<label for="'+param[1]+'" class="col-sm-4">'+param[3]+':</label>';
+        var list = '<div class="col-sm-8"><select id="' + param[1] + '" name="' + param[1] + '" class="form-control param-list"></select></div>';
+        $('#param_container').before('<div class="col-sm-3 col-xs-12"><div class="form-group"><div class="row">' + lable + list + '</div></div></div>');
+        Report.getParamList(param);
+    },
+    renderDateParam: function (param) {
+        var label = '<label for="' + param[1] + '" class="col-sm-4">' + param[3] + ':</label>';
+        var input = '<div class="col-sm-8"><input id="' + param[1] + '" name="' + param[1] + '" class="form-control param-date" /></div>';
+        $('#param_container').before('<div class="col-sm-3 col-xs-12"><div class="form-group"><div class="row">' + label + input + '</div></div></div>');
+        $('#' + param[1]).datepicker({
+            format: 'dd-mm-yyyy',
+            language: 'uk',
+            autoclose: true
+        });
+        $('#' + param[1]).datepicker("update", new Date());
+    },
+    renderParam: function (paramArr) {
+        var arrLen = paramArr.length;
+        for (var i = 0; i < arrLen; i++) {
+            
+            var par = Report.JSON.ReportParam.findParamByParName(paramArr[i]);
+            console.log(par);
+            switch (par[2]) {
+                case 'list':
+                    Report.renderListParam(par);
+                    break;
+                case 'date':
+                    Report.renderDateParam(par);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    },
     selectReport: function () {
+        $('.param-list, .param-date').closest('.col-sm-3').remove();
         $('#export_to_csv').css('display', 'none');
         var el = $(this);
         var val = parseInt(el.val());
         Report.CurRP = val;
+
         if (val == -1) {
-            $('#reports_date_begin_container, #reports_date_end_container, #reports_list_select_container, #run_container').css('display', 'none');
+            $('#run_container').css('display', 'none');
         } else {
             var report = Report.JSON.Report.findReportById(val);
-            switch (report[2]) {
-                case "":
-                    Report.noParamReport();
-                    break;
-                case "code_firm":
-                    Report.getListReport();
-                    break;
-                case "date_begin,date_end":
-                    Report.getDateReport();
-                    break;
+            console.log(report);
+            if (report[2] == "") {
+                Report.noParamReport();
+            } else {
+                var repArr = report[2].split(',');
+                Report.renderParam(repArr);
             }
             $('#run_container').css('display', 'block');
         }
@@ -80,11 +122,11 @@ var Report = {
         $('#reports_date_begin_container, #reports_date_end_container').css('display', 'block');
         $('#run').prop('disabled', false);
     },
-    getParamList: function () {
+    getParamList: function (param) {
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 21;
-        obj.data.ParamName = "code_firm";
+        obj.data.ParamName = param[1];
         obj.data = JSON.stringify(obj.data);
 
         $.ajax({
@@ -98,18 +140,18 @@ var Report = {
                 var rJSON = JSON.parse(data);
                 console.log(rJSON);
 
-                var options = '<option value="-1">--Пошук--</option>';
+                var options = '<option value="-1"></option>';
                 var arr = rJSON.LispParam;
                 var arrLen = arr.length;
 
                 for (var i = 0; i < arrLen; i++) {
                     options += '<option value="' + arr[i][0] + '">' + arr[i][1] + '</option>';
                 }
-                $('#reports_list_select').html(options);
-                $("#reports_list_select").combobox({
+                $('#'+param[1]).html(options);
+                $('#' + param[1]).combobox({
                     change: Report.selectGP
                 });
-                $('#reports_list_select_container').css('display', 'block');
+                
             },
             error: function () {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
@@ -117,10 +159,11 @@ var Report = {
         });
     },
     executeReports: function () {
-        if ($('#reports_list_select_container').css('display') != 'none')
-            Report.Param = [[$('#reports_list_select').attr('name'), $('#reports_list_select').val()]];
-        if ($('#reports_date_begin_container').css('display') != 'none' && $('#reports_date_end_container').css('display') != 'none')
-            Report.Param = [['date_begin', $('#reports_date_begin').val()], ['date_end', $('#reports_date_end').val()]];
+        Report.Param = [];
+        $('.param-list, .param-date').each(function () {
+            var el = $(this);
+            Report.Param.push([el.attr('id'), el.val()]);
+        });
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 22;

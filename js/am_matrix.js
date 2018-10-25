@@ -314,11 +314,9 @@ var AMatrix = {
 
         var reader = new FileReader();
         reader.onloadstart = function (event) {
-            $('#import_xl').html('<div class="loader loader-adaptive"></div>');
         };
         reader.onload = function (event) {
             AMatrix.getAM(-1, -1, -1, event.target.result);
-            $('#import_xl').html('CSV');
         };
         reader.onerror = function (event) {
             alert("Сталася помилка: " + event.target.error.code);
