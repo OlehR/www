@@ -334,7 +334,7 @@ var AMatrix = {
             e.stopPropagation();
             $('#import_xl').prop('disabled',true);
             $('#file-upload').click();
-            false;
+            return false;
         });
         $('#file-upload').change(AMatrix.importXL);
         $('#tableContent').on('click', '.status div > div:not(.st_all)', function () {
@@ -453,5 +453,7 @@ var AMatrix = {
 }
 
 $(document).ready(function () {
-    AMatrix.init();
+    if (window.isLogin) {
+        AMatrix.init();
+    }
 });
