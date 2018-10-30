@@ -306,11 +306,14 @@ var AMatrix = {
             }
         });
     },
-    importXL: function () {
+    importXL: function (e) {
+        e.stopPropagation();
         $input = $(this);
         var inputFiles = this.files;
-        if (inputFiles == undefined || inputFiles.length == 0) return;
+        if (typeof inputFiles === typeof undefined || inputFiles.length === 0) return;
         var inputFile = inputFiles[0];
+
+        console.log(inputFiles);
 
         var reader = new FileReader();
         reader.onloadstart = function (event) {
@@ -323,10 +326,15 @@ var AMatrix = {
         };
         reader.readAsText(inputFile);
 
+        $('#import_xl').prop('disabled', false);
+        return false;
     },
     controlsInit: function () {
-        $('#import_xl').click(function () {
+        $('#import_xl').click(function (e) {
+            e.stopPropagation();
+            $('#import_xl').prop('disabled',true);
             $('#file-upload').click();
+            false;
         });
         $('#file-upload').change(AMatrix.importXL);
         $('#tableContent').on('click', '.status div > div:not(.st_all)', function () {
