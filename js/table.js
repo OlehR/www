@@ -228,12 +228,14 @@ var Table = {
             } else {
                 Table.renderDesctopOrders();
             }
-            $("html, body").animate({
-                scrollTop: ($('#' + REQUEST.getField('last_order')).offset().top -110 )+ "px"
-            }, {
-                duration: 500,
-                easing: "swing"
-            });
+            if (typeof REQUEST.getField('last_order') != typeof undefined) {
+                $("html, body").animate({
+                    scrollTop: ($('#' + REQUEST.getField('last_order')).offset().top - 110) + "px"
+                }, {
+                    duration: 500,
+                    easing: "swing"
+                });
+            }
         } else {
 
             var renderSettings = Cookies.get('renderSettings');
@@ -1180,12 +1182,21 @@ var Table = {
             success: function (data) {
                 if (JSON.parse(data).TextError == "Ok") {
                     alert('Дані успішно збережено.');
+
+                    console.log(parseInt($('#stateOrder').val()));
+                    if (parseInt($('#stateOrder').val()) == -1) {
+                        location.href = '/znp/';
+                        return;
+                    }
+
                     $('#send_mail_addr').val(Table.JSON.OrderHead.GROUP_EMAIL);
                     var sendmail = false;
                     if (Table.StateOrder == 0 && parseInt($('#stateOrder').val()) == 1) {
                         sendmail = true;
                     }
-					Table.getData(true, sendmail);
+
+                    Table.getData(true, sendmail);
+
                 } else {
                     alert(JSON.parse(data).TextError);
                     Table.getData(true);
