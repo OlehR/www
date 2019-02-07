@@ -228,7 +228,7 @@ var Table = {
             } else {
                 Table.renderDesctopOrders();
             }
-            if (typeof REQUEST.getField('last_order') != typeof undefined) {
+            if (typeof REQUEST.getField('last_order') != typeof undefined && typeof $('#' + REQUEST.getField('last_order')) != typeof undefined) {
                 $("html, body").animate({
                     scrollTop: ($('#' + REQUEST.getField('last_order')).offset().top - 110) + "px"
                 }, {
@@ -270,7 +270,7 @@ var Table = {
         var arr = Table.JSON.OrderDetail.Data;
         var table = '';
         for (var i = 0; i < arrLength; i += 1) {
-            table += '<div class="row clickable-row ' + (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] == 2 ? 'table-warning' : '') + '" data-href="order.html?order=' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '" data-order="' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '">';
+            table += '<div id="' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '" class="row clickable-row ' + (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] == 2 ? 'table-warning' : '') + '" data-href="order.html?order=' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '" data-order="' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NUMBER_ORDER_SUPPLY')] + '">';
             switch (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')]) {
                 case 0:
                     mark = "*";
@@ -1144,7 +1144,7 @@ var Table = {
         for (var i = 0; i < rows.length; i++){
             item = [];
             if (isMobile) {
-                item.push($($(rows[i]).find('div:first-child + div')[0]).html());
+                item.push($($(rows[i]).find('#sort_by_brand + div')[0]).html());
                 item.push($($(rows[i]).find('div.orderCount input')[0]).val());
             } else {
                 item.push($($(rows[i]).find('td')[0]).html());
@@ -1157,7 +1157,7 @@ var Table = {
         Data.data.DATA = items;
         Data.CodeData = 7;
         Data.data.Order = REQUEST.getField('order');
-        Data.data.StateOrder = 1;
+        Data.data.StateOrder = 0;
         if ($('#stateOrderWrapper').is(':visible')) {
             Data.data.StateOrder = $('#stateOrder').val();
         }
