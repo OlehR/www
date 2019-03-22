@@ -1,24 +1,26 @@
-﻿var Plane = {
+var Plane = {
     JSON:{},
     Data: {
-        warehouse: -1,
+        CodeWarehouse: -1,
         CodeGroupWares: -1,
         CodeMonth: -1,
         CodeData:102
     },
     getWarhouses: function () {
-        var data = {};
-        data.CodeData = 101;
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 101;
+        obj.data = JSON.stringify(obj.data);
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: data,
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 if (typeof result.Warehouse != typeof undefined) {
                     var arrLength = result.Warehouse.Data.length;
                     var options = '<option value="-1">--Вибрати ТЗ--</option>';
@@ -43,7 +45,7 @@
         });
     },
     selectWarehouse: function () {
-        Plane.Data.warehouse = parseInt($("#warehouse").val());
+        Plane.Data.CodeWarehouse = parseInt($("#warehouse").val());
 
         if (Plane.checkWaresSelected()) {
             Plane.getPlane();
@@ -61,12 +63,12 @@
         var dataArr = $('#date').val().split("-");
         Plane.Data.CodeMonth = dataArr[1] + '' + dataArr[0];
 
-        if (Plane.Data.warehouse == -1 && Plane.Data.CodeGroupWares == -1) {
+        if (Plane.Data.CodeWarehouse == -1 && Plane.Data.CodeGroupWares == -1) {
             $("#tableContent").html('<h1 class="text-center">Виберіть торговий зал і групу постачання.</h1>');
             return false;
         }
 
-        if (Plane.Data.warehouse == -1) {
+        if (Plane.Data.CodeWarehouse == -1) {
             $("#tableContent").html('<h1 class="text-center">Виберіть торговий зал.</h1>');
             return false;
         }
@@ -81,16 +83,18 @@
     getPlane: function () {
         $("#tableContent").html('<div class="loader"></div>');
 
+        var obj = {};
+        obj.data = JSON.stringify(Plane.Data);
+
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: Plane.Data,
+            data:obj,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
-                Plane.JSON = JSON.parse(data);
-                console.log(Plane.JSON);
+                Plane.JSON = data;
                 Plane.renderTable();
             },
             error: function () {
@@ -209,19 +213,21 @@
         }
 
         console.log(JsonSend);
-        JsonSend.data = JSON.stringify(JsonSend);
         JsonSend.CodeData = 103;
+
+        var obj = {};
+        obj.data = JSON.stringify(JsonSend);
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: JsonSend,
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
-                if (result.TextError == "Ok") {
+                var result = data;
+                if (result.TextError === "Ok") {
                     alert('Дані успінео збережені');
                 }else {
                     alert(result.TextError);
