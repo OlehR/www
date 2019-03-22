@@ -1,6 +1,6 @@
 var AMatrix = {
     JSON: {},
-    prevSort:-2,
+    prevSort: -2,
     getData: function () {
         var obj = {};
         obj.data = {};
@@ -49,30 +49,30 @@ var AMatrix = {
 
         var tree = $('<ul>').addClass('tree');
         tree.append(
-          items.map(
-            function (el) {
-                var li = $('<li>').append(
-                    $('<a>').html(el[2])
-                  );
-                  nestedTree = AMatrix.createTree(data, el[0]);
+            items.map(
+                function (el) {
+                    var li = $('<li>').append(
+                        $('<a>').html(el[2])
+                    );
+                    nestedTree = AMatrix.createTree(data, el[0]);
 
-                  if (nestedTree !== null) {
-                      var hashCode = nestedTree.html().toString().hashCode();
-                      nestedTree.addClass('collapse panel-collapse')
-                      .attr('id', hashCode);
-                      li.find('a')
-                        .attr('href', '#' + hashCode)
-                        .attr('data-toggle', 'collapse')
-                        .attr('aria-controls', hashCode)
-                        .attr('role', 'menuitem')
-                        .html(el[2] + '&nbsp;<i class="fas fa-chevron-down"></i>');
-                      li.append(nestedTree).attr('role', 'presentation').addClass('have-child');
-                  } else {
-                      li.find('a').attr('data-warhause_code', el[0]).addClass('last_child_warhause');
-                  }
-                return li;
-            }
-          )
+                    if (nestedTree !== null) {
+                        var hashCode = nestedTree.html().toString().hashCode();
+                        nestedTree.addClass('collapse panel-collapse')
+                            .attr('id', hashCode);
+                        li.find('a')
+                            .attr('href', '#' + hashCode)
+                            .attr('data-toggle', 'collapse')
+                            .attr('aria-controls', hashCode)
+                            .attr('role', 'menuitem')
+                            .html(el[2] + '&nbsp;<i class="fas fa-chevron-down"></i>');
+                        li.append(nestedTree).attr('role', 'presentation').addClass('have-child');
+                    } else {
+                        li.find('a').attr('data-warhause_code', el[0]).addClass('last_child_warhause');
+                    }
+                    return li;
+                }
+            )
         );
         return tree;
     },
@@ -127,23 +127,35 @@ var AMatrix = {
         var arrLenth = columnTitles.length;
         var tableSort = Cookies.get('tableSort');
         if (typeof tableSort == typeof undefined) {
-            tableSort = [1,3,2,4];
+            tableSort = [1, 3, 2, 4];
             for (var k = 4; k < columnTitles.length + 5; k++) {
-                tableSort.push(k+1);
+                tableSort.push(k + 1);
             }
             Cookies.set('tableSort', tableSort, { expires: 9999 });
         } else {
             tableSort = JSON.parse(tableSort);
         }
-        
+
+        var WaresIsVisible = Cookies.get('WaresIsVisible');
+        if (typeof WaresIsVisible == typeof undefined) {
+            WaresIsVisible = [];
+            console.log(columnTitles);
+            for (var k = 0; k < columnTitles.length; k++) {
+                WaresIsVisible.push([columnTitles[k][0], 1]);
+            }
+            Cookies.set('WaresIsVisible', WaresIsVisible, { expires: 9999 });
+        } else {
+            WaresIsVisible = JSON.parse(WaresIsVisible);
+        }
+
         var tHead = '<thead>';
 
         tHead += '<tr>';
         tHead += '<th data-header="1" class="text-center dragtable-drag-boundary"><div class="thead">код</div>код</th>';
         tHead += '<th data-header="2" class="text-center dragtable-drag-boundary"><div class="thead">назва</div>назва</th>';
         tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead">ст. код</div>ст. код</th>';
-        tHead += '<th data-header="4" class="text-center dragtable-drag-boundary"><div class="thead status status_all"><div class="clearfix">зат. </div><div class="flex"><div class="'+ readOnly + ' st_all"><input ' + readOnly + ' name="status" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class="' + readOnly + ' st_all"><input ' + readOnly + ' name="status" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></div></div>ст. код</th>';
-        for (var i = 0; i < arrLenth; i++){
+        tHead += '<th data-header="4" class="text-center dragtable-drag-boundary"><div class="thead status status_all"><div class="clearfix">зат. </div><div class="flex"><div class="' + readOnly + ' st_all"><input ' + readOnly + ' name="status" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class="' + readOnly + ' st_all"><input ' + readOnly + ' name="status" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></div></div>ст. код</th>';
+        for (var i = 0; i < arrLenth; i++) {
             tHead += '<th data-ewh="' + columnTitles[i][0] + '" data-header="' + (i + 5) + '" class="text-center dragtable-drag-handle"><div class="thead">' + columnTitles[i][1] + '</div>' + columnTitles[i][1] + '</th>';
         }
         tHead += '</tr>';
@@ -178,12 +190,12 @@ var AMatrix = {
                 if (isEWH) {
                     var colnumber = AMatrix.JSON.Data.InfoColumn[i].split(/_/)[1];
                     var colIndex = 0;
-                    for (var t = 0; t < AMatrix.JSON.Warehouse.length; t++){
+                    for (var t = 0; t < AMatrix.JSON.Warehouse.length; t++) {
                         if (AMatrix.JSON.Warehouse[t][0] == parseInt(colnumber)) {
                             colIndex = t + 5;
                         }
                     }
-                    Catch.push(Data[j][i],colIndex);
+                    Catch.push(Data[j][i], colIndex);
                 }
                 var reg3 = new RegExp('^DWH', 'i');
                 var isDWH = reg3.test(AMatrix.JSON.Data.InfoColumn[i]);
@@ -235,13 +247,30 @@ var AMatrix = {
         $('#tableContent table').dragtable();
         $('#tableContent table .thead').each(function () {
             var el = $(this);
-            el.width(el.closest('th').outerWidth()-2);
-            el.height(el.closest('th').outerHeight()-2);
+            el.width(el.closest('th').outerWidth() - 2);
+            el.height(el.closest('th').outerHeight() - 2);
         });
         $('#tableContent table').dragtable('order', tableSort);
 
+        var renderSettings = '';
+        for (var j = 0; j < WaresIsVisible.length; j++) {
+            renderSettings += '<tr>';
+            renderSettings += '<td>' + columnTitles[j][1] + '</td>';
+            renderSettings += '<td><input data-field-code="' + WaresIsVisible[j][0] + '" class="rnd_setting_control" type="radio" name="rnd_setting_' + WaresIsVisible[j][0] + '" value="1"  ' + (WaresIsVisible[j][1] == 1 ? 'checked' : '') + '/></td>';
+            renderSettings += '<td><input data-field-code="' + WaresIsVisible[j][0] + '" class="rnd_setting_control" type="radio" name="rnd_setting_' + WaresIsVisible[j][0] + '" value="0"  ' + (WaresIsVisible[j][1] == 0 ? 'checked' : '') + '/></td>';
+            renderSettings += '<tr>';
+
+            if (WaresIsVisible[j][1] == 0) {
+                var colIndex = $('#tableContent th').index($('#tableContent th[data-ewh="' + WaresIsVisible[j][0] + '"]'));
+                console.log(colIndex);
+                $('#tableContent th, #tableContent td').eq(colIndex).hide();
+            }
+        }
+
+        $('#render_settings_bar tbody').html(renderSettings);
+
     },
-    onFocus: function(el){
+    onFocus: function (el) {
         $(el).select();
     },
     saveAM: function () {
@@ -258,7 +287,7 @@ var AMatrix = {
             return;
         }
 
-        for (var j = 4; j < titles.length; j++){
+        for (var j = 4; j < titles.length; j++) {
             obj.data.Warehouse.push($(titles[j]).data('ewh'));
         }
 
@@ -329,10 +358,31 @@ var AMatrix = {
         $('#import_xl').prop('disabled', false);
         return false;
     },
+    hideOrShowWarehouse: function () {
+        var el = $(this);
+        var ware = el.attr('data-field-code');
+        var WaresIsVisible = JSON.parse(Cookies.get('WaresIsVisible'));
+
+        for (var i = 0; i < WaresIsVisible.length; i++) {
+            console.log(ware);
+            console.log(WaresIsVisible[i][0]);
+            if (WaresIsVisible[i][0] == ware) {
+                WaresIsVisible[i][1] = el.val();
+            }
+        }
+
+        Cookies.set('WaresIsVisible', WaresIsVisible, { expires: 9999 });
+
+        AMatrix.renderAM();
+    },
     controlsInit: function () {
+        $('#render_settings_bar').on('change', '.rnd_setting_control', AMatrix.hideOrShowWarehouse);
+        $('#render_settings, .close_render_settings').click(function () {
+            $('#render_settings_bar').toggle(300);
+        });
         $('#import_xl').click(function (e) {
             e.stopPropagation();
-            $('#import_xl').prop('disabled',true);
+            $('#import_xl').prop('disabled', true);
             $('#file-upload').click();
             return false;
         });
@@ -445,12 +495,12 @@ var AMatrix = {
         $('#saveAM').click(AMatrix.saveAM);
     },
     init: function () {
-        if (window.isLogin){
+        if (window.isLogin) {
             AMatrix.getData();
         }
         this.controlsInit();
     }
-}
+};
 
 $(document).ready(function () {
     if (window.isLogin) {
