@@ -15,7 +15,7 @@ var AMatrix = {
                 withCredentials: true
             },
             success: function (data) {
-                AMatrix.JSON = JSON.parse(data);
+                AMatrix.JSON = data;
                 if (typeof AMatrix.JSON.GroupWares != typeof undefined) {
                     var tree = AMatrix.createTree(AMatrix.JSON.GroupWares);
                     $('#Warehouse li').html(tree);
@@ -108,7 +108,7 @@ var AMatrix = {
                 withCredentials: true
             },
             success: function (data) {
-                AMatrix.JSON = JSON.parse(data);
+                AMatrix.JSON = data;
                 console.log(AMatrix.JSON);
                 AMatrix.renderAM();
             },
@@ -263,9 +263,12 @@ var AMatrix = {
             if (WaresIsVisible[j][1] == 0) {
                 var colIndex = $('#tableContent th').index($('#tableContent th[data-ewh="' + WaresIsVisible[j][0] + '"]'));
                 console.log(colIndex);
-                $('#tableContent th, #tableContent td').eq(colIndex).hide();
+                $('#tableContent th').eq(colIndex).hide();
+                $('#tableContent td:nth-child(' + (colIndex+1) +')').hide();
             }
         }
+
+        $('#tableContent').scroll();
 
         $('#render_settings_bar tbody').html(renderSettings);
 
@@ -322,7 +325,7 @@ var AMatrix = {
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 console.log(result);
                 if (result.TextError == "Ok") {
                     alert('Данні успішно збережено!');
@@ -375,7 +378,28 @@ var AMatrix = {
 
         AMatrix.renderAM();
     },
+    clearAm: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 113;
+        obj.data.Warehouse = [];
+        obj.data.Wares = [];
+
+        var warehouses = $('#tableContent th[data-ewh]:visible');
+        var wares = $('#tableContent tbody tr:not([class="text-left"])');
+
+        warehouses.each(function () {
+            obj.data.Warehouse.push($(this).attr('data-ewh'));
+        });
+
+        wares.each(function () {
+            obj.data.Wares.push($(this).find('td:first-child').text());
+        });
+
+        console.log(obj);
+    },
     controlsInit: function () {
+        $('#clear_am').click(AMatrix.clearAm);
         $('#render_settings_bar').on('change', '.rnd_setting_control', AMatrix.hideOrShowWarehouse);
         $('#render_settings, .close_render_settings').click(function () {
             $('#render_settings_bar').toggle(300);
