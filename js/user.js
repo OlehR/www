@@ -25,7 +25,10 @@ var User = {
             },
             data: loginData,
             success: function (data) {
-                if (JSON.parse(data).TextError == "Ok") {
+                if (IsJsonString(data)) {
+                    data = JSON.parse(data);
+                }
+                if (data.TextError == "Ok") {
                     Cookies.set('isLogin', 'true');
                     window.isLogin = true;
                     $('#loginForm').hide();
@@ -101,7 +104,9 @@ var User = {
             },
             data: data,
             success: function (data) {
-                data = JSON.parse(data);
+                if (IsJsonString(data)) {
+                    data = JSON.parse(data);
+                }
 
                 console.log(data);
                 if (data.State == 0) {
@@ -127,3 +132,16 @@ var User = {
 $(document).ready(function () {
     User.init();
 });
+
+function IsJsonString(str) {
+    if (typeof str !== "string") {
+        return false;
+    }
+    try {
+        JSON.parse(str);
+        return true;
+    }
+    catch (error) {
+        return false;
+    }
+}

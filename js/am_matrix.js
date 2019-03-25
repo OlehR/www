@@ -1,6 +1,7 @@
 var AMatrix = {
     JSON: {},
     prevSort: -2,
+    lastRequest:[],
     getData: function () {
         var obj = {};
         obj.data = {};
@@ -77,6 +78,7 @@ var AMatrix = {
         return tree;
     },
     getAM: function (val, manager, groups, xls) {
+        AMatrix.lastRequest = [val, manager, groups, xls];
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 111;
@@ -278,7 +280,7 @@ var AMatrix = {
     },
     saveAM: function () {
         var rows = $('tr[is-change="true"]');
-        var titles = $('thead th');
+        var titles = $('thead th[data-ewh]:visible');
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 112;
@@ -290,13 +292,13 @@ var AMatrix = {
             return;
         }
 
-        for (var j = 4; j < titles.length; j++) {
+        for (var j = 0; j < titles.length; j++) {
             obj.data.Warehouse.push($(titles[j]).data('ewh'));
         }
 
         rows.each(function (index) {
             var el = $(this);
-            var cells = el.find('td');
+            var cells = el.find('td:visible');
             obj.data.Data[index] = [];
             obj.data.Data[index].push($(cells[0]).text());
             obj.data.Data[index].push($(cells[2]).text());
@@ -388,6 +390,10 @@ var AMatrix = {
         var warehouses = $('#tableContent th[data-ewh]:visible');
         var wares = $('#tableContent tbody tr:not([class="text-left"])');
 
+        if (warehouses.length === 0 || wares.length === 0) {
+            return;
+        }
+
         warehouses.each(function () {
             obj.data.Warehouse.push($(this).attr('data-ewh'));
         });
@@ -396,7 +402,28 @@ var AMatrix = {
             obj.data.Wares.push($(this).find('td:first-child').text());
         });
 
-        console.log(obj);
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                var result = data;
+                if (result.TextError == "Ok") {
+                    var last = AMatrix.lastRequest;
+                    AMatrix.getAM(last[0], last[1],last[2], last[3]);
+                } else {
+                    alert('Помилка: ' + result.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
     },
     controlsInit: function () {
         $('#clear_am').click(AMatrix.clearAm);
