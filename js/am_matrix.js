@@ -120,7 +120,7 @@ var AMatrix = {
         });
 
     },
-    renderAM: function () {
+    renderAM: function (isHide) {
         var readOnly = '';
         if (!AMatrix.JSON.IsAccept) {
             readOnly = 'disabled';
@@ -263,9 +263,9 @@ var AMatrix = {
             renderSettings += '<tr>';
 
             if (WaresIsVisible[j][1] == 0) {
-                var colIndex = $('#tableContent th').index($('#tableContent th[data-ewh="' + WaresIsVisible[j][0] + '"]'));
+                var colIndex = $('#tableContent thead th').index($('#tableContent th[data-ewh="' + WaresIsVisible[j][0] + '"]'));
                 console.log(colIndex);
-                $('#tableContent th').eq(colIndex).hide();
+                $('#tableContent thead th').eq(colIndex).hide();
                 $('#tableContent td:nth-child(' + (colIndex+1) +')').hide();
             }
         }
@@ -395,11 +395,11 @@ var AMatrix = {
         }
 
         warehouses.each(function () {
-            obj.data.Warehouse.push($(this).attr('data-ewh'));
+            obj.data.Warehouse.push(parseInt($(this).attr('data-ewh')));
         });
 
         wares.each(function () {
-            obj.data.Wares.push($(this).find('td:first-child').text());
+            obj.data.Wares.push(parseInt($(this).find('td:first-child').text()));
         });
 
         obj.data = JSON.stringify(obj.data);

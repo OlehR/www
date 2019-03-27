@@ -52,7 +52,13 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="home-tab" data-toggle="tab" href="#Cheker" role="tab" aria-controls="home" aria-selected="true">Заборонені товари в бренді</a>
-                        </li>   
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" data-toggle="tab" href="#Supplier" role="tab" aria-controls="home" aria-selected="true">Постачальники</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab" data-toggle="tab" href="#GroupSupplies" role="tab" aria-controls="home" aria-selected="true">Групи поставки</a>
+                        </li>
                     </ul>
 
                     <div class="tab-content" id="myTabContent">
@@ -67,7 +73,7 @@
                                             </select>
                                         </div>
                                         <div class="col-sm-3">
-                                            <input class="form-control GP" placeholder="Група поставки"/>
+                                            <input class="form-control GP" placeholder="Група поставки" />
                                         </div>
                                         <div class="col-sm-3">
                                             <select class="form-control Route">
@@ -89,7 +95,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="tab-pane fade" id="Cheker" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row">
                                 <div id="sidebar" class="col-sm-4 col-xs-12">
@@ -122,6 +128,38 @@
                                 </div>
                                 <div class="col-sm-8 col-xs-12">
                                     <div id="tableContentChecker">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="Supplier" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group"></div>
+                                    <div class="form-group">
+                                        <div class="ui-widget">
+                                            <div class="row">
+                                                <label class="col-md-3 col-sm-12">Група поставки: </label>
+                                                <select id="supplierCombobox"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div id="tableContentSupplier">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="GroupSupplies" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row">
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-12">
+                                    <div id="tableContentGroupSupplies">
 
                                     </div>
                                 </div>

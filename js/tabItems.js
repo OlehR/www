@@ -7,7 +7,7 @@ var Checker = {
     getWarhouses: function (save) {
         var obj = {};
         obj.data = {};
-        obj.data.CodeData = 120;
+        obj.data.CodeData = 302;
         obj.data.Warehouse = -1;
         obj.data = JSON.stringify(obj.data);
 
@@ -456,9 +456,7 @@ var Delivery = {
                 return;
             }
 
-            if (item[item.length - 3] === '' && item[item.length - 2] === '' && item[item.length - 1] === '') {
-                
-            } else {
+            if (item[item.length - 3] !== '' && item[item.length - 2] !== '' && item[item.length - 1] !== '') {
                 if (item[item.length - 3] === '') {
                     alert('Поле П-сть має бути заповнене.');
                     return;
@@ -529,5 +527,50 @@ var Delivery = {
     }
 };
 
+var Supplier = {
+    selectSupplier: function () {
+
+    },
+    getSupplier: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 300;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                if (parseInt(data.State) === 1) {
+                    var arrLength = data.Supplier.length;
+                    var options = '<option value=""></option>';
+                    for (var i = 0; i < arrLength; i++) {
+                        options += '<option value="' + data.Supplier[i][0] + '">' + data.Supplier[i][1] + '</option>';
+                    }
+                    $("#supplierCombobox").html(options);
+                    $("#supplierCombobox").combobox({
+                        change: Supplier.selectSupplier
+                    });
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    init: function () {
+        Supplier.getSupplier();
+    }
+};
+
 ZnpConfig.addTab('Delivery', Delivery);
 ZnpConfig.addTab('Checker', Checker);
+ZnpConfig.addTab('Supplier', Supplier);

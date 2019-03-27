@@ -87,7 +87,7 @@ var User = {
         var pass1 = $('#change_password1').val();
         var pass2 = $('#change_password2').val();
 
-        if (pass1 != pass2) {
+        if (pass1 !== pass2) {
             alert('Паролі не співпадають!');
             return;
         }
@@ -108,8 +108,8 @@ var User = {
                     data = JSON.parse(data);
                 }
 
-                console.log(data);
-                if (data.State == 0) {
+                
+                if (data.State === 0) {
                     alert('Пароль успішно змінено');
                     $('#ChangePasswordModal').modal('hide');
                 } else {
