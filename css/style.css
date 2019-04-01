@@ -311,3 +311,31 @@ header{
 .table-info, .table-info>td, .table-info>th {
     background-color: #bee5eb;
 }
+#tableContentSupplier .brand_widget {
+    display: none;
+}
+#supplier_brands {
+    padding: 0;
+    margin: 0;
+    height:calc(100vh - 250px - 1rem);
+    overflow-x:auto;
+}
+#supplier_brands > li{
+    padding:8px;
+    border-bottom: 1px solid #007bff;
+}
+.p8px {
+    padding:8px;
+}
+.bt1px {
+    border-top: 1px solid #007bff;
+}
+    #supplier_brands > li:hover {
+        background: #007bff;
+        color:#fff;
+    }
+.vcenterText{
+    display:inline-flex;
+    height:100%;
+    align-content:center;
+}
