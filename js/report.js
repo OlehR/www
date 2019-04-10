@@ -107,6 +107,7 @@ var Report = {
     },
     selectReport: function () {
         $('.param-list, .param-date').closest('.col-sm-3').remove();
+        $('#tableContent').html('');
         $('#export_to_csv').css('display', 'none');
         var el = $(this);
         var val = parseInt(el.val());
