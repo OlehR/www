@@ -320,22 +320,35 @@ header{
     height:calc(100vh - 250px - 1rem);
     overflow-x:auto;
 }
-#supplier_brands > li{
-    padding:8px;
-    border-bottom: 1px solid #007bff;
-}
+    #supplier_brands > li, #group_supplier li{
+        padding: 8px;
+        border-bottom: 1px solid #007bff;
+    }
 .p8px {
     padding:8px;
 }
 .bt1px {
     border-top: 1px solid #007bff;
 }
-    #supplier_brands > li:hover {
-        background: #007bff;
-        color:#fff;
-    }
+#supplier_brands > li:hover, #group_supplier li:hover, #group_supplier li:hover a {
+    background: #007bff;
+    color: #fff;
+}
 .vcenterText{
     display:inline-flex;
     height:100%;
     align-content:center;
+}
+#group_supplier {
+    height: calc(100vh - 178px - 1rem);
+    position:relative;
+}
+#group_supplier ul{
+    position:absolute;
+    width:100%;
+    height:60%;
+    bottom:0;
+    left:0;
+    padding:0;
+    margin:0;
 }

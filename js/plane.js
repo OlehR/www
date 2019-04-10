@@ -21,7 +21,7 @@ var Plane = {
             },
             success: function (data) {
                 var result = data;
-                if (typeof result.Warehouse != typeof undefined) {
+                if (typeof result.Warehouse !== typeof undefined) {
                     var arrLength = result.Warehouse.Data.length;
                     var options = '<option value="-1">--Вибрати ТЗ--</option>';
                     for (var i = 0; i < arrLength; i++) {

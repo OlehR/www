@@ -47,7 +47,7 @@ var User = {
                             Plane.init();
                             break;
                         case "Report":
-                            Plane.init();
+                            Report.init();
                             break;
                         case "Monitoring":
                             Monitoring.init();

@@ -17,7 +17,6 @@ var Report = {
             },
             success: function (data) {
                 Report.JSON = JSON.parse(data);
-                console.log(Report.JSON);
 
                 var options = '<option value="-1">--Виберіть звіт--</option>';
                 var arr = Report.JSON.Report;
@@ -66,13 +65,33 @@ var Report = {
             autoclose: true
         });
         $('#' + param[1]).datepicker("update", new Date());
+
+        var reportCoockie = Cookies.get('reportCoockie');
+
+        if (typeof reportCoockie !== typeof undefined) {
+            reportCoockie = JSON.parse(reportCoockie);
+        } else {
+            reportCoockie = [];
+        }
+
+        for (var i = 0; i < reportCoockie.length; i++) {
+            if (reportCoockie[i][0] == Report.CurRP) {
+                var curValues = reportCoockie[i][1];
+                for (var j = 0; j < curValues.length; j++) {
+                    var el = $('#' + curValues[j][0]);
+                    el.val(curValues[j][1]);
+                    if (el.hasClass('param-date')) {
+                        el.datepicker("update", curValues[j][1]);
+                    }
+                }
+            }
+        }
     },
     renderParam: function (paramArr) {
         var arrLen = paramArr.length;
         for (var i = 0; i < arrLen; i++) {
             
             var par = Report.JSON.ReportParam.findParamByParName(paramArr[i]);
-            console.log(par);
             switch (par[2]) {
                 case 'list':
                     Report.renderListParam(par);
@@ -97,7 +116,6 @@ var Report = {
             $('#run_container').css('display', 'none');
         } else {
             var report = Report.JSON.Report.findReportById(val);
-            console.log(report);
             if (report[2] == "") {
                 Report.noParamReport();
             } else {
@@ -138,7 +156,6 @@ var Report = {
             },
             success: function (data) {
                 var rJSON = JSON.parse(data);
-                console.log(rJSON);
 
                 var options = '<option value="-1"></option>';
                 var arr = rJSON.LispParam;
@@ -151,6 +168,31 @@ var Report = {
                 $('#' + param[1]).combobox({
                     change: Report.selectGP
                 });
+
+                var reportCoockie = Cookies.get('reportCoockie');
+
+                if (typeof reportCoockie !== typeof undefined) {
+                    reportCoockie = JSON.parse(reportCoockie);
+                } else {
+                    reportCoockie = [];
+                }
+
+                for (var i = 0; i < reportCoockie.length; i++) {
+                    if (reportCoockie[i][0] == Report.CurRP) {
+                        var curValues = reportCoockie[i][1];
+                        for (var j = 0; j < curValues.length; j++) {
+                            var el = $('#' + curValues[j][0]);
+                            el.val(curValues[j][1]);
+                            if (el.hasClass('param-list')) {
+                                var input = el.next('span').find('input');
+                                input.val(el.find('option:selected').text());
+                                input.focus(function () {
+                                    input.val('');
+                                });
+                            }
+                        }
+                    }
+                }
                 
             },
             error: function () {
@@ -164,6 +206,27 @@ var Report = {
             var el = $(this);
             Report.Param.push([el.attr('id'), el.val()]);
         });
+
+        var reportCoockie = Cookies.get('reportCoockie');
+
+        if (typeof reportCoockie !== typeof undefined) {
+            reportCoockie = JSON.parse(reportCoockie);
+        } else {
+            reportCoockie = [];
+        }
+
+        var coockieExists = false;
+        for (var i = 0; i < reportCoockie.length; i++) {
+            if (reportCoockie[i][0] == Report.CurRP) {
+                reportCoockie[i] = [Report.CurRP, Report.Param];
+                coockieExists = true;
+            }
+        }
+        if (!coockieExists) {
+            reportCoockie.push([Report.CurRP, Report.Param]);
+        }
+        Cookies.set('reportCoockie', reportCoockie, { expires: 99999 });
+
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 22;
@@ -195,7 +258,6 @@ var Report = {
     },
     selectGP: function () {
         var val = $(this).val();
-        console.log(val);
         if(parseInt(val) != -1){
             $('#run').prop('disabled', false);
         } else {

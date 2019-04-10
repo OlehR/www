@@ -23,16 +23,16 @@
 
                 var arrLen = json.Pages.length;
                 for (var i = 0; i < arrLen; i++) {
-                    if (json.Pages[i][2] == 'On' || json.Pages[i][2] == 'ReadOnly') {
+                    if (json.Pages[i][2] === 'On' || json.Pages[i][2] === 'ReadOnly') {
                         $('.nav-tabs a').eq(i).tab('show');
                         break;
                     }
                 }
                 for (var i = 0; i < arrLen; i++) {
-                    if (json.Pages[i][2] == 'Off') {
+                    if (json.Pages[i][2] === 'Off') {
                         $('.nav-tabs nav-item').eq(i).hide();
                     }
-                    if (json.Pages[i][2] == 'ReadOnly') {
+                    if (json.Pages[i][2] === 'ReadOnly') {
                         $('.tab-pane').eq(i).addClass('ReadOnly');
                     }
                 }
@@ -44,7 +44,7 @@
         });
     },
     controlsInit: function () {
-        $('.nav-tabs a').on('shown.bs.tab', function (event) {
+        $('#myTab.nav-tabs a').on('shown.bs.tab', function (event) {
             //var x = $(event.target).text();         // active tab
             //var y = $(event.relatedTarget).text();  // previous tab
 

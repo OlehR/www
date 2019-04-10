@@ -1,7 +1,7 @@
 var Checker = {
     GP: -1,
     WR: -1,
-    contextKey:'',
+    contextKey: '',
     JSON: {},
     isSave: false,
     getWarhouses: function (save) {
@@ -61,7 +61,7 @@ var Checker = {
                 Checker.JSON = JSON.parse(data);
                 console.log(Checker.JSON);
                 var arrLength = Checker.JSON.Brand.length;
-               var list = '';
+                var list = '';
                 for (var i = 0; i < arrLength; i++) {
                     list += '<li class="nav-item"><a class="nav-link" data-val="' + Checker.JSON.Brand[i][0] + '" href="javascript:void(0)">' + Checker.JSON.Brand[i][1] + '</a></li>';
                 }
@@ -81,7 +81,7 @@ var Checker = {
     selectBrand: function () {
         $('#tableContent' + Checker.contextKey).html('<div class"loader"></div>');
         if ($('.nav-link.checked').length > 0)
-        $($('.nav-link.checked')[0]).removeClass('checked');
+            $($('.nav-link.checked')[0]).removeClass('checked');
         var el = $(this);
         el.addClass('checked');
         Checker.WR = el.data('val');
@@ -111,9 +111,9 @@ var Checker = {
                 }
             }
         }
-        tHead = tHead.replace(/id="select_all"/g, 'id="select_all" '+ checked);
+        tHead = tHead.replace(/id="select_all"/g, 'id="select_all" ' + checked);
         $('#tableContent' + Checker.contextKey).html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
-        
+
     },
     changeStatus: function () {
         var el = $(this);
@@ -141,10 +141,10 @@ var Checker = {
 
         var arrLength = rows.length;
         for (var i = 0; i < arrLength; i++) {
-            obj.data.Data.push([$(rows[i]).find('td:first-child').text(),$(rows[i]).find('input').val()]);
+            obj.data.Data.push([$(rows[i]).find('td:first-child').text(), $(rows[i]).find('input').val()]);
         }
         obj.data = JSON.stringify(obj.data);
-        $('#overlay').css('display','flex');
+        $('#overlay').css('display', 'flex');
         $.ajax({
             url: apiUrl,
             method: "POST",
@@ -182,12 +182,12 @@ var Checker = {
         });
     },
     init: function () {
-        if (window.isLogin){
+        if (window.isLogin) {
             Checker.getWarhouses();
         }
         this.controlsInit();
     }
-}
+};
 
 var Delivery = {
     contextKey: '',
@@ -489,8 +489,8 @@ var Delivery = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data)
-                if (parseInt(data.State) == 1) {
+                data = JSON.parse(data);
+                if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');
                 } else {
                     alert(data.TextError);
@@ -527,6 +527,232 @@ var Delivery = {
     }
 };
 
+Object.defineProperty(Array.prototype, 'chunk_inefficient', {
+    value: function (chunkSize) {
+        var array = this;
+        return [].concat.apply([],
+            array.map(function (elem, i) {
+                return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
+            })
+        );
+    }
+});
+
+var GroupSupplies = {
+    curGS:-1,
+    bindGpSearching: function () {
+        $('#group_supplier_input').select2({
+            minimumInputLength: 3,
+            ajax: {
+                url: apiUrl,
+                dataType: 'json',
+                type: "POST",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: function (params) {
+                    var obj = {};
+                    obj.data = {};
+                    obj.data.CodeData = 302;
+                    obj.data.NameGS = params.term;
+                    obj.data = JSON.stringify(obj.data);
+                    return obj;
+                },
+                processResults: function (data) {
+                    var dataArr = [{ id: '', text: '' }];
+                    if (parseInt(data.State) === 0) {
+                        var arrLength = data.data.length;
+                        for (var i = 0; i < arrLength; i++) {
+                            dataArr.push({ id: data.data[i][0], text: data.data[i][1] });
+                        }
+                    } else {
+                        alert(data.TextError);
+                    }
+                    return {
+                        results: dataArr
+                    };
+                }
+            }
+        });
+    },
+    getBrandGroupSupplier: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 232;
+        obj.data.CodeGS = GroupSupplies.curGS;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                if (parseInt(data.State) === 0) {
+                    $('a[href="#GPSbrand"]').tab('show');
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    getGroupSupplierData: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 234;
+        obj.data.CodeGS = GroupSupplies.curGS;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                if (parseInt(data.State) === 0) {
+                    var options = '';
+                    for (var i = 7; i <= 20; i++) {
+                        options += '<option value="' + i + '">' + i + '</option>';
+                    }
+                    $('#TIME_CRATE_1').html(options);
+                    $('#TIME_CRATE_2').html(options);
+                    $('#TIME_CRATE_3').html(options);
+                    GroupSupplies.renderGSfields(data.Comment, data);
+                    for (var k in data.GS) {
+                        if (data.GS.hasOwnProperty(k)) {
+                            var el = $('#' + k);
+                            el.val(data.GS[k]);
+                            if (el.is(':checkbox')) {
+                                if (parseInt(data.GS[k]) === 1)
+                                    el.prop('checked', true);
+                            }
+                        }
+                    }
+                    $('a[href="#EditGPS"]').tab('show');
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    supplierChecker: function () {
+        $('a[href="#GPSwares"]').tab('show');
+        Checker.init();
+    },
+    getTabsData: function (isCurrent, id) {
+
+        if (GroupSupplies.curGS === -1) {
+            alert('Виберіть группу постачання.');
+            return;
+        }
+
+        var Id;
+        var curTab = $('#GroupTabContent .tab-pane:visible');
+
+        if (curTab.length === 0) {
+            Id = 'EditGPS';
+        } else {
+            Id = curTab.attr('id');
+        }
+
+        if (!isCurrent)
+            Id = id;
+
+        switch (Id) {
+            case 'EditGPS':
+                GroupSupplies.getGroupSupplierData();
+                break;
+            case 'GPSbrand':
+                GroupSupplies.getBrandGroupSupplier();
+                break;
+            case 'GPSwares':
+                GroupSupplies.supplierChecker();
+                break;
+        }
+    },
+    renderGSfields: function (fields, data) {
+        var countPerCol = (fields.length - 7) / 3;
+
+        var rows = [];
+        for (var i = 0; i < fields.length; i++) {
+            if ($('#' + fields[i][0]).length === 0) {
+                var row = '<div class="form-group">';
+                row += '<div class="row">';
+                row += '<label class="col-sm-3" for="' + fields[i][0] + '">' + fields[i][1] + ':</label>';
+                row += '<div class="col-sm-9">';
+                var readonly = '';
+                if (/R/g.test(fields[i][2])) {
+                    readonly = 'readonly';
+                }
+                if (/S/g.test(fields[i][2]) || /D/g.test(fields[i][2])) {
+                    row += '<input ' + readonly + ' class="form-control" id="' + fields[i][0] + '" />';
+                }
+                if (/L/g.test(fields[i][2])) {
+                    row += '<select ' + readonly + ' class="form-control" id="' + fields[i][0] + '">';
+                    for (var k = 0; k < data[fields[i][0]].length; k++) {
+                        row += '<option value="' + data[fields[i][0]][k][0] + '">' + data[fields[i][0]][k][1] +'</option>';
+                    }
+                    row += '</select>';
+                }
+                if (/C/g.test(fields[i][2])) {
+                    row += '<input ' + readonly + ' type="checkbox" class="checkbox" id="' + fields[i][0] + '" />';
+                }
+                if (/N/g.test(fields[i][2])) {
+                    var range = '';
+                    if (fields[i][3] !== '') {
+                        var rangeArr = fields[i][3].split('-');
+                        range = 'min="' + rangeArr[0] + '" max="' + rangeArr[1] + '"';
+                    }
+                    row += '<input ' + readonly + ' ' + range + ' type="number" class="form-control" id="' + fields[i][0] + '" />';
+                }
+                if (/I/g.test(fields[i][2])) {
+                    row += '<input ' + readonly + ' type="number" class="form-control integer" id="' + fields[i][0] + '" />';
+                }
+                if (/E/g.test(fields[i][2])) {
+                    row += '<input ' + readonly + ' class="form-control e-mail" id="' + fields[i][0] + '" />';
+                }
+                row += '</div>';
+                row += '</div>';
+                row += '</div>';
+                rows.push(row);
+            }
+        }
+
+        var cols = rows.chunk_inefficient(countPerCol);
+
+        $('#col_GS_1').html(cols[0].join(''));
+        $('#col_GS_2').html(cols[1].join(''));
+        $('#col_GS_3').html(cols[2].join(''));
+    },
+    init: function () {
+        GroupSupplies.bindGpSearching();
+        $('#group_supplier_input').on('select2:select', function (e) {
+            var data = e.params.data;
+            GroupSupplies.curGS = data.id;
+
+            GroupSupplies.getTabsData(true);
+        });
+        $('#GroupSuppliesTab a').click(function (e) {
+            e.preventDefault();
+            GroupSupplies.getTabsData(false, $(this).attr('href').replace(/#/g,''));
+        });
+    }
+};
+
 var Supplier = {
     currSupplier: -1,
     bindBrandsSearching: function () {
@@ -549,7 +775,7 @@ var Supplier = {
                 },
                 processResults: function (data) {
                     var dataArr = [{ id: '', text: '' }];
-                    if (parseInt(data.State) === 1) {
+                    if (parseInt(data.State) === 0) {
                         var arrLength = data.Brand.length;
                         for (var i = 0; i < arrLength; i++) {
                             dataArr.push({ id: data.Brand[i][0], text: data.Brand[i][1] });
@@ -584,7 +810,7 @@ var Supplier = {
                 },
                 processResults: function (data) {
                     var dataArr = [{ id: '', text: '' }];
-                    if (parseInt(data.State) === 1) {
+                    if (parseInt(data.State) === 0) {
                         var arrLength = data.Supplier.length;
                         for (var i = 0; i < arrLength; i++) {
                             dataArr.push({ id: data.Supplier[i][0], text: data.Supplier[i][1] });
@@ -617,7 +843,7 @@ var Supplier = {
             success: function (data) {
                 data = JSON.parse(data);
                 console.log(data);
-                if (parseInt(data.State) === 1) {
+                if (parseInt(data.State) === 0) {
                     var brandList = '';
                     for (var i = 0; i < data.Brand.length; i++) {
                         brandList += '<li brand-id="' + data.Brand[i][0] + '" class="clearfix">';
@@ -629,6 +855,17 @@ var Supplier = {
                     }
                     $('#supplier_brands').html(brandList);
                     $('#tableContentSupplier .brand_widget').show();
+
+                    var groupList = '';
+                    for (var j = 0; j < data.GroupSupplier.length; j++) {
+                        groupList += '<li class="clearfix">';
+                        groupList += '<a group-id="' + data.GroupSupplier[j][0] + '" class="btn btn-block" href="#GroupSupplies">';
+                        groupList += '<span>' + data.GroupSupplier[j][1] + '</span>';
+                        groupList += '</a>';
+                        groupList += '</li>';
+                    }
+
+                    $('#group_supplier ul').html(groupList);
                 } else {
                     alert(data.TextError);
                 }
@@ -640,7 +877,7 @@ var Supplier = {
     },
     addSupplierBrand: function (brandId, brandTitle) {
         var brandList = '';
-        brandList += '<li brand-id="' + brandId + '" class="clearfix isChange alert-success isAdded">';
+        brandList += '<li brand-id="' + brandId + '" class="clearfix isChanged alert-success isAdded">';
         brandList += '<span>' + brandTitle + '</span>';
         brandList += '<a class="btn btn-sm btn-warning cancleSupplierBrand float-right" href="#" title="відмінити">';
         brandList += 'X';
@@ -665,7 +902,7 @@ var Supplier = {
         }
     },
     saveBrands: function () {
-        var items = $('.isChange');
+        var items = $('.isChanged');
 
         if (items.length === 0) {
             alert('Відсутні зміни!');
@@ -698,7 +935,7 @@ var Supplier = {
             success: function (data) {
                 data = JSON.parse(data);
                 console.log(data);
-                if (parseInt(data.State) === 1) {
+                if (parseInt(data.State) === 0) {
                     alert('Дані збережено.');
                     /*items.each(function () {
                         
@@ -732,3 +969,4 @@ var Supplier = {
 ZnpConfig.addTab('Delivery', Delivery);
 ZnpConfig.addTab('Checker', Checker);
 ZnpConfig.addTab('Supplier', Supplier);
+ZnpConfig.addTab('GroupSupplies', GroupSupplies);
