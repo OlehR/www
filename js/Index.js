@@ -1,6 +1,5 @@
 ﻿var Index = {
     getMenuList: function () {
-        var apiUrl = "http://znp.vopak.local/api/api_v1.php";
         var obj = {};
         obj.data = {};
 
