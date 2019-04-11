@@ -5,6 +5,11 @@
     align-items:center;
     justify-content:center;
 }
+@media only screen and (max-device-width: 768px) {
+    #tableContent {
+        min-height: unset;
+    }
+}
 #menuBox{
     width:320px;
     border-radius:5px;
