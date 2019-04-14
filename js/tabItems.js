@@ -591,8 +591,25 @@ var GroupSupplies = {
             },
             success: function (data) {
                 data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
+                    var countPerCol = Math.ceil(data.Brand.length / 5);
+                    var list = [];
+                    for (var i = 0; i < data.Brand.length; i++) {
+                        var listItem = '';
+                        listItem += '<div class="custom-control custom-checkbox">';
+                        listItem += '<input type="checkbox" class="custom-control-input" id="' + data.Brand[i][0] + '" value="' + data.Brand[i][2] + '" ' + (parseInt(data.Brand[i][2]) === 1 ? 'checked' : '') +'>';
+                        listItem += '<label class="custom-control-label" for="' + data.Brand[i][0] + '">' + data.Brand[i][1] + '</label>';
+                        listItem += '</div>';
+                        list.push(listItem);
+                    }
+
+                    var cols = list.chunk_inefficient(countPerCol);
+                    var html = '<div class="col-sm-1"></div>';
+                    for (var j = 0; j < cols.length; j++) {
+                        html += '<div class="col-sm-2">' + cols[j].join('') + '</div>';
+                    }
+
+                    $('#GPSbrandList').html(html);
                     $('a[href="#GPSbrand"]').tab('show');
                 } else {
                     alert(data.TextError);
@@ -685,15 +702,15 @@ var GroupSupplies = {
         }
     },
     renderGSfields: function (fields, data) {
-        var countPerCol = (fields.length - 7) / 3;
+        var countPerCol = Math.ceil((fields.length - 7) / 3);
 
         var rows = [];
         for (var i = 0; i < fields.length; i++) {
-            if ($('#' + fields[i][0]).length === 0) {
+            if (!$('#' + fields[i][0]).hasClass('staticField')) {
                 var row = '<div class="form-group">';
                 row += '<div class="row">';
-                row += '<label class="col-sm-3" for="' + fields[i][0] + '">' + fields[i][1] + ':</label>';
-                row += '<div class="col-sm-9">';
+                row += '<label class="col-sm-8" for="' + fields[i][0] + '">' + fields[i][1] + ':</label>';
+                row += '<div class="col-sm-4">';
                 var readonly = '';
                 if (/R/g.test(fields[i][2])) {
                     readonly = 'readonly';
@@ -738,6 +755,42 @@ var GroupSupplies = {
         $('#col_GS_2').html(cols[1].join(''));
         $('#col_GS_3').html(cols[2].join(''));
     },
+    saveGSdata: function () {
+        var data = {};
+        $('#EditGPS input, #EditGPS select').each(function () {
+            var el = $(this);
+            data[el.attr('id')] = el.val();
+        });
+        data.CodeData = 235;
+
+        var obj = {};
+        obj.data = data;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                if (parseInt(data.State) === 0) {
+                    alert('Дані успішно збережено.');
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    saveGSbrandData: function () {
+
+    },
     init: function () {
         GroupSupplies.bindGpSearching();
         $('#group_supplier_input').on('select2:select', function (e) {
@@ -749,6 +802,17 @@ var GroupSupplies = {
         $('#GroupSuppliesTab a').click(function (e) {
             e.preventDefault();
             GroupSupplies.getTabsData(false, $(this).attr('href').replace(/#/g,''));
+        });
+        $('#saveGSdata').click(GroupSupplies.saveGSdata);
+        $('#saveGSbrandData').click(GroupSupplies.saveGSbrandData);
+        $('#EditGPS, #GPSbrandList').on('change', 'input[type="checkbox"]', function () {
+            var el = $(this);
+            if (el.prop('checked')) {
+                el.val(1);
+            }
+            else {
+                el.val(0);
+            }
         });
     }
 };

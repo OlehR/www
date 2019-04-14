@@ -13,10 +13,6 @@ var User = {
         loginData.data.CodeData = 1;
         loginData.data = JSON.stringify(loginData.data);
 
-        if (typeof window.loginUrl != typeof undefined) {
-            apiUrl = loginUrl;
-        }
-
         $.ajax({
             url: apiUrl,
             method: "POST",
@@ -28,7 +24,7 @@ var User = {
                 if (IsJsonString(data)) {
                     data = JSON.parse(data);
                 }
-                if (data.TextError == "Ok") {
+                if (data.TextError === "Ok") {
                     Cookies.set('isLogin', 'true');
                     window.isLogin = true;
                     $('#loginForm').hide();

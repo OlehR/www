@@ -1,14 +1,17 @@
 ﻿var Order = {
     GP: -1,
-    WH:-1,
+    WH: -1,
     getWarhouses: function () {
         var data = {};
         data.CodeData = 5;
 
+        var obj = {};
+        obj.data = JSON.stringify(data);
+
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: data,
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
@@ -36,10 +39,13 @@
 
         Order.WH = data.warehouse;
 
+        var obj = {};
+        obj.data = JSON.stringify(data);
+
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: data,
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
@@ -71,10 +77,13 @@
         data.CodeGroupSupply = Order.GP;
         data.CodeData = 8;
 
+        var obj = {};
+        obj.data = JSON.stringify(data);
+
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: data,
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
@@ -91,5 +100,5 @@
         Order.getWarhouses();
         $('#add_order').click(Order.add_order);
     }
-}
+};
 Order.init();
