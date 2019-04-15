@@ -179,6 +179,9 @@ var OrderHelper = {
         data.CodeData = 10;
         data.NumberOrder = number;
 
+        var obj = {};
+        obj.data = JSON.stringify(data);
+
         $.ajax({
             url: apiUrl,
             method: "POST",
@@ -187,7 +190,7 @@ var OrderHelper = {
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 var rows = '';
                 
                 for (var i = 0; i < result.AudInfo.length; i++) {

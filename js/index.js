@@ -14,8 +14,7 @@
             },
             data: obj,
             success: function (data) {
-                var result = JSON.parse(data);
-                console.log(result);
+                var result = data;
                 if (result.TextError == "Ok") {
                     var list = '<ul class="site-menu">';
                     for (var i = 0; i < result.Sites.length; i++) {
@@ -23,7 +22,7 @@
                     }
                     $('#menuBox').html(list);
                 } else {
-                    alert(JSON.parse(data).TextError);
+                    alert(data.TextError);
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {

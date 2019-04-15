@@ -18,7 +18,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var json = JSON.parse(data);
+                var json = data;
                 console.log(json);
 
                 var arrLen = json.Pages.length;

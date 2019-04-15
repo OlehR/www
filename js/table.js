@@ -2,7 +2,7 @@ var Table = {
     StateOrder: -1,
     globalCurrentRow: -1,
     JSON: {},
-    OriginalTableJSON: "",
+    OriginalTableJSON: {},
     sortByColumn: 0,
     sort: 'weeks',
     seeBrands: true,
@@ -43,14 +43,15 @@ var Table = {
         $.ajax({
             url: apiUrl,
             method: "POST",
+            dataType: "json",
             data: obj,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
-                Table.JSON = JSON.parse(data);
+                Table.JSON = data;
                 Table.sortByColumn = Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND');
-                Table.OriginalTableJSON = data;
+                Table.OriginalTableJSON = JSON.parse(JSON.stringify(data));
                 if ((typeof Table.JSON.OrderHead !== typeof undefined)) {
                     var d = DateHelper.formatJsDate(Table.JSON.OrderHead.DELIVERY);
                     $('#status').attr('is-change', 'false');
@@ -242,7 +243,7 @@ var Table = {
         } else {
 
             var renderSettings = Cookies.get('renderSettings');
-            Table.JSON.OrderField = JSON.parse(Table.OriginalTableJSON).OrderField;
+            Table.JSON.OrderField = Table.OriginalTableJSON.OrderField;
             /*
             Table.JSON.OrderField.Data.push([Table.JSON.OrderField.Data.length + 1, "PPACK", "заказ упаковок", "заказ уп.", 1, 3, "", ""]);
             Table.JSON.OrderField.Data.push([Table.JSON.OrderField.Data.length + 1, "LPACK", "логістична к-сть пакування", "логістична к-сть п.", 1, 3, "", ""]);
@@ -361,11 +362,12 @@ var Table = {
     },
     sortByState: function () {
         var state = parseInt($('#state').val());
-        Table.JSON = JSON.parse(Table.OriginalTableJSON);
-        if (state != -1) {
+        Table.JSON = JSON.parse(JSON.stringify(Table.OriginalTableJSON));
+        console.log();
+        if (state !== -1) {
             var newArr = [];
             for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
-                if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] == state)
+                if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] === state)
                     newArr.push(Table.JSON.OrderDetail.Data[i]);
             }
             Table.JSON.OrderDetail.Data = newArr;
@@ -381,7 +383,7 @@ var Table = {
             isLogistic = true;
             $('#logistic').prop('checked', true);
         }
-        Table.JSON = JSON.parse(Table.OriginalTableJSON);
+        Table.JSON = JSON.parse(JSON.stringify(Table.OriginalTableJSON));
         if (isLogistic) {
             var newArr = [];
             for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
@@ -1112,17 +1114,18 @@ var Table = {
         $.ajax({
             url: apiUrl,
             method: "POST",
+            dataType: "json",
             data: obj,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
                 if (!save) {
-                    if (JSON.parse(data).State === 0) {
+                    if (data.State === 0) {
                         alert('Дані успішно відправлено.');
                         $('#SendMailModal').modal('hide');
                     } else {
-                        alert(JSON.parse(data).TextError);
+                        alert(data.TextError);
                     }
                 }
             },
@@ -1183,12 +1186,13 @@ var Table = {
         $.ajax({
             url: apiUrl,
             method: "POST",
+            dataType: "json",
             data: Data,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
-                if (JSON.parse(data).TextError === "Ok") {
+                if (data.TextError === "Ok") {
                     alert('Дані успішно збережено.');
 
                     console.log(parseInt($('#stateOrder').val()));
@@ -1206,7 +1210,7 @@ var Table = {
                     Table.getData(true, sendmail);
 
                 } else {
-                    alert(JSON.parse(data).TextError);
+                    alert(data.TextError);
                     Table.getData(true);
                 }
             },

@@ -21,9 +21,6 @@ var User = {
             },
             data: loginData,
             success: function (data) {
-                if (IsJsonString(data)) {
-                    data = JSON.parse(data);
-                }
                 if (data.TextError === "Ok") {
                     Cookies.set('isLogin', 'true');
                     window.isLogin = true;
@@ -59,7 +56,7 @@ var User = {
                     btn.prop('disabled', false);
                     btn.html('Вхід');
                 } else {
-                    alert(JSON.parse(data).TextError);
+                    alert(data.TextError);
                     btn.prop('disabled', false);
                     btn.html('Вхід');
                 }
@@ -100,9 +97,6 @@ var User = {
             },
             data: data,
             success: function (data) {
-                if (IsJsonString(data)) {
-                    data = JSON.parse(data);
-                }
 
                 
                 if (data.State === 0) {
@@ -128,16 +122,3 @@ var User = {
 $(document).ready(function () {
     User.init();
 });
-
-function IsJsonString(str) {
-    if (typeof str !== "string") {
-        return false;
-    }
-    try {
-        JSON.parse(str);
-        return true;
-    }
-    catch (error) {
-        return false;
-    }
-}

@@ -19,8 +19,7 @@ var Checker = {
                 withCredentials: true
             },
             success: function (data) {
-                Checker.JSON = JSON.parse(data);
-                console.log(Checker.JSON);
+                Checker.JSON = data;
                 var arrLength = Checker.JSON.data.length;
                 var options = '<option value=""></option>';
                 for (var i = 0; i < arrLength; i++) {
@@ -58,8 +57,7 @@ var Checker = {
                 withCredentials: true
             },
             success: function (data) {
-                Checker.JSON = JSON.parse(data);
-                console.log(Checker.JSON);
+                Checker.JSON = data;
                 var arrLength = Checker.JSON.Brand.length;
                 var list = '';
                 for (var i = 0; i < arrLength; i++) {
@@ -153,7 +151,7 @@ var Checker = {
                 withCredentials: true
             },
             success: function (data) {
-                result = JSON.parse(data);
+                result = data;
                 console.log(result);
                 if (parseInt(result.Sate) != -1) {
                     Checker.getWarhouses(true);
@@ -206,8 +204,7 @@ var Delivery = {
                 withCredentials: true
             },
             success: function (data) {
-                var json = JSON.parse(data);
-                console.log(json);
+                var json = data;
 
                 var warehouse = $('#Delivery .Warehouse');
                 var arrLength = json.Warehouse.length;
@@ -264,8 +261,7 @@ var Delivery = {
                 withCredentials: true
             },
             success: function (data) {
-                Delivery.JSON = JSON.parse(data);
-                console.log(Delivery.JSON);
+                Delivery.JSON = data;
 
                 Delivery.JSON.DeliverySchedule.Data.__proto__.filterByPrognosisType = function (search) {
                     var arr = [];
@@ -489,7 +485,6 @@ var Delivery = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
                 if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');
                 } else {
@@ -590,7 +585,6 @@ var GroupSupplies = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
                 if (parseInt(data.State) === 0) {
                     var countPerCol = Math.ceil(data.Brand.length / 5);
                     var list = [];
@@ -635,8 +629,6 @@ var GroupSupplies = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
                     var options = '';
                     for (var i = 7; i <= 20; i++) {
@@ -777,8 +769,6 @@ var GroupSupplies = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');
                 } else {
@@ -811,8 +801,6 @@ var GroupSupplies = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');
                 } else {
@@ -938,8 +926,6 @@ var Supplier = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
                     var brandList = '';
                     for (var i = 0; i < data.Brand.length; i++) {
@@ -1012,7 +998,7 @@ var Supplier = {
             if (el.hasClass('isAdded'))
                 data.push([el.attr('brand-id'), 1]);
             else
-                data.push([el.attr('brand-id'), -1]);
+                data.push([el.attr('brand-id'), 0]);
         });
 
         var obj = {};
@@ -1030,8 +1016,6 @@ var Supplier = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
                     alert('Дані збережено.');
                     /*items.each(function () {

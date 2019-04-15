@@ -14,7 +14,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 var html = '<option value="-1">--Виберіть кодування--</option>';
 
                 for (var i = 0; i < result.CodeChar.length; i++) {
@@ -55,7 +55,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 
                 Monitoring.renderDoc(result);
             },
@@ -122,7 +122,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 if (result.TextError == "Ok")
                     alert('Дані успішно збережено.');
             },
@@ -150,7 +150,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 console.log(result);
 
                 var List = result.Data.Data;
@@ -219,7 +219,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 console.log(result);
 
                 Monitoring.getOrderWaresDocList();
@@ -246,7 +246,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
 
                 if (parseInt(result.Head.STATEDOC) != 0) {
                     $('#import_xl, #save_doc_wares,#code_type_select, #warhouse_select, #date_from, #date_to').attr('disabled', 'disabled');
@@ -325,7 +325,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 console.log(result);
 
                 var html = '<option value="-1">--Моніторинг--</option>';
@@ -363,7 +363,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 console.log(result);
                 var arr = result.Data;
                 var arrLen = arr.length;
@@ -446,7 +446,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 console.log(result);
 
                 if (parseInt(result.State) == 1) {
@@ -478,7 +478,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 console.log(result);
 
                 var html = '<option value="-1">--Конкурент--</option>';
