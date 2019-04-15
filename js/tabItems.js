@@ -43,7 +43,7 @@ var Checker = {
         });
     },
     selectGroup: function () {
-        Checker.GP = $(this).val();
+        //Checker.GP = $(this).val();
         var obj = {};
         obj.data = {};
         obj.data.CodeGroupSupply = Checker.GP;
@@ -79,7 +79,7 @@ var Checker = {
         });
     },
     selectBrand: function () {
-        $('#tableContent' + Checker.contextKey).html('<div class"loader"></div>');
+        $('#tableContentChecker').html('<div class"loader"></div>');
         if ($('.nav-link.checked').length > 0)
             $($('.nav-link.checked')[0]).removeClass('checked');
         var el = $(this);
@@ -112,7 +112,7 @@ var Checker = {
             }
         }
         tHead = tHead.replace(/id="select_all"/g, 'id="select_all" ' + checked);
-        $('#tableContent' + Checker.contextKey).html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
+        $('#tableContentChecker').html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
 
     },
     changeStatus: function () {
@@ -132,7 +132,7 @@ var Checker = {
         }
     },
     saveCheck: function () {
-        var rows = $('tr[is-change="true"]');
+        var rows = $('#GPSwares tr[is-change="true"]');
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 122;
@@ -172,9 +172,9 @@ var Checker = {
             $(this).val('');
         });
         $('#sidebar').on('click', '.nav-link', Checker.selectBrand);
-        $('#tableContent' + Checker.contextKey).on('change', 'input:not([id="select_all"])', Checker.changeStatus);
+        $('#tableContentChecker').on('change', 'input:not([id="select_all"])', Checker.changeStatus);
         $('#save_cheked').click(Checker.saveCheck);
-        $('#tableContent' + Checker.contextKey).on('change', 'input[id="select_all"]', function () {
+        $('#tableContentChecker').on('change', 'input[id="select_all"]', function () {
             var checked = $(this).prop('checked');
             $('input:not([id="select_all"])').each(function () {
                 $(this).prop('checked', checked).trigger('change');
@@ -182,9 +182,9 @@ var Checker = {
         });
     },
     init: function () {
-        if (window.isLogin) {
+        /*if (window.isLogin) {
             Checker.getWarhouses();
-        }
+        }*/
         this.controlsInit();
     }
 };
@@ -669,6 +669,8 @@ var GroupSupplies = {
     supplierChecker: function () {
         $('a[href="#GPSwares"]').tab('show');
         Checker.init();
+        Checker.GP = GroupSupplies.curGS;
+        Checker.selectGroup();
     },
     getTabsData: function (isCurrent, id) {
 
@@ -789,7 +791,38 @@ var GroupSupplies = {
         });
     },
     saveGSbrandData: function () {
+        var data = {};
+        data.Brand = [];
+        $('#GPSbrandList input[type="checkbox"]').each(function () {
+            var el = $(this);
+            data.Brand.push([el.attr('id'), el.val()]);
+        });
+        data.CodeData = 233;
+        data.CodeGS = GroupSupplies.curGS;
 
+        var obj = {};
+        obj.data = JSON.stringify(data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                if (parseInt(data.State) === 0) {
+                    alert('Дані успішно збережено.');
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
     },
     init: function () {
         GroupSupplies.bindGpSearching();
@@ -923,7 +956,7 @@ var Supplier = {
                     var groupList = '';
                     for (var j = 0; j < data.GroupSupplier.length; j++) {
                         groupList += '<li class="clearfix">';
-                        groupList += '<a group-id="' + data.GroupSupplier[j][0] + '" class="btn btn-block" href="#GroupSupplies">';
+                        groupList += '<a group-id="' + data.GroupSupplier[j][0] + '" class="btn btn-block GroupSuppliesStart" href="#">';
                         groupList += '<span>' + data.GroupSupplier[j][1] + '</span>';
                         groupList += '</a>';
                         groupList += '</li>';
@@ -1013,6 +1046,14 @@ var Supplier = {
             }
         });
     },
+    startGS: function () {
+        var el = $(this);
+        GroupSupplies.curGS = parseInt(el.attr('group-id'));
+        $('a[href="#GroupSupplies"]').tab('show');
+        $('#select2-group_supplier_input-container').attr('title', el.text()).text(el.text());
+        GroupSupplies.getGroupSupplierData();
+        
+    },
     init: function () {
         Supplier.bindSupplierSearching();
         Supplier.bindBrandsSearching();
@@ -1027,6 +1068,7 @@ var Supplier = {
         $('#supplier_brands').on('click', '.removeSupplierBrand', Supplier.removeSuplierBrand);
         $('#supplier_brands').on('click', '.cancleSupplierBrand', Supplier.cancleSupplierBrand);
         $('#saveSupplierBrands').click(Supplier.saveBrands);
+        $('#group_supplier').on('click', '.GroupSuppliesStart', Supplier.startGS);
     }
 };
 

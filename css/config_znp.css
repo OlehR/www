@@ -156,7 +156,7 @@ ul {
 #sidebar{
     display:flex;
     align-items:center;
-    min-height: calc(100vh - 87px);
+    min-height: calc(100vh - 226px);
     flex-direction: column;
     border-right:2px solid #007bff;
 }
@@ -168,7 +168,7 @@ ul {
     width:100%;
 }
 #brand_menu{
-    height:calc(100vh - 4.5rem - 198px);
+    height:calc(100vh - 4.5rem - 280px);
     overflow-y:auto;
     margin:0;
     padding:0;
@@ -210,7 +210,7 @@ ul {
     display:none;
 }
 #tableContentChecker{
-    height:calc(100vh - 127px);
+    height:calc(100vh - 226px);
     overflow-y:auto;
 }
 #select_all{
