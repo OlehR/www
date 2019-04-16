@@ -1056,7 +1056,14 @@ var Supplier = {
     }
 };
 
+var ExchangeBrands = {
+    init: function () {
+
+    }
+};
+
 ZnpConfig.addTab('Delivery', Delivery);
 ZnpConfig.addTab('Checker', Checker);
 ZnpConfig.addTab('Supplier', Supplier);
 ZnpConfig.addTab('GroupSupplies', GroupSupplies);
+ZnpConfig.addTab('ExchangeBrands', ExchangeBrands);
