@@ -93,7 +93,7 @@ var AMatrix = {
             delete obj.data.CodeManager;
             obj.data.CodeWares = groups;
         }
-        if (manager === -1 && val === -1 && groups == -1) {
+        if (manager === -1 && val === -1 && groups === -1) {
             delete obj.data.GodeGroup;
             delete obj.data.CodeManager;
             delete obj.data.CodeWares;
@@ -538,7 +538,7 @@ var AMatrix = {
             e.preventDefault();
             var mEvent = e || window.event;
             var mPressed = mEvent.keyCode || mEvent.which;
-            if (mPressed == 13) {
+            if (mPressed === 13) {
                 AMatrix.getAM(-1, -1, $('#code_group_tag').val());
             }
         });
