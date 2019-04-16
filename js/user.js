@@ -13,10 +13,6 @@ var User = {
         loginData.data.CodeData = 1;
         loginData.data = JSON.stringify(loginData.data);
 
-        if (typeof window.loginUrl != typeof undefined) {
-            apiUrl = loginUrl;
-        }
-
         $.ajax({
             url: apiUrl,
             method: "POST",
@@ -25,10 +21,7 @@ var User = {
             },
             data: loginData,
             success: function (data) {
-                if (IsJsonString(data)) {
-                    data = JSON.parse(data);
-                }
-                if (data.TextError == "Ok") {
+                if (data.TextError === "Ok") {
                     Cookies.set('isLogin', 'true');
                     window.isLogin = true;
                     $('#loginForm').hide();
@@ -63,7 +56,7 @@ var User = {
                     btn.prop('disabled', false);
                     btn.html('Вхід');
                 } else {
-                    alert(JSON.parse(data).TextError);
+                    alert(data.TextError);
                     btn.prop('disabled', false);
                     btn.html('Вхід');
                 }
@@ -104,9 +97,6 @@ var User = {
             },
             data: data,
             success: function (data) {
-                if (IsJsonString(data)) {
-                    data = JSON.parse(data);
-                }
 
                 
                 if (data.State === 0) {
@@ -132,16 +122,3 @@ var User = {
 $(document).ready(function () {
     User.init();
 });
-
-function IsJsonString(str) {
-    if (typeof str !== "string") {
-        return false;
-    }
-    try {
-        JSON.parse(str);
-        return true;
-    }
-    catch (error) {
-        return false;
-    }
-}

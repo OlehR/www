@@ -194,7 +194,7 @@ var OrderHelper = {
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 var rows = '';
                 
                 for (var i = 0; i < result.AudInfo.length; i++) {

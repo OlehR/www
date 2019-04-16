@@ -19,8 +19,7 @@ var Checker = {
                 withCredentials: true
             },
             success: function (data) {
-                Checker.JSON = JSON.parse(data);
-                console.log(Checker.JSON);
+                Checker.JSON = data;
                 var arrLength = Checker.JSON.data.length;
                 var options = '<option value=""></option>';
                 for (var i = 0; i < arrLength; i++) {
@@ -43,7 +42,7 @@ var Checker = {
         });
     },
     selectGroup: function () {
-        Checker.GP = $(this).val();
+        //Checker.GP = $(this).val();
         var obj = {};
         obj.data = {};
         obj.data.CodeGroupSupply = Checker.GP;
@@ -58,8 +57,7 @@ var Checker = {
                 withCredentials: true
             },
             success: function (data) {
-                Checker.JSON = JSON.parse(data);
-                console.log(Checker.JSON);
+                Checker.JSON = data;
                 var arrLength = Checker.JSON.Brand.length;
                 var list = '';
                 for (var i = 0; i < arrLength; i++) {
@@ -79,7 +77,7 @@ var Checker = {
         });
     },
     selectBrand: function () {
-        $('#tableContent' + Checker.contextKey).html('<div class"loader"></div>');
+        $('#tableContentChecker').html('<div class"loader"></div>');
         if ($('.nav-link.checked').length > 0)
             $($('.nav-link.checked')[0]).removeClass('checked');
         var el = $(this);
@@ -112,7 +110,7 @@ var Checker = {
             }
         }
         tHead = tHead.replace(/id="select_all"/g, 'id="select_all" ' + checked);
-        $('#tableContent' + Checker.contextKey).html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
+        $('#tableContentChecker').html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
 
     },
     changeStatus: function () {
@@ -132,7 +130,7 @@ var Checker = {
         }
     },
     saveCheck: function () {
-        var rows = $('tr[is-change="true"]');
+        var rows = $('#GPSwares tr[is-change="true"]');
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 122;
@@ -153,7 +151,7 @@ var Checker = {
                 withCredentials: true
             },
             success: function (data) {
-                result = JSON.parse(data);
+                result = data;
                 console.log(result);
                 if (parseInt(result.Sate) != -1) {
                     Checker.getWarhouses(true);
@@ -172,9 +170,9 @@ var Checker = {
             $(this).val('');
         });
         $('#sidebar').on('click', '.nav-link', Checker.selectBrand);
-        $('#tableContent' + Checker.contextKey).on('change', 'input:not([id="select_all"])', Checker.changeStatus);
+        $('#tableContentChecker').on('change', 'input:not([id="select_all"])', Checker.changeStatus);
         $('#save_cheked').click(Checker.saveCheck);
-        $('#tableContent' + Checker.contextKey).on('change', 'input[id="select_all"]', function () {
+        $('#tableContentChecker').on('change', 'input[id="select_all"]', function () {
             var checked = $(this).prop('checked');
             $('input:not([id="select_all"])').each(function () {
                 $(this).prop('checked', checked).trigger('change');
@@ -182,9 +180,9 @@ var Checker = {
         });
     },
     init: function () {
-        if (window.isLogin) {
+        /*if (window.isLogin) {
             Checker.getWarhouses();
-        }
+        }*/
         this.controlsInit();
     }
 };
@@ -206,8 +204,7 @@ var Delivery = {
                 withCredentials: true
             },
             success: function (data) {
-                var json = JSON.parse(data);
-                console.log(json);
+                var json = data;
 
                 var warehouse = $('#Delivery .Warehouse');
                 var arrLength = json.Warehouse.length;
@@ -264,8 +261,7 @@ var Delivery = {
                 withCredentials: true
             },
             success: function (data) {
-                Delivery.JSON = JSON.parse(data);
-                console.log(Delivery.JSON);
+                Delivery.JSON = data;
 
                 Delivery.JSON.DeliverySchedule.Data.__proto__.filterByPrognosisType = function (search) {
                     var arr = [];
@@ -489,7 +485,6 @@ var Delivery = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
                 if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');
                 } else {
@@ -590,9 +585,25 @@ var GroupSupplies = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
+                    var countPerCol = Math.ceil(data.Brand.length / 5);
+                    var list = [];
+                    for (var i = 0; i < data.Brand.length; i++) {
+                        var listItem = '';
+                        listItem += '<div class="custom-control custom-checkbox">';
+                        listItem += '<input type="checkbox" class="custom-control-input" id="' + data.Brand[i][0] + '" value="' + data.Brand[i][2] + '" ' + (parseInt(data.Brand[i][2]) === 1 ? 'checked' : '') +'>';
+                        listItem += '<label class="custom-control-label" for="' + data.Brand[i][0] + '">' + data.Brand[i][1] + '</label>';
+                        listItem += '</div>';
+                        list.push(listItem);
+                    }
+
+                    var cols = list.chunk_inefficient(countPerCol);
+                    var html = '<div class="col-sm-1"></div>';
+                    for (var j = 0; j < cols.length; j++) {
+                        html += '<div class="col-sm-2">' + cols[j].join('') + '</div>';
+                    }
+
+                    $('#GPSbrandList').html(html);
                     $('a[href="#GPSbrand"]').tab('show');
                 } else {
                     alert(data.TextError);
@@ -618,8 +629,6 @@ var GroupSupplies = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
                     var options = '';
                     for (var i = 7; i <= 20; i++) {
@@ -652,6 +661,8 @@ var GroupSupplies = {
     supplierChecker: function () {
         $('a[href="#GPSwares"]').tab('show');
         Checker.init();
+        Checker.GP = GroupSupplies.curGS;
+        Checker.selectGroup();
     },
     getTabsData: function (isCurrent, id) {
 
@@ -685,15 +696,15 @@ var GroupSupplies = {
         }
     },
     renderGSfields: function (fields, data) {
-        var countPerCol = (fields.length - 7) / 3;
+        var countPerCol = Math.ceil((fields.length - 7) / 3);
 
         var rows = [];
         for (var i = 0; i < fields.length; i++) {
-            if ($('#' + fields[i][0]).length === 0) {
+            if (!$('#' + fields[i][0]).hasClass('staticField')) {
                 var row = '<div class="form-group">';
                 row += '<div class="row">';
-                row += '<label class="col-sm-3" for="' + fields[i][0] + '">' + fields[i][1] + ':</label>';
-                row += '<div class="col-sm-9">';
+                row += '<label class="col-sm-8" for="' + fields[i][0] + '">' + fields[i][1] + ':</label>';
+                row += '<div class="col-sm-4">';
                 var readonly = '';
                 if (/R/g.test(fields[i][2])) {
                     readonly = 'readonly';
@@ -738,6 +749,69 @@ var GroupSupplies = {
         $('#col_GS_2').html(cols[1].join(''));
         $('#col_GS_3').html(cols[2].join(''));
     },
+    saveGSdata: function () {
+        var data = {};
+        $('#EditGPS input, #EditGPS select').each(function () {
+            var el = $(this);
+            data[el.attr('id')] = el.val();
+        });
+        data.CodeData = 235;
+
+        var obj = {};
+        obj.data = data;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if (parseInt(data.State) === 0) {
+                    alert('Дані успішно збережено.');
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    saveGSbrandData: function () {
+        var data = {};
+        data.Brand = [];
+        $('#GPSbrandList input[type="checkbox"]').each(function () {
+            var el = $(this);
+            data.Brand.push([el.attr('id'), el.val()]);
+        });
+        data.CodeData = 233;
+        data.CodeGS = GroupSupplies.curGS;
+
+        var obj = {};
+        obj.data = JSON.stringify(data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if (parseInt(data.State) === 0) {
+                    alert('Дані успішно збережено.');
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
     init: function () {
         GroupSupplies.bindGpSearching();
         $('#group_supplier_input').on('select2:select', function (e) {
@@ -749,6 +823,17 @@ var GroupSupplies = {
         $('#GroupSuppliesTab a').click(function (e) {
             e.preventDefault();
             GroupSupplies.getTabsData(false, $(this).attr('href').replace(/#/g,''));
+        });
+        $('#saveGSdata').click(GroupSupplies.saveGSdata);
+        $('#saveGSbrandData').click(GroupSupplies.saveGSbrandData);
+        $('#EditGPS, #GPSbrandList').on('change', 'input[type="checkbox"]', function () {
+            var el = $(this);
+            if (el.prop('checked')) {
+                el.val(1);
+            }
+            else {
+                el.val(0);
+            }
         });
     }
 };
@@ -841,8 +926,6 @@ var Supplier = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
                     var brandList = '';
                     for (var i = 0; i < data.Brand.length; i++) {
@@ -859,7 +942,7 @@ var Supplier = {
                     var groupList = '';
                     for (var j = 0; j < data.GroupSupplier.length; j++) {
                         groupList += '<li class="clearfix">';
-                        groupList += '<a group-id="' + data.GroupSupplier[j][0] + '" class="btn btn-block" href="#GroupSupplies">';
+                        groupList += '<a group-id="' + data.GroupSupplier[j][0] + '" class="btn btn-block GroupSuppliesStart" href="#">';
                         groupList += '<span>' + data.GroupSupplier[j][1] + '</span>';
                         groupList += '</a>';
                         groupList += '</li>';
@@ -915,7 +998,7 @@ var Supplier = {
             if (el.hasClass('isAdded'))
                 data.push([el.attr('brand-id'), 1]);
             else
-                data.push([el.attr('brand-id'), -1]);
+                data.push([el.attr('brand-id'), 0]);
         });
 
         var obj = {};
@@ -933,8 +1016,6 @@ var Supplier = {
                 withCredentials: true
             },
             success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
                 if (parseInt(data.State) === 0) {
                     alert('Дані збережено.');
                     /*items.each(function () {
@@ -948,6 +1029,14 @@ var Supplier = {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
             }
         });
+    },
+    startGS: function () {
+        var el = $(this);
+        GroupSupplies.curGS = parseInt(el.attr('group-id'));
+        $('a[href="#GroupSupplies"]').tab('show');
+        $('#select2-group_supplier_input-container').attr('title', el.text()).text(el.text());
+        GroupSupplies.getGroupSupplierData();
+        
     },
     init: function () {
         Supplier.bindSupplierSearching();
@@ -963,6 +1052,7 @@ var Supplier = {
         $('#supplier_brands').on('click', '.removeSupplierBrand', Supplier.removeSuplierBrand);
         $('#supplier_brands').on('click', '.cancleSupplierBrand', Supplier.cancleSupplierBrand);
         $('#saveSupplierBrands').click(Supplier.saveBrands);
+        $('#group_supplier').on('click', '.GroupSuppliesStart', Supplier.startGS);
     }
 };
 

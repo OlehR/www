@@ -1,9 +1,12 @@
 ﻿var Order = {
     GP: -1,
-    WH:-1,
+    WH: -1,
     getWarhouses: function () {
         var data = {};
         data.CodeData = 5;
+
+        var obj = {};
+        obj.data = JSON.stringify(data);
 
         $.ajax({
             url: apiUrl,
@@ -13,7 +16,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 var arrLength = result.Warehouse.Data.length;
                 var options = '<option value=""></option>';
                 for (var i = 0; i < arrLength; i++) {
@@ -31,10 +34,13 @@
     },
     selectWarehouse: function () {
         var data = {};
-        data.warehouse = $(this).val();
+        data.CodeWarehouse = $(this).val();
         data.CodeData = 4;
 
-        Order.WH = data.warehouse;
+        Order.WH = data.CodeWarehouse;
+
+        var obj = {};
+        obj.data = JSON.stringify(data);
 
         $.ajax({
             url: apiUrl,
@@ -44,7 +50,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 var arrLength = result.data.length;
                 var options = '<option value=""></option>';
                 for (var i = 0; i < arrLength; i++) {
@@ -67,9 +73,12 @@
     },
     add_order: function () {
         var data = {};
-        data.warehouse = Order.WH;
+        data.CodeWarehouse = Order.WH;
         data.CodeGroupSupply = Order.GP;
         data.CodeData = 8;
+
+        var obj = {};
+        obj.data = JSON.stringify(data);
 
         $.ajax({
             url: apiUrl,
@@ -79,7 +88,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 document.location = 'order.html?order=' + result.Order;
             },
             error: function () {
@@ -91,5 +100,5 @@
         Order.getWarhouses();
         $('#add_order').click(Order.add_order);
     }
-}
+};
 Order.init();

@@ -9,7 +9,7 @@
     <link href="../css/dragtable-default.css" type="text/css" rel="stylesheet" />
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/cookie.js"></script>
-    <script src="config/config.js"></script>
+    <script src="../config/config.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
@@ -234,7 +234,7 @@
                                                             <div class="row">
                                                                 <label class="col-sm-1" for="NAME_GROUP_SUPPLY">Назва:</label>
                                                                 <div class="col-sm-11">
-                                                                    <input class="form-control" id="NAME_GROUP_SUPPLY" />
+                                                                    <input class="form-control staticField" id="NAME_GROUP_SUPPLY" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -244,11 +244,11 @@
                                                             <div class="row">
                                                                 <label class="col-sm-3" for="TIME_CRATE_1">Час створення 1:</label>
                                                                 <div class="col-sm-2">
-                                                                    <select class="form-control" id="TIME_CRATE_1"></select>
+                                                                    <select class="form-control staticField" id="TIME_CRATE_1"></select>
                                                                 </div>
                                                                 <label class="col-sm-5" for="TIME_CREATE_PERCENT1">% від денного завмовлення 1:</label>
                                                                 <div class="col-sm-2">
-                                                                    <input type="number" min="0" max="100" class="form-control" id="TIME_CREATE_PERCENT1" />
+                                                                    <input type="number" min="0" max="100" class="form-control staticField" id="TIME_CREATE_PERCENT1" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -259,11 +259,11 @@
                                                             <div class="row">
                                                                 <label class="col-sm-3" for="TIME_CRATE_2">Час створення 2:</label>
                                                                 <div class="col-sm-2">
-                                                                    <select class="form-control" id="TIME_CRATE_2"></select>
+                                                                    <select class="form-control staticField" id="TIME_CRATE_2"></select>
                                                                 </div>
                                                                 <label class="col-sm-5" for="TIME_CREATE_PERCENT2">% від денного завмовлення 2:</label>
                                                                 <div class="col-sm-2">
-                                                                    <input type="number" min="0" max="100" class="form-control" id="TIME_CREATE_PERCENT2" />
+                                                                    <input type="number" min="0" max="100" class="form-control staticField" id="TIME_CREATE_PERCENT2" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -274,24 +274,32 @@
                                                             <div class="row">
                                                                 <label class="col-sm-3" for="TIME_CRATE_3">Час створення 3:</label>
                                                                 <div class="col-sm-2">
-                                                                    <select class="form-control" id="TIME_CRATE_3"></select>
+                                                                    <select class="form-control staticField" id="TIME_CRATE_3"></select>
                                                                 </div>
                                                                 <label class="col-sm-5" for="TIME_CREATE_PERCENT3">% від денного завмовлення 3:</label>
                                                                 <div class="col-sm-2">
-                                                                    <input type="number" min="0" max="100" class="form-control" id="TIME_CREATE_PERCENT3" />
+                                                                    <input type="number" min="0" max="100" class="form-control staticField" id="TIME_CREATE_PERCENT3" />
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div id="col_GS_3"></div>
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-sm-5"></div>
+                                                    <div class="col-sm-2 text-center"><button id="saveGSdata" class="btn btn-success">Зберегти</button></div>
+                                                    <div class="col-sm-5"></div>
+                                                </div>
                                             </div>
 
                                             <div class="tab-pane fade" id="GPSbrand" role="tabpanel" aria-labelledby="home-tab">
+                                                <div class="form-group"></div>
+                                                <div class="row" id="GPSbrandList">
+                                                    
+                                                </div>
                                                 <div class="row">
-                                                    <div class="col-sm-12">
-
-                                                    </div>
+                                                    <div class="form-group"></div>
+                                                    <div class="col-sm-12 text-center"><button id="saveGSbrandData" class="btn btn-success">Зберегти</button></div>
                                                 </div>
                                             </div>
 
@@ -299,14 +307,6 @@
                                                 <div class="row">
                                                     <div id="sidebar" class="col-sm-4 col-xs-12">
                                                         <div class="form-group"></div>
-                                                        <div class="form-group">
-                                                            <div class="ui-widget">
-                                                                <div class="row">
-                                                                    <label class="col-md-3 col-sm-12">Група поставки: </label>
-                                                                    <select id="combobox"></select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                         <div class="form-group">
                                                             <nav class="nav-bar navbar-expand-lg">
                                                                 <div class="ui-widget brand_widget">

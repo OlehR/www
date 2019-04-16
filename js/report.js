@@ -16,7 +16,7 @@ var Report = {
                 withCredentials: true
             },
             success: function (data) {
-                Report.JSON = JSON.parse(data);
+                Report.JSON = data;
 
                 var options = '<option value="-1">--Виберіть звіт--</option>';
                 var arr = Report.JSON.Report;
@@ -156,7 +156,7 @@ var Report = {
                 withCredentials: true
             },
             success: function (data) {
-                var rJSON = JSON.parse(data);
+                var rJSON = data;
 
                 var options = '<option value="-1"></option>';
                 var arr = rJSON.LispParam;
@@ -243,7 +243,7 @@ var Report = {
                 withCredentials: true
             },
             success: function (data) {
-                var rJSON = JSON.parse(data);
+                var rJSON = data;
                 
                 if (parseInt(rJSON.State) != -1){
                     Report.renderTable(rJSON.data);

@@ -156,7 +156,7 @@ ul {
 #sidebar{
     display:flex;
     align-items:center;
-    min-height: calc(100vh - 87px);
+    min-height: calc(100vh - 226px);
     flex-direction: column;
     border-right:2px solid #007bff;
 }
@@ -168,7 +168,7 @@ ul {
     width:100%;
 }
 #brand_menu{
-    height:calc(100vh - 4.5rem - 198px);
+    height:calc(100vh - 4.5rem - 280px);
     overflow-y:auto;
     margin:0;
     padding:0;
@@ -210,7 +210,7 @@ ul {
     display:none;
 }
 #tableContentChecker{
-    height:calc(100vh - 127px);
+    height:calc(100vh - 226px);
     overflow-y:auto;
 }
 #select_all{
@@ -263,4 +263,77 @@ body[data-page="ConfigZNP"] .nav-tabs{
     height:1px;
     bottom:-1px;
     left:0;
+}
+.custom-control {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+}
+    .custom-control button, .custom-control input {
+        overflow: visible;
+    }
+.custom-control-input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+.custom-control input[type=checkbox], .custom-control input[type=radio] {
+    box-sizing: border-box;
+    padding: 0;
+}
+.custom-control [type=checkbox]:checked, .custom-control [type=checkbox]:not(:checked) {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.custom-control label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+.custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+}
+.custom-control-label::before {
+    position: absolute;
+    top: .25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: #fff;
+    border: #adb5bd solid 1px;
+}
+.custom-control-label::before, .custom-file-label, .custom-select {
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.custom-checkbox .custom-control-label::before {
+    border-radius: .25rem;
+}
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: #fff;
+    border-color: #007bff;
+    background-color: #007bff;
+}
+.custom-control-input:not(:disabled):active ~ .custom-control-label::before {
+    color: #fff;
+    background-color: #b3d7ff;
+    border-color: #b3d7ff;
+}
+.custom-control-label::after {
+    position: absolute;
+    top: .25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    background: no-repeat 50%/50% 50%;
+}
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
 }

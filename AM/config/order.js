@@ -13,7 +13,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 var arrLength = result.Warehouse.Data.length;
                 var options = '<option value=""></option>';
                 for (var i = 0; i < arrLength; i++) {
@@ -44,7 +44,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 var arrLength = result.data.length;
                 var options = '<option value=""></option>';
                 for (var i = 0; i < arrLength; i++) {
@@ -79,7 +79,7 @@
                 withCredentials: true
             },
             success: function (data) {
-                var result = JSON.parse(data);
+                var result = data;
                 document.location = 'order.html?order=' + result.Order;
             },
             error: function () {

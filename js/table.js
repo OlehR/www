@@ -2,7 +2,7 @@ var Table = {
     StateOrder: -1,
     globalCurrentRow: -1,
     JSON: {},
-    OriginalTableJSON: "",
+    OriginalTableJSON: {},
     sortByColumn: 0,
     sort: 'weeks',
     seeBrands: true,
@@ -11,47 +11,51 @@ var Table = {
     renderSettings: [],
     getData: function (withRender, sendMail) {
         var type = $('#tableContent').attr("data-type");
-        var data = {};
+        var obj = {};
+        obj.data = {};
         var coockieHouse = Cookies.get('Warehouse');
         var Date_From = Cookies.get('Date_From');
         var Date_To = Cookies.get('Date_To');
-        if (type == "orders") {
-            data.warehouse = $('#warehouse').val();
-            if (typeof coockieHouse != typeof undefined)
-                data.warehouse = coockieHouse;
-            data.CodeData = 5;
-            data.date_to = $('#date_to').val();
-            if (typeof Date_To != typeof undefined) {
-                data.date_to = Date_To;
+        if (type === "orders") {
+            obj.data.CodeWarehouse = $('#warehouse').val();
+            if (typeof coockieHouse !== typeof undefined)
+                obj.data.CodeWarehouse = coockieHouse;
+            obj.data.CodeData = 5;
+            obj.data.DateEnd = $('#date_to').val();
+            if (typeof Date_To !== typeof undefined) {
+                obj.data.DateEnd = Date_To;
                 $('#date_to').val(Date_To);
             }
                 
-            data.date_from = $('#date_from').val();
-            if (typeof Date_From != typeof undefined) {
-                data.date_from = Date_From;
+            obj.data.DateBegin = $('#date_from').val();
+            if (typeof Date_From !== typeof undefined) {
+                obj.data.DateBegin = Date_From;
                 $('#date_from').val(Date_From);
             }
                 
         } else {
-            data.CodeData = 6;
-            data.NumberOrder = REQUEST.getField('order');
+            obj.data.CodeData = 6;
+            obj.data.NumberOrder = REQUEST.getField('order');
         }
+
+        obj.data = JSON.stringify(obj.data);
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: data,
+            dataType: "json",
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
-                Table.JSON = JSON.parse(data);
+                Table.JSON = data;
                 Table.sortByColumn = Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND');
-                Table.OriginalTableJSON = data;
-                if ((typeof Table.JSON.OrderHead != typeof undefined)) {
+                Table.OriginalTableJSON = JSON.parse(JSON.stringify(data));
+                if ((typeof Table.JSON.OrderHead !== typeof undefined)) {
                     var d = DateHelper.formatJsDate(Table.JSON.OrderHead.DELIVERY);
                     $('#status').attr('is-change', 'false');
-                    if (Table.JSON.OrderHead.TIME == "00") {
+                    if (Table.JSON.OrderHead.TIME === "00") {
                         $('#status').val("-1");
                     } else {
                         $('#status').val(Table.JSON.OrderHead.TIME);
@@ -60,15 +64,15 @@ var Table = {
                     $('#delivery_date').attr('is-change', 'false');
                     $('#delivery_date').datepicker("update", d);
                     $('#delivery_date').attr('is-change', 'true');
-                    if (Table.JSON.OrderHead.STATE_ORDER == 1) { 
+                    if (Table.JSON.OrderHead.STATE_ORDER === 1) { 
                         $('#delivery_date').prop('disabled', false);
                     }
-                    if (Table.JSON.OrderHead.STATE_ORDER != 0) {
+                    if (Table.JSON.OrderHead.STATE_ORDER !== 0) {
                         $('#print_doc').css('display','block');
                     }
                 }
-                if (typeof Table.JSON.Is_Supplier != typeof undefined) {
-                    if (Table.JSON.Is_Supplier == 1) {
+                if (typeof Table.JSON.Is_Supplier !== typeof undefined) {
+                    if (Table.JSON.Is_Supplier === 1) {
                         Table.isSuppplier = true;
                         $('#warehouse, #logistic').hide();
                     } else {
@@ -76,7 +80,7 @@ var Table = {
                         $('#warehouse, #logistic').show();
                     }
                 }
-                if (typeof Table.JSON.StateOrder != typeof undefined) {
+                if (typeof Table.JSON.StateOrder !== typeof undefined) {
                     var arrLength = Table.JSON.StateOrder.length;
                     Table.StateOrder = Table.JSON.OrderHead.STATE_ORDER;
                     var options = '';
@@ -89,7 +93,7 @@ var Table = {
                     }
                     $('#stateOrderWrapper').show();
                 }
-                if (typeof Table.JSON.Warehouse != typeof undefined) {
+                if (typeof Table.JSON.Warehouse !== typeof undefined) {
                     var arrLength = Table.JSON.Warehouse.Data.length;
                     var warehouse = Cookies.get('Warehouse');
                     var wareControl = $('#warehouse');
@@ -153,7 +157,7 @@ var Table = {
                 if (sendMail) {
                     Table.sendMail(true);
                 }
-                if (type == "orders")
+                if (type === "orders")
                 Table.sortByLogistic();
                 if (withRender) {
                     Table.renderTable();
@@ -239,7 +243,7 @@ var Table = {
         } else {
 
             var renderSettings = Cookies.get('renderSettings');
-            Table.JSON.OrderField = JSON.parse(Table.OriginalTableJSON).OrderField;
+            Table.JSON.OrderField = Table.OriginalTableJSON.OrderField;
             /*
             Table.JSON.OrderField.Data.push([Table.JSON.OrderField.Data.length + 1, "PPACK", "заказ упаковок", "заказ уп.", 1, 3, "", ""]);
             Table.JSON.OrderField.Data.push([Table.JSON.OrderField.Data.length + 1, "LPACK", "логістична к-сть пакування", "логістична к-сть п.", 1, 3, "", ""]);
@@ -358,11 +362,12 @@ var Table = {
     },
     sortByState: function () {
         var state = parseInt($('#state').val());
-        Table.JSON = JSON.parse(Table.OriginalTableJSON);
-        if (state != -1) {
+        Table.JSON = JSON.parse(JSON.stringify(Table.OriginalTableJSON));
+        console.log();
+        if (state !== -1) {
             var newArr = [];
             for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
-                if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] == state)
+                if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] === state)
                     newArr.push(Table.JSON.OrderDetail.Data[i]);
             }
             Table.JSON.OrderDetail.Data = newArr;
@@ -378,7 +383,7 @@ var Table = {
             isLogistic = true;
             $('#logistic').prop('checked', true);
         }
-        Table.JSON = JSON.parse(Table.OriginalTableJSON);
+        Table.JSON = JSON.parse(JSON.stringify(Table.OriginalTableJSON));
         if (isLogistic) {
             var newArr = [];
             for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
@@ -1093,6 +1098,7 @@ var Table = {
         $('#SendMailModal').modal('show');
     },
     sendMail: function (save) {
+        var obj = {};
         var data = {};
         var html = '<body>';
         html += '<style> body,table{font:12px Helvetica}@media screen{#page{width:800px}}@media print{#page{width:100%}}*{margin:0;padding:0}body{margin:10px}td.right{text-align:right}td.left{text-align:left}td.center{text-align:center}table{width:100%}td.caption{text-align:right;padding-right:8px}table.detail,table.detail td,table.detail th{border:1px solid #000;border-collapse:collapse;padding:2px 3px;font-size:11px}table.summary,table.summary td{border:1px solid #fff;border-collapse:collapse;padding:3px;text-align:right}h3,h4{display:block;text-align:center}h4{font:14px Tahoma;font-weight:700;margin-top:5px;margin-bottom:5px}h3{font:18px Tahoma;font-weight:700;margin-top:10px;margin-bottom:25px}strong{font:16px Tahoma}';
@@ -1103,20 +1109,23 @@ var Table = {
         data.EMail = $('#send_mail_addr').val();
         data.Boby = html;
 
+        obj.data = JSON.stringify(data);
+
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: data,
+            dataType: "json",
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
                 if (!save) {
-                    if (JSON.parse(data).State == 0) {
+                    if (data.State === 0) {
                         alert('Дані успішно відправлено.');
                         $('#SendMailModal').modal('hide');
                     } else {
-                        alert(JSON.parse(data).TextError);
+                        alert(data.TextError);
                     }
                 }
             },
@@ -1132,11 +1141,10 @@ var Table = {
         var items = [];
         var item = [];
         var Data = {};
-        Data.data = {};
         var date = new Date();
         date.setDate(date.getDate() + 1);
 
-        if (rows.length == 0) {
+        if (rows.length === 0) {
             rows = $('tr.dataRow[data-is-change="true"]');
             isMobile = false;
         }
@@ -1154,33 +1162,37 @@ var Table = {
             items.push(item);
         }
 
-        Data.data.DATA = items;
+        Data.DATA = items;
         Data.CodeData = 7;
-        Data.data.Order = REQUEST.getField('order');
-        Data.data.StateOrder = 0;
+        Data.NumberOrder = REQUEST.getField('order');
+        Data.StateOrder = 0;
         if ($('#stateOrderWrapper').is(':visible')) {
-            Data.data.StateOrder = $('#stateOrder').val();
+            Data.StateOrder = $('#stateOrder').val();
         }
         var d = DateHelper.formatJsDate($('#delivery_date').val());
 
-        Data.data.DateDelivery = d.getFullYear() + "-" + ((d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1)) + "-" + (d.getDate() < 10 ? "0" + d.getDate() : d.getDate()) + " " + $("#status").val() + ":00";
+        Data.DateDelivery = d.getFullYear() + "-" + ((d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1)) + "-" + (d.getDate() < 10 ? "0" + d.getDate() : d.getDate()) + " " + $("#status").val() + ":00";
 
         if ($("#status").val() == -1) {
-            delete Data.data.DateDelivery;
+            delete Data.DateDelivery;
         }
 		
-        Data.data = JSON.stringify(Data.data);
+        //Data.data = JSON.stringify(Data.data);
+
+        var obj = {};
+        obj.data = JSON.stringify(Data);
 
         $('#tableContent').html('<div class="loader"></div>');
         $.ajax({
             url: apiUrl,
             method: "POST",
+            dataType: "json",
             data: Data,
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
-                if (JSON.parse(data).TextError == "Ok") {
+                if (data.TextError === "Ok") {
                     alert('Дані успішно збережено.');
 
                     console.log(parseInt($('#stateOrder').val()));
@@ -1198,7 +1210,7 @@ var Table = {
                     Table.getData(true, sendmail);
 
                 } else {
-                    alert(JSON.parse(data).TextError);
+                    alert(data.TextError);
                     Table.getData(true);
                 }
             },
