@@ -43,7 +43,6 @@ var Table = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            dataType: "json",
             data: obj,
             xhrFields: {
                 withCredentials: true
@@ -1114,7 +1113,6 @@ var Table = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            dataType: "json",
             data: obj,
             xhrFields: {
                 withCredentials: true
@@ -1186,8 +1184,7 @@ var Table = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            dataType: "json",
-            data: Data,
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
