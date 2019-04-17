@@ -34,7 +34,7 @@
     },
     selectWarehouse: function () {
         var data = {};
-        data.warehouse = $(this).val();
+        data.CodeWarehouse = $(this).val();
         data.CodeData = 4;
 
         Order.WH = data.warehouse;
