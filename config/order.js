@@ -34,10 +34,10 @@
     },
     selectWarehouse: function () {
         var data = {};
-        data.warehouse = $(this).val();
+        data.CodeWarehouse = $(this).val();
         data.CodeData = 4;
 
-        Order.WH = data.warehouse;
+        Order.WH = data.CodeWarehouse;
 
         var obj = {};
         obj.data = JSON.stringify(data);
@@ -51,10 +51,10 @@
             },
             success: function (data) {
                 var result = data;
-                var arrLength = result.data.length;
+                var arrLength = result.GroupSupply.length;
                 var options = '<option value=""></option>';
                 for (var i = 0; i < arrLength; i++) {
-                    options += '<option value="' + result.data[i][0] + '">' + result.data[i][1] + '</option>';
+                    options += '<option value="' + result.GroupSupply[i][0] + '">' + result.GroupSupply[i][1] + '</option>';
                 }
                 $("#combobox1").html(options);
                 $("#combobox1").combobox({
@@ -73,7 +73,7 @@
     },
     add_order: function () {
         var data = {};
-        data.warehouse = Order.WH;
+        data.CodeWarehouse = Order.WH;
         data.CodeGroupSupply = Order.GP;
         data.CodeData = 8;
 
