@@ -381,6 +381,9 @@ var AMatrix = {
         AMatrix.renderAM();
     },
     clearAm: function () {
+        if (!confirm('Очистити дані?')) {
+            return;
+        }
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 113;
