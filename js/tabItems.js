@@ -1057,8 +1057,163 @@ var Supplier = {
 };
 
 var ExchangeBrands = {
-    init: function () {
+    bindBrandsSearching: function () {
+        $('#brands_input').select2({
+            minimumInputLength: 3,
+            ajax: {
+                url: apiUrl,
+                dataType: 'json',
+                type: "POST",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: function (params) {
+                    var obj = {};
+                    obj.data = {};
+                    obj.data.CodeData = 301;
+                    obj.data.Brand = params.term;
+                    obj.data = JSON.stringify(obj.data);
+                    return obj;
+                },
+                processResults: function (data) {
+                    var dataArr = [{ id: '', text: '' }];
+                    if (parseInt(data.State) === 0) {
+                        var arrLength = data.Brand.length;
+                        for (var i = 0; i < arrLength; i++) {
+                            dataArr.push({ id: data.Brand[i][0], text: data.Brand[i][1] });
+                        }
+                    } else {
+                        alert(data.TextError);
+                    }
+                    return {
+                        results: dataArr
+                    };
+                }
+            }
+        });
+    },
+    getSupplierBrands: function (supplier) {
+        Supplier.currSupplier = supplier;
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 230;
+        obj.data.CodeSupplier = supplier;
+        obj.data = JSON.stringify(obj.data);
 
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if (parseInt(data.State) === 0) {
+                    var brandList = '';
+                    for (var i = 0; i < data.Brand.length; i++) {
+                        brandList += '<li brand-id="' + data.Brand[i][0] + '" class="clearfix">';
+                        brandList += '<span>' + data.Brand[i][1] + '</span>';
+                        brandList += '<a class="btn btn-sm btn-danger removeSupplierBrand float-right" href="#" title="видалити">';
+                        brandList += 'X';
+                        brandList += '</a>';
+                        brandList += '</li>';
+                    }
+                    $('#supplier_brands').html(brandList);
+                    $('#tableContentSupplier .brand_widget').show();
+
+                    var groupList = '';
+                    for (var j = 0; j < data.GroupSupplier.length; j++) {
+                        groupList += '<li class="clearfix">';
+                        groupList += '<a group-id="' + data.GroupSupplier[j][0] + '" class="btn btn-block GroupSuppliesStart" href="#">';
+                        groupList += '<span>' + data.GroupSupplier[j][1] + '</span>';
+                        groupList += '</a>';
+                        groupList += '</li>';
+                    }
+
+                    $('#group_supplier ul').html(groupList);
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    addSupplierBrand: function (brandId, brandTitle) {
+        var brandList = '';
+        brandList += '<li brand-id="' + brandId + '" class="clearfix isChanged alert-success isAdded">';
+        brandList += '<span>' + brandTitle + '</span>';
+        brandList += '<a class="btn btn-sm btn-warning cancleSupplierBrand float-right" href="#" title="відмінити">';
+        brandList += 'X';
+        brandList += '</a>';
+        brandList += '</li>';
+        $('#supplier_brands').append(brandList);
+        $('#supplier_brands').scrollTop($("#supplier_brands")[0].scrollHeight);
+
+    },
+    removeSuplierBrand: function () {
+        var item = $(this).closest('li');
+        item.addClass('isChanged alert-danger isRemoved');
+        item.find('a').removeClass('btn-danger removeSupplierBrand').addClass('btn-warning cancleSupplierBrand');
+    },
+    cancleSupplierBrand: function () {
+        var item = $(this).closest('li');
+        if (item.hasClass('isAdded')) {
+            item.remove();
+        } else {
+            item.removeClass('isChanged alert-danger isRemoved');
+            item.find('a').addClass('btn-danger removeSupplierBrand').removeClass('btn-warning cancleSupplierBrand');
+        }
+    },
+    saveBrands: function () {
+        var items = $('.isChanged');
+
+        if (items.length === 0) {
+            alert('Відсутні зміни!');
+            return;
+        }
+
+        var data = [];
+        items.each(function () {
+            var el = $(this);
+            if (el.hasClass('isAdded'))
+                data.push([el.attr('brand-id'), 1]);
+            else
+                data.push([el.attr('brand-id'), 0]);
+        });
+
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 231;
+        obj.data.CodeSupplier = Supplier.currSupplier;
+        obj.data.Brand = data;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if (parseInt(data.State) === 0) {
+                    alert('Дані збережено.');
+                    /*items.each(function () {
+                        
+                    });*/
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    init: function () {
+        $('a[href="#EditExchangeBrandsTab"]').tab('show');
     }
 };
 

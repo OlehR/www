@@ -186,10 +186,13 @@ var OrderHelper = {
         data.CodeData = 10;
         data.NumberOrder = number;
 
+        var obj = {};
+        obj.data = JSON.stringify(data);
+
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: data,
+            data: obj,
             xhrFields: {
                 withCredentials: true
             },
@@ -219,10 +222,13 @@ function TestConnection() {
     var data = {};
     data.CodeData = -1;
 
+    var obj = {};
+    obj.data = JSON.stringify(data);
+
     $.ajax({
         url: apiUrl,
         method: "POST",
-        data: data,
+        data: obj,
         xhrFields: {
             withCredentials: true
         },
