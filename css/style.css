@@ -320,7 +320,7 @@ header{
     height:calc(100vh - 250px - 1rem);
     overflow-x:auto;
 }
-    #supplier_brands > li, #group_supplier li{
+    #exchange_brand_brands > li, #supplier_brands > li, #group_supplier li {
         padding: 8px;
         border-bottom: 1px solid #007bff;
     }
@@ -330,7 +330,7 @@ header{
 .bt1px {
     border-top: 1px solid #007bff;
 }
-#supplier_brands > li:hover, #group_supplier li:hover, #group_supplier li:hover a {
+#exchange_brand_brands > li:hover, #supplier_brands > li:hover, #group_supplier li:hover, #group_supplier li:hover a {
     background: #007bff;
     color: #fff;
 }

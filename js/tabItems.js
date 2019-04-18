@@ -1018,9 +1018,7 @@ var Supplier = {
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     alert('Дані збережено.');
-                    /*items.each(function () {
-                        
-                    });*/
+                    Supplier.getSupplierBrands();
                 } else {
                     alert(data.TextError);
                 }
@@ -1058,7 +1056,7 @@ var Supplier = {
 
 var ExchangeBrands = {
     bindBrandsSearching: function () {
-        $('#brands_input').select2({
+        $('#exchange_brands_input').select2({
             minimumInputLength: 3,
             ajax: {
                 url: apiUrl,
@@ -1092,12 +1090,10 @@ var ExchangeBrands = {
             }
         });
     },
-    getSupplierBrands: function (supplier) {
-        Supplier.currSupplier = supplier;
+    getExchangeBrands: function () {
         var obj = {};
         obj.data = {};
-        obj.data.CodeData = 230;
-        obj.data.CodeSupplier = supplier;
+        obj.data.CodeData = 238;
         obj.data = JSON.stringify(obj.data);
 
         $.ajax({
@@ -1118,19 +1114,8 @@ var ExchangeBrands = {
                         brandList += '</a>';
                         brandList += '</li>';
                     }
-                    $('#supplier_brands').html(brandList);
-                    $('#tableContentSupplier .brand_widget').show();
-
-                    var groupList = '';
-                    for (var j = 0; j < data.GroupSupplier.length; j++) {
-                        groupList += '<li class="clearfix">';
-                        groupList += '<a group-id="' + data.GroupSupplier[j][0] + '" class="btn btn-block GroupSuppliesStart" href="#">';
-                        groupList += '<span>' + data.GroupSupplier[j][1] + '</span>';
-                        groupList += '</a>';
-                        groupList += '</li>';
-                    }
-
-                    $('#group_supplier ul').html(groupList);
+                    $('#exchange_brand_brands').html(brandList);
+                    
                 } else {
                     alert(data.TextError);
                 }
@@ -1148,8 +1133,8 @@ var ExchangeBrands = {
         brandList += 'X';
         brandList += '</a>';
         brandList += '</li>';
-        $('#supplier_brands').append(brandList);
-        $('#supplier_brands').scrollTop($("#supplier_brands")[0].scrollHeight);
+        $('#exchange_brand_brands').append(brandList);
+        $('#exchange_brand_brands').scrollTop($("#exchange_brand_brands")[0].scrollHeight);
 
     },
     removeSuplierBrand: function () {
@@ -1185,8 +1170,7 @@ var ExchangeBrands = {
 
         var obj = {};
         obj.data = {};
-        obj.data.CodeData = 231;
-        obj.data.CodeSupplier = Supplier.currSupplier;
+        obj.data.CodeData = 239;
         obj.data.Brand = data;
         obj.data = JSON.stringify(obj.data);
 
@@ -1200,9 +1184,7 @@ var ExchangeBrands = {
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     alert('Дані збережено.');
-                    /*items.each(function () {
-                        
-                    });*/
+                    ExchangeBrands.getExchangeBrands();
                 } else {
                     alert(data.TextError);
                 }
@@ -1214,6 +1196,15 @@ var ExchangeBrands = {
     },
     init: function () {
         $('a[href="#EditExchangeBrandsTab"]').tab('show');
+        ExchangeBrands.getExchangeBrands();
+        ExchangeBrands.bindBrandsSearching();
+        $('#exchange_brands_input').on('select2:select', function (e) {
+            var data = e.params.data;
+            ExchangeBrands.addSupplierBrand(data.id, data.text);
+        });
+        $('#exchange_brand_brands').on('click', '.removeSupplierBrand', ExchangeBrands.removeSuplierBrand);
+        $('#exchange_brand_brands').on('click', '.cancleSupplierBrand', ExchangeBrands.cancleSupplierBrand);
+        $('#saveExchangeBrands').click(ExchangeBrands.saveBrands);
     }
 };
 
