@@ -24,16 +24,16 @@
                 var arrLen = json.Pages.length;
                 for (var i = 0; i < arrLen; i++) {
                     if (json.Pages[i][2] === 'On' || json.Pages[i][2] === 'ReadOnly') {
-                        $('.nav-tabs a').eq(i).tab('show');
+                        $('#myTab a').eq(i).tab('show');
                         break;
                     }
                 }
-                for (var i = 0; i < arrLen; i++) {
-                    if (json.Pages[i][2] === 'Off') {
-                        $('.nav-tabs nav-item').eq(i).hide();
+                for (var j = 0; j < arrLen; j++) {
+                    if (json.Pages[j][2] === 'Off') {
+                        $('#myTab nav-item').eq(j).hide();
                     }
-                    if (json.Pages[i][2] === 'ReadOnly') {
-                        $('.tab-pane').eq(i).addClass('ReadOnly');
+                    if (json.Pages[j][2] === 'ReadOnly') {
+                        $('#myTabContent > .tab-pane').eq(j).addClass('ReadOnly');
                     }
                 }
 
@@ -44,7 +44,7 @@
         });
     },
     controlsInit: function () {
-        $('#myTab.nav-tabs a').on('shown.bs.tab', function (event) {
+        $('#myTab a').on('shown.bs.tab', function (event) {
             //var x = $(event.target).text();         // active tab
             //var y = $(event.relatedTarget).text();  // previous tab
 
@@ -52,7 +52,7 @@
         });
     },
     Run: function () {
-        var tabIndex = $('.nav-tabs .nav-link').index($('.nav-tabs .nav-link.active'));
+        var tabIndex = $('#myTab .nav-link').index($('#myTab .nav-link.active'));
         ZnpConfig.Tabs[tabIndex].obj.init();
     }
 };

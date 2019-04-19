@@ -586,12 +586,13 @@ var GroupSupplies = {
             },
             success: function (data) {
                 if (parseInt(data.State) === 0) {
+                    var readOnly = $('#GroupSupplies').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
                     var countPerCol = Math.ceil(data.Brand.length / 5);
                     var list = [];
                     for (var i = 0; i < data.Brand.length; i++) {
                         var listItem = '';
                         listItem += '<div class="custom-control custom-checkbox">';
-                        listItem += '<input type="checkbox" class="custom-control-input" id="' + data.Brand[i][0] + '" value="' + data.Brand[i][2] + '" ' + (parseInt(data.Brand[i][2]) === 1 ? 'checked' : '') +'>';
+                        listItem += '<input ' + readOnly + ' type="checkbox" class="custom-control-input" id="' + data.Brand[i][0] + '" value="' + data.Brand[i][2] + '" ' + (parseInt(data.Brand[i][2]) === 1 ? 'checked' : '') +'>';
                         listItem += '<label class="custom-control-label" for="' + data.Brand[i][0] + '">' + data.Brand[i][1] + '</label>';
                         listItem += '</div>';
                         list.push(listItem);
@@ -637,6 +638,12 @@ var GroupSupplies = {
                     $('#TIME_CRATE_1').html(options);
                     $('#TIME_CRATE_2').html(options);
                     $('#TIME_CRATE_3').html(options);
+                    if ($('#GroupSupplies').hasClass('ReadOnly')) {
+                        $('#EditGPS select, #EditGPS input').each(function () {
+                            var el = $(this);
+                            el.attr('readonly','readonly');
+                        });
+                    }
                     GroupSupplies.renderGSfields(data.Comment, data);
                     for (var k in data.GS) {
                         if (data.GS.hasOwnProperty(k)) {
@@ -696,6 +703,7 @@ var GroupSupplies = {
         }
     },
     renderGSfields: function (fields, data) {
+        var readOnly = $('#GroupSupplies').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
         var countPerCol = Math.ceil((fields.length - 7) / 3);
 
         var rows = [];
@@ -710,17 +718,17 @@ var GroupSupplies = {
                     readonly = 'readonly';
                 }
                 if (/S/g.test(fields[i][2]) || /D/g.test(fields[i][2])) {
-                    row += '<input ' + readonly + ' class="form-control" id="' + fields[i][0] + '" />';
+                    row += '<input ' + readOnly + ' ' + readonly + ' class="form-control" id="' + fields[i][0] + '" />';
                 }
                 if (/L/g.test(fields[i][2])) {
-                    row += '<select ' + readonly + ' class="form-control" id="' + fields[i][0] + '">';
+                    row += '<select ' + readOnly + ' ' + readonly + ' class="form-control" id="' + fields[i][0] + '">';
                     for (var k = 0; k < data[fields[i][0]].length; k++) {
                         row += '<option value="' + data[fields[i][0]][k][0] + '">' + data[fields[i][0]][k][1] +'</option>';
                     }
                     row += '</select>';
                 }
                 if (/C/g.test(fields[i][2])) {
-                    row += '<input ' + readonly + ' type="checkbox" class="checkbox" id="' + fields[i][0] + '" />';
+                    row += '<input ' + readOnly + ' ' + readonly + ' type="checkbox" class="checkbox" id="' + fields[i][0] + '" />';
                 }
                 if (/N/g.test(fields[i][2])) {
                     var range = '';
@@ -728,13 +736,13 @@ var GroupSupplies = {
                         var rangeArr = fields[i][3].split('-');
                         range = 'min="' + rangeArr[0] + '" max="' + rangeArr[1] + '"';
                     }
-                    row += '<input ' + readonly + ' ' + range + ' type="number" class="form-control" id="' + fields[i][0] + '" />';
+                    row += '<input ' + readOnly + ' ' + readonly + ' ' + range + ' type="number" class="form-control" id="' + fields[i][0] + '" />';
                 }
                 if (/I/g.test(fields[i][2])) {
-                    row += '<input ' + readonly + ' type="number" class="form-control integer" id="' + fields[i][0] + '" />';
+                    row += '<input ' + readOnly + ' ' + readonly + ' type="number" class="form-control integer" id="' + fields[i][0] + '" />';
                 }
                 if (/E/g.test(fields[i][2])) {
-                    row += '<input ' + readonly + ' class="form-control e-mail" id="' + fields[i][0] + '" />';
+                    row += '<input ' + readOnly + ' ' + readonly + ' class="form-control e-mail" id="' + fields[i][0] + '" />';
                 }
                 row += '</div>';
                 row += '</div>';
@@ -750,6 +758,9 @@ var GroupSupplies = {
         $('#col_GS_3').html(cols[2].join(''));
     },
     saveGSdata: function () {
+        if ($('#GroupSupplies').hasClass('ReadOnly')) {
+            return;
+        }
         var data = {};
         $('#EditGPS input, #EditGPS select').each(function () {
             var el = $(this);
@@ -927,11 +938,12 @@ var Supplier = {
             },
             success: function (data) {
                 if (parseInt(data.State) === 0) {
+                    var readOnly = $('#Supplier').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
                     var brandList = '';
                     for (var i = 0; i < data.Brand.length; i++) {
                         brandList += '<li brand-id="' + data.Brand[i][0] + '" class="clearfix">';
                         brandList += '<span>' + data.Brand[i][1] + '</span>';
-                        brandList += '<a class="btn btn-sm btn-danger removeSupplierBrand float-right" href="#" title="видалити">';
+                        brandList += '<a ' + readOnly + ' class="btn btn-sm btn-danger removeSupplierBrand float-right" href="#" title="видалити">';
                         brandList += 'X';
                         brandList += '</a>';
                         brandList += '</li>';
@@ -959,6 +971,11 @@ var Supplier = {
         });
     },
     addSupplierBrand: function (brandId, brandTitle) {
+
+        if ($('#Supplier').hasClass('ReadOnly')) {
+            return;
+        }
+
         var brandList = '';
         brandList += '<li brand-id="' + brandId + '" class="clearfix isChanged alert-success isAdded">';
         brandList += '<span>' + brandTitle + '</span>';
@@ -971,11 +988,21 @@ var Supplier = {
 
     },
     removeSuplierBrand: function () {
+
+        if ($('#Supplier').hasClass('ReadOnly')) {
+            return;
+        }
+
         var item = $(this).closest('li');
         item.addClass('isChanged alert-danger isRemoved');
         item.find('a').removeClass('btn-danger removeSupplierBrand').addClass('btn-warning cancleSupplierBrand');
     },
     cancleSupplierBrand: function () {
+
+        if ($('#Supplier').hasClass('ReadOnly')) {
+            return;
+        }
+
         var item = $(this).closest('li');
         if (item.hasClass('isAdded')) {
             item.remove();
@@ -985,6 +1012,11 @@ var Supplier = {
         }
     },
     saveBrands: function () {
+
+        if ($('#Supplier').hasClass('ReadOnly')) {
+            return;
+        }
+
         var items = $('.isChanged');
 
         if (items.length === 0) {
