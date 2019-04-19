@@ -344,3 +344,12 @@ body[data-page="ConfigZNP"] .nav-tabs{
     height: calc(100vh - 250px - 1rem);
     overflow-x: auto;
 }
+#ExchangeBrandWaresTable input {
+    margin: 0;
+}
+#ExchangeBrandWaresTable .checkbox {
+    margin-right: 10px;
+}
+#ExchangeBrandWaresTable .flex{
+    justify-content: center;
+}

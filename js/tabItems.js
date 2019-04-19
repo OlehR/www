@@ -1194,6 +1194,180 @@ var ExchangeBrands = {
             }
         });
     },
+    getWaresExchange: function (brandId) {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 240;
+        obj.data.CodeBrand = brandId;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if (parseInt(data.State) === 0) {
+                    data.Price.__proto__.getPrice = function (waresIndex, gpIndex) {
+                        for (var i = 0; i < this.length; i++) {
+                            if (this[i][0] === waresIndex && this[i][1] === gpIndex) {
+                                return this[i];
+                            }
+                        }
+                    };
+                    ExchangeBrands.renderTable(data);
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    bindBrandWaresSearching: function () {
+        $('#exchange_brands_wares_input').select2({
+            minimumInputLength: 3,
+            ajax: {
+                url: apiUrl,
+                dataType: 'json',
+                type: "POST",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: function (params) {
+                    var obj = {};
+                    obj.data = {};
+                    obj.data.CodeData = 301;
+                    obj.data.Brand = params.term;
+                    obj.data = JSON.stringify(obj.data);
+                    return obj;
+                },
+                processResults: function (data) {
+                    var dataArr = [{ id: '', text: '' }];
+                    if (parseInt(data.State) === 0) {
+                        var arrLength = data.Brand.length;
+                        for (var i = 0; i < arrLength; i++) {
+                            dataArr.push({ id: data.Brand[i][0], text: data.Brand[i][1] });
+                        }
+                    } else {
+                        alert(data.TextError);
+                    }
+                    return {
+                        results: dataArr
+                    };
+                }
+            }
+        });
+    },
+    renderTable: function (data) {
+        var thead = '<thead><tr>';
+        thead += '<th>код</th>';
+        thead += '<th>назва</th>';
+
+        for (var i = 0; i < data.Supplier.length; i++) {
+            thead += '<th supplier-id="' + data.Supplier[i][1] +'">' + data.Supplier[i][1] +'</th>';
+        }
+
+        thead += '</tr></thead>';
+
+        var tbody = '<tbody>';
+
+        for (var j = 0; j < data.Wares.length; j++) {
+            tbody += '<tr>';
+            tbody += '<td>';
+            tbody += data.Wares[j][0];
+            tbody += '</td>';
+            tbody += '<td>';
+            tbody += data.Wares[j][1];
+            tbody += '</td>';
+            for (var k = 0; k < data.Supplier.length; k++) {
+                var curItem = data.Price.getPrice(data.Wares[j][0], data.Supplier[k][0]);
+                tbody += '<td group-id="' + curItem[1]+'">';
+                tbody += '<div class="flex">';
+                tbody += '<input class="checkbox isActive" data-old="' + (curItem[3] === 1 ? 'true' : 'false') + '" type="checkbox" ' + (curItem[3] === 1 ? 'checked' : '') + '/>';
+                tbody += '<input class="form-control price" data-old="' + curItem[2] + '" type="number" value="' + curItem[2] + '" ' + (curItem[3] !== 1 ? 'disabled' : '') + '/>';
+                tbody += '</div>';
+                tbody += '</td>';
+            }
+            tbody += '</tr>';
+        }
+
+        tbody += '</tbody>';
+
+        $('#ExchangeBrandWaresTable').html(thead + tbody);
+    },
+    OnChange: function () {
+        var el = $(this);
+        var checked = el.prop('checked');
+
+        if (checked) {
+            el.next('input').prop('disabled',false);
+        } else {
+            el.next('input').prop('disabled', true);
+        }
+
+        if (checked === JSON.parse(el.attr('data-old'))) {
+            el.closest('tr').attr('is-change', 'false');
+        } else {
+            el.closest('tr').attr('is-change', 'true');
+        }
+    },
+    OnBlur: function () {
+        var el = $(this);
+        if (el.val() !== el.attr('data-old')) {
+            el.closest('tr').attr('is-changed', 'true');
+        } else {
+            el.closest('tr').attr('is-changed', 'false');
+        }
+    },
+    saveWares: function () {
+        var rows = $('#ExchangeBrandWaresTable tr[is-changed="true"]');
+
+        if (rows.length === 0) {
+            alert('Зміни відсутні');
+            return;
+        }
+
+        var Price = [];
+        for (var i = 0; i < rows.length; i++) {
+            var cells = $(rows[i]).find('td');
+            for (var j = 2; j < cells.length; j++) {
+                var data = [parseInt($(cells[0]).text())];
+                data.push(parseInt($(cells[j]).attr('group-id')));
+                data.push(parseFloat($(cells[j]).find('.price').val()));
+                data.push(0 + $(cells[j]).find('.isActive').prop('checked'));
+                Price.push(data);
+            }
+        }
+
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 241;
+        obj.data.Price = Price;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if (parseInt(data.State) === 0) {
+                    alert('Дані успішно збережено.');
+                } else {
+                    alert(data.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
     init: function () {
         $('a[href="#EditExchangeBrandsTab"]').tab('show');
         ExchangeBrands.getExchangeBrands();
@@ -1202,9 +1376,19 @@ var ExchangeBrands = {
             var data = e.params.data;
             ExchangeBrands.addSupplierBrand(data.id, data.text);
         });
+        $('#exchange_brands_wares_input').on('select2:select', function (e) {
+            var data = e.params.data;
+            ExchangeBrands.getWaresExchange(data.id);
+        });
         $('#exchange_brand_brands').on('click', '.removeSupplierBrand', ExchangeBrands.removeSuplierBrand);
         $('#exchange_brand_brands').on('click', '.cancleSupplierBrand', ExchangeBrands.cancleSupplierBrand);
         $('#saveExchangeBrands').click(ExchangeBrands.saveBrands);
+        $('a[href="#GPSExchangeBrandsTab"]').on('shown.bs.tab', function (event) {
+            ExchangeBrands.bindBrandWaresSearching();
+        });
+        $('#ExchangeBrandWaresTable').on('change', '.checkbox', ExchangeBrands.OnChange);
+        $('#ExchangeBrandWaresTable').on('blur', '.checkbox', ExchangeBrands.OnBlur);
+        $('#SaveExchangeWares').click(ExchangeBrands.saveWares);
     }
 };
 
