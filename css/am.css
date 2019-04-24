@@ -226,3 +226,10 @@ ul {
     border:none;
     border-spacing: 0;
 }
+
+#start_novelty_date{
+    margin-top: -5px;
+}
+.ln18px{
+    line-height:18px;
+}

@@ -71,7 +71,7 @@
                         </div>
                     </div>
                 </div>
-            </div>          
+            </div>
         </nav>
     </header>
 
@@ -88,27 +88,28 @@
                         </div>
                     </div>
                     <div class="col-md-2 col-sm-12 form-group">
-                        <input id="code_group_tag" type="text" class="form-control" placeholder="Введіть коди через (,) та натисніть Enter" title="Введіть коди через (,) та натисніть Enter"/>
+                        <input id="code_group_tag" type="text" class="form-control" placeholder="Введіть коди через (,) та натисніть Enter" title="Введіть коди через (,) та натисніть Enter" />
                     </div>
                     <div class="col-md-2 col-sm-12 form-group">
-                        <select id="managers" class="form-control">
-                        </select>
+                        <select id="managers" class="form-control"></select>
                     </div>
                     <div class="col-md-2 col-sm-12 form-group">
                         <button title="Формат CSV => КОД ТОВАРУ, Код товару який закривається,Код магазину 1,Код магазину 2, Код магазину 3.
 Code,Code,3,9,15,22,57,68
 123,0,1,1,1,1,1,1
 212,11,0,0,1,1,0,0
-233,44,0,0,0,0,1,1" id="import_xl" class="btn btn-primary" type="button">CSV</button>
-                        <input id="file-upload" hidden="hidden" type="file" name="files[]" multiple/>
-                    
+233,44,0,0,0,0,1,1" id="import_xl" class="btn btn-primary" type="button">
+                            CSV
+                        </button>
+                        <input id="file-upload" hidden="hidden" type="file" name="files[]" multiple=multiple />
+
                         <button type="button" id="clear_am" class="btn btn-warning">Очистити</button>
                     </div>
                     <div class="col-md-2">
                         <label>Мінімальні залишки</label>
-                        <input type="radio" />
+                        <input type="radio" name="am_type" value="0" checked=checked />
                         <label>Новинка</label>
-                        <input type="radio" />
+                        <input type="radio" name="am_type" value="1" />
                     </div>
                 </div>
             </form>
@@ -161,7 +162,7 @@ Code,Code,3,9,15,22,57,68
             <input type="text" id="inputLogin" class="form-control" placeholder="Логин" required="" autofocus="" />
             <label for="inputPassword" class="sr-only">Пароль</label>
             <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="" />
-           
+
             <button id="loginButton" class="btn btn-lg btn-primary btn-block" type="button">Вхід</button>
         </form>
     </div>
@@ -214,11 +215,14 @@ Code,Code,3,9,15,22,57,68
             $('#loginForm').hide();
         }
     </script>
-<script src="../js/popper.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="config/helpers.js"></script>
+    <script src="../js/popper.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="config/helpers.js"></script>
     <script src="../js/jquery-ui.js"></script>
     <script src="../js/jquery.dragtable.js"></script>
+    <script src="../js/bootstrap-datepicker.js"></script>
+    <script src="../js/bootstrap-datepicker.uk.js"></script>
+    <link href="../css/datepicker/bootstrap-datepicker.css" type="text/css" rel="stylesheet" />
     <script>
         $(function () {
             $.widget("custom.combobox", {
@@ -358,13 +362,13 @@ Code,Code,3,9,15,22,57,68
                 'transform': 'translate3d(0,' + ($('#tableContent').scrollTop() - 1) + 'px,0)'
             });
             $('#tableContent thead th:nth-child(-n+4)').css({
-                'transform': 'translate3d(' + ($(this).scrollLeft() - 1) + 'px,' + ($('#tableContent').scrollTop()-1) + 'px,0)'
+                'transform': 'translate3d(' + ($(this).scrollLeft() - 1) + 'px,' + ($('#tableContent').scrollTop() - 1) + 'px,0)'
             });
             $('#tableContent td:nth-child(-n+4)').css({
                 'transform': 'translate3d(' + ($(this).scrollLeft() - 1) + 'px,0,0)'
             });
         });
     </script>
-<script src="../js/am_matrix.js"></script>
-<script src="../js/user.js"></script>
+    <script src="../js/am_matrix.js"></script>
+    <script src="../js/user.js"></script>
 </body>

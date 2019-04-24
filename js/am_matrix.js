@@ -23,7 +23,7 @@ var AMatrix = {
                 }
 
                 if (typeof AMatrix.JSON.Manager != typeof undefined) {
-                    var options = '<option>--Вибрати менеджера--</option>';
+                    var options = '<option value="-1">--Вибрати менеджера--</option>';
                     var arr = AMatrix.JSON.Manager;
                     var arrLength = arr.length;
 
@@ -78,11 +78,14 @@ var AMatrix = {
         return tree;
     },
     getAM: function (val, manager, groups, xls) {
+
         AMatrix.lastRequest = [val, manager, groups, xls];
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 111;
         obj.data.GodeGroup = val;
+
+        obj.data.Type = parseInt($('input[name="am_type"]:checked').val());
 
         if (val === -1) {
             delete obj.data.GodeGroup;
@@ -121,6 +124,7 @@ var AMatrix = {
 
     },
     renderAM: function (isHide) {
+        var isNovelty = parseInt($('input[name="am_type"]:checked').val()) === 1;
         var readOnly = '';
         if (!AMatrix.JSON.IsAccept) {
             readOnly = 'disabled';
@@ -155,7 +159,13 @@ var AMatrix = {
         tHead += '<tr>';
         tHead += '<th data-header="1" class="text-center dragtable-drag-boundary"><div class="thead">код</div>код</th>';
         tHead += '<th data-header="2" class="text-center dragtable-drag-boundary"><div class="thead">назва</div>назва</th>';
-        tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead">ст. код</div>ст. код</th>';
+        if (isNovelty) {
+            tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead status_all"><div class="clearfix ln18px">дата </div><input id="start_novelty_date" class="form-control novelty_date"/></div></th>';
+        }
+        else {
+            tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead">ст. код</div>ст. код</th>';
+        }
+        
         tHead += '<th data-header="4" class="text-center dragtable-drag-boundary"><div class="thead status status_all"><div class="clearfix">зат. </div><div class="flex"><div class="' + readOnly + ' st_all"><input ' + readOnly + ' name="status" type="checkbox" class="checkbox" title="затвердити" value="1" /></div><div class="' + readOnly + ' st_all"><input ' + readOnly + ' name="status" type="checkbox" class="checkbox"  title="відмовити" value="-1"/></div></div></div>ст. код</th>';
         for (var i = 0; i < arrLenth; i++) {
             tHead += '<th data-ewh="' + columnTitles[i][0] + '" data-header="' + (i + 5) + '" class="text-center dragtable-drag-handle"><div class="thead">' + columnTitles[i][1] + '</div>' + columnTitles[i][1] + '</th>';
@@ -232,7 +242,11 @@ var AMatrix = {
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 2) {
-                    tBody += '<td title="' + Data[j][3] + '"><div><input class="form-control" value="' + Number(Data[j][i]) + '" title="' + Data[j][3] + '"/></div></td>';
+                    if (isNovelty) {
+                        tBody += '<td title="' + Data[j][3] + '"><div><input class="form-control novelty_date" value="' + Data[j][i] + '" title="' + Data[j][3] + '"/></div></td>';
+                    } else {
+                        tBody += '<td title="' + Data[j][3] + '"><div><input class="form-control" value="' + Number(Data[j][i]) + '" title="' + Data[j][3] + '"/></div></td>';
+                    }
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 3) {
@@ -253,6 +267,22 @@ var AMatrix = {
             el.height(el.closest('th').outerHeight() - 2);
         });
         $('#tableContent table').dragtable('order', tableSort);
+
+        if (isNovelty) {
+            $('.novelty_date').each(function () {
+                $(this).datepicker({
+                    format: 'dd-mm-yyyy',
+                    language: 'uk'
+                });
+            });
+
+            $('#start_novelty_date').change(function () {
+                var el = $(this);
+                $('.novelty_date').each(function () {
+                    $(this).val(el.val()).datepicker("update");
+                });
+            });
+        }
 
         var renderSettings = '';
         for (var j = 0; j < WaresIsVisible.length; j++) {
@@ -286,6 +316,8 @@ var AMatrix = {
         obj.data.CodeData = 112;
         obj.data.Data = [];
         obj.data.Warehouse = [];
+
+        obj.data.Type = parseInt($('input[name="am_type"]:checked').val());
 
         if (rows.length <= 0) {
             alert('Данні не змінилися!');
@@ -543,6 +575,15 @@ var AMatrix = {
             var mPressed = mEvent.keyCode || mEvent.which;
             if (mPressed === 13) {
                 AMatrix.getAM(-1, -1, $('#code_group_tag').val());
+            }
+        });
+
+        $('input[name="am_type"]').change(function () {
+            if (AMatrix.lastRequest.length === 0) {
+                alert('Відсутні параметри');
+            } else {
+                var last = AMatrix.lastRequest;
+                AMatrix.getAM(last[0], last[1], last[2], last[3]);
             }
         });
 

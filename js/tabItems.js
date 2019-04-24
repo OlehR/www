@@ -792,6 +792,9 @@ var GroupSupplies = {
         });
     },
     saveGSbrandData: function () {
+        if ($('#GroupSupplies').hasClass('ReadOnly')) {
+            return;
+        }
         var data = {};
         data.Brand = [];
         $('#GPSbrandList input[type="checkbox"]').each(function () {
@@ -1137,11 +1140,12 @@ var ExchangeBrands = {
             },
             success: function (data) {
                 if (parseInt(data.State) === 0) {
+                    var readOnly = $('#ExchangeBrands').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
                     var brandList = '';
                     for (var i = 0; i < data.Brand.length; i++) {
                         brandList += '<li brand-id="' + data.Brand[i][0] + '" class="clearfix">';
                         brandList += '<span>' + data.Brand[i][1] + '</span>';
-                        brandList += '<a class="btn btn-sm btn-danger removeSupplierBrand float-right" href="#" title="видалити">';
+                        brandList += '<a ' + readOnly+' class="btn btn-sm btn-danger removeSupplierBrand float-right" href="#" title="видалити">';
                         brandList += 'X';
                         brandList += '</a>';
                         brandList += '</li>';
@@ -1158,6 +1162,9 @@ var ExchangeBrands = {
         });
     },
     addSupplierBrand: function (brandId, brandTitle) {
+        if ($('#ExchangeBrands').hasClass('ReadOnly')) {
+            return;
+        }
         var brandList = '';
         brandList += '<li brand-id="' + brandId + '" class="clearfix isChanged alert-success isAdded">';
         brandList += '<span>' + brandTitle + '</span>';
@@ -1170,11 +1177,17 @@ var ExchangeBrands = {
 
     },
     removeSuplierBrand: function () {
+        if ($('#ExchangeBrands').hasClass('ReadOnly')) {
+            return;
+        }
         var item = $(this).closest('li');
         item.addClass('isChanged alert-danger isRemoved');
         item.find('a').removeClass('btn-danger removeSupplierBrand').addClass('btn-warning cancleSupplierBrand');
     },
     cancleSupplierBrand: function () {
+        if ($('#ExchangeBrands').hasClass('ReadOnly')) {
+            return;
+        }
         var item = $(this).closest('li');
         if (item.hasClass('isAdded')) {
             item.remove();
@@ -1184,6 +1197,9 @@ var ExchangeBrands = {
         }
     },
     saveBrands: function () {
+        if ($('#ExchangeBrands').hasClass('ReadOnly')) {
+            return;
+        }
         var items = $('.isChanged');
 
         if (items.length === 0) {
@@ -1295,6 +1311,7 @@ var ExchangeBrands = {
         });
     },
     renderTable: function (data) {
+        var readOnly = $('#ExchangeBrands').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
         var thead = '<thead><tr>';
         thead += '<th>код</th>';
         thead += '<th>назва</th>';
@@ -1319,8 +1336,8 @@ var ExchangeBrands = {
                 var curItem = data.Price.getPrice(data.Wares[j][0], data.Supplier[k][0]);
                 tbody += '<td group-id="' + curItem[1]+'">';
                 tbody += '<div class="flex">';
-                tbody += '<input class="checkbox isActive" data-old="' + (curItem[3] === 1 ? 'true' : 'false') + '" type="checkbox" ' + (curItem[3] === 1 ? 'checked' : '') + '/>';
-                tbody += '<input class="form-control price" data-old="' + curItem[2] + '" type="number" value="' + curItem[2] + '" ' + (curItem[3] !== 1 ? 'disabled' : '') + '/>';
+                tbody += '<input ' + readOnly + ' class="checkbox isActive" data-old="' + (curItem[3] === 1 ? 'true' : 'false') + '" type="checkbox" ' + (curItem[3] === 1 ? 'checked' : '') + '/>';
+                tbody += '<input ' + readOnly + '  class="form-control price" data-old="' + curItem[2] + '" type="number" value="' + curItem[2] + '" ' + (curItem[3] !== 1 ? 'disabled' : '') + '/>';
                 tbody += '</div>';
                 tbody += '</td>';
             }
@@ -1356,6 +1373,9 @@ var ExchangeBrands = {
         }
     },
     saveWares: function () {
+        if ($('#ExchangeBrands').hasClass('ReadOnly')) {
+            return;
+        }
         var rows = $('#ExchangeBrandWaresTable tr[is-changed="true"]');
 
         if (rows.length === 0) {
