@@ -309,7 +309,7 @@ var AMatrix = {
         $(el).select();
     },
     saveAM: function () {
-        var rows = $('tr[is-change="true"]');
+        var rows = $('tbody tr[is-change="true"]');
         var titles = $('thead th[data-ewh]:visible');
         var obj = {};
         obj.data = {};
@@ -333,7 +333,7 @@ var AMatrix = {
             var cells = el.find('td:visible');
             obj.data.Data[index] = [];
             obj.data.Data[index].push($(cells[0]).text());
-            obj.data.Data[index].push($(cells[2]).text());
+            obj.data.Data[index].push($(cells[2]).find('input').val());
 
             if ($(cells[3]).find('div.checked').length > 0) {
                 obj.data.Data[index].push($(cells[3]).find('div.checked input').val());
