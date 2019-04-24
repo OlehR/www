@@ -160,7 +160,7 @@ var AMatrix = {
         tHead += '<th data-header="1" class="text-center dragtable-drag-boundary"><div class="thead">код</div>код</th>';
         tHead += '<th data-header="2" class="text-center dragtable-drag-boundary"><div class="thead">назва</div>назва</th>';
         if (isNovelty) {
-            tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead status_all"><div class="clearfix ln18px">дата </div><input id="start_novelty_date" class="form-control novelty_date"/></div></th>';
+            tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead status_all"><div class="clearfix ln18px">дата </div><input id="start_novelty_date" class="form-control novelty_date"/></div> <br /> <br /></th>';
         }
         else {
             tHead += '<th data-header="3" class="text-center dragtable-drag-boundary"><div class="thead">ст. код</div>ст. код</th>';
