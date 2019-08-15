@@ -1,4 +1,4 @@
-var Checker = {
+﻿var Checker = {
     GP: -1,
     WR: -1,
     contextKey: '',
@@ -187,6 +187,7 @@ var Checker = {
     }
 };
 
+// вкладка графіки доставки
 var Delivery = {
     contextKey: '',
     JSON: {},
@@ -533,6 +534,7 @@ Object.defineProperty(Array.prototype, 'chunk_inefficient', {
     }
 });
 
+// вкладка групи поставки
 var GroupSupplies = {
     curGS:-1,
     bindGpSearching: function () {
@@ -852,8 +854,11 @@ var GroupSupplies = {
     }
 };
 
+// вкладка постачальники
 var Supplier = {
     currSupplier: -1,
+
+    // постачальники - пошук брендів
     bindBrandsSearching: function () {
         $('#brands_input').select2({
             minimumInputLength: 3,
@@ -889,6 +894,8 @@ var Supplier = {
             }
         });
     },
+
+    // постачальники - пошук постачальників
     bindSupplierSearching: function () {
         $('#supplier_input').select2({
             minimumInputLength: 3,
@@ -924,6 +931,8 @@ var Supplier = {
             }
         });
     },
+
+    // постачальники -  отримання списку брендів постачальника
     getSupplierBrands: function (supplier) {
         Supplier.currSupplier = supplier;
         var obj = {};
@@ -973,6 +982,8 @@ var Supplier = {
             }
         });
     },
+
+    // постачальники -  додати бренд у список
     addSupplierBrand: function (brandId, brandTitle) {
 
         if ($('#Supplier').hasClass('ReadOnly')) {
@@ -990,6 +1001,8 @@ var Supplier = {
         $('#supplier_brands').scrollTop($("#supplier_brands")[0].scrollHeight);
 
     },
+
+    // постачальники - видалити бренд із списку
     removeSuplierBrand: function () {
 
         if ($('#Supplier').hasClass('ReadOnly')) {
@@ -1000,6 +1013,8 @@ var Supplier = {
         item.addClass('isChanged alert-danger isRemoved');
         item.find('a').removeClass('btn-danger removeSupplierBrand').addClass('btn-warning cancleSupplierBrand');
     },
+
+    // постачальники - скасувати зміну в списку
     cancleSupplierBrand: function () {
 
         if ($('#Supplier').hasClass('ReadOnly')) {
@@ -1014,6 +1029,8 @@ var Supplier = {
             item.find('a').addClass('btn-danger removeSupplierBrand').removeClass('btn-warning cancleSupplierBrand');
         }
     },
+
+    // постачальники - збереження змін
     saveBrands: function () {
 
         if ($('#Supplier').hasClass('ReadOnly')) {
@@ -1063,6 +1080,8 @@ var Supplier = {
             }
         });
     },
+
+
     startGS: function () {
         var el = $(this);
         GroupSupplies.curGS = parseInt(el.attr('group-id'));
@@ -1089,7 +1108,10 @@ var Supplier = {
     }
 };
 
+// вкладка біржові бренди
 var ExchangeBrands = {
+
+    // біржові бренди/біржові бренди/бренд - пошук
     bindBrandsSearching: function () {
         $('#exchange_brands_input').select2({
             minimumInputLength: 3,
@@ -1125,6 +1147,9 @@ var ExchangeBrands = {
             }
         });
     },
+
+    // біржові бренди/біржові бренди&біржові товари в бренді 
+    // отримання списку біржових брендів, груп складів; створення списку біржових брендів
     getExchangeBrands: function () {
         var obj = {};
         obj.data = {};
@@ -1155,12 +1180,17 @@ var ExchangeBrands = {
                 } else {
                     alert(data.TextError);
                 }
+                ExchangeBrands.bindBrandWaresSearching(data.Brand);
+                ExchangeBrands.bindGPWarehouseWaresSearching(data.GroupWarehouse);
+
             },
             error: function () {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
             }
         });
     },
+
+    // біржові бренди/біржові бренди - додати бренд у список
     addSupplierBrand: function (brandId, brandTitle) {
         if ($('#ExchangeBrands').hasClass('ReadOnly')) {
             return;
@@ -1176,6 +1206,8 @@ var ExchangeBrands = {
         $('#exchange_brand_brands').scrollTop($("#exchange_brand_brands")[0].scrollHeight);
 
     },
+
+    // біржові бренди/біржові бренди - видалити бренд із списку
     removeSuplierBrand: function () {
         if ($('#ExchangeBrands').hasClass('ReadOnly')) {
             return;
@@ -1184,6 +1216,8 @@ var ExchangeBrands = {
         item.addClass('isChanged alert-danger isRemoved');
         item.find('a').removeClass('btn-danger removeSupplierBrand').addClass('btn-warning cancleSupplierBrand');
     },
+
+    // біржові бренди/біржові бренди - скасувати зміну в списку
     cancleSupplierBrand: function () {
         if ($('#ExchangeBrands').hasClass('ReadOnly')) {
             return;
@@ -1196,6 +1230,8 @@ var ExchangeBrands = {
             item.find('a').addClass('btn-danger removeSupplierBrand').removeClass('btn-warning cancleSupplierBrand');
         }
     },
+
+    // біржові бренди/біржові бренди - збереження змін
     saveBrands: function () {
         if ($('#ExchangeBrands').hasClass('ReadOnly')) {
             return;
@@ -1242,74 +1278,72 @@ var ExchangeBrands = {
             }
         });
     },
-    getWaresExchange: function (brandId) {
+
+    // біржові бренди/біржові товари в бренді - отримання даних для таблиці
+    getWaresExchange: function () {
         var obj = {};
         obj.data = {};
         obj.data.CodeData = 240;
-        obj.data.CodeBrand = brandId;
+        obj.data.CodeBrand = IdExchangeBrandsData;
+        obj.data.CodeGroupWarehouse = IdExchangeWarehouseData;
         obj.data = JSON.stringify(obj.data);
-
-        $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function (data) {
-                if (parseInt(data.State) === 0) {
-                    data.Price.__proto__.getPrice = function (waresIndex, gpIndex) {
-                        for (var i = 0; i < this.length; i++) {
-                            if (this[i][0] === waresIndex && this[i][1] === gpIndex) {
-                                return this[i];
-                            }
-                        }
-                    };
-                    ExchangeBrands.renderTable(data);
-                } else {
-                    alert(data.TextError);
-                }
-            },
-            error: function () {
-                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
-            }
-        });
-    },
-    bindBrandWaresSearching: function () {
-        $('#exchange_brands_wares_input').select2({
-            minimumInputLength: 3,
-            ajax: {
+        if (IdExchangeBrandsData != -1 && IdExchangeWarehouseData != -1) {
+            $.ajax({
                 url: apiUrl,
-                dataType: 'json',
-                type: "POST",
+                method: "POST",
+                data: obj,
                 xhrFields: {
                     withCredentials: true
                 },
-                data: function (params) {
-                    var obj = {};
-                    obj.data = {};
-                    obj.data.CodeData = 301;
-                    obj.data.Brand = params.term;
-                    obj.data = JSON.stringify(obj.data);
-                    return obj;
-                },
-                processResults: function (data) {
-                    var dataArr = [{ id: '', text: '' }];
+                success: function (data) {
                     if (parseInt(data.State) === 0) {
-                        var arrLength = data.Brand.length;
-                        for (var i = 0; i < arrLength; i++) {
-                            dataArr.push({ id: data.Brand[i][0], text: data.Brand[i][1] });
-                        }
+                        data.Price.__proto__.getPrice = function (waresIndex, gpIndex) {
+                            for (var i = 0; i < this.length; i++) {
+                                if (this[i][0] === waresIndex && this[i][1] === gpIndex) {
+                                    return this[i];
+                                }
+                            }
+                        };
+                        ExchangeBrands.renderTable(data);
                     } else {
                         alert(data.TextError);
                     }
-                    return {
-                        results: dataArr
-                    };
+                },
+                error: function () {
+                    alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
                 }
-            }
+            });
+        }
+       
+    },  
+
+    // біржові бренди/біржові товари в бренді - заповнення вибору брендів
+    bindBrandWaresSearching: function (data) {
+
+        var options = '<option value="-1" selected></option>';
+        var arrLength = data.length;
+        for (var i = 0; i < arrLength; i++) {
+            options += '<option value="' + data[i][0] + '">' + data[i][1] + '</option>';
+        }
+        $('#exchange_brands_wares_input').html(options);        
+        $('#exchange_brands_wares_input').select2({
         });
     },
+
+    // біржові бренди/біржові товари в бренді - заповнення вибору груп складів
+    bindGPWarehouseWaresSearching: function (data) {
+
+        var options = '<option value="-1" selected></option>';
+        var arrLength = data.length;
+        for (var i = 0; i < arrLength; i++) {
+            options += '<option value="' + data[i][0] + '">' + data[i][1] + '</option>';
+        }
+        $('#exchange_gpwarehouse_wares_input').html(options);
+        $('#exchange_gpwarehouse_wares_input').select2({
+        });
+    },
+
+    // біржові бренди/біржові товари в бренді - малює таблицю 
     renderTable: function (data) {
         var readOnly = $('#ExchangeBrands').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
         var thead = '<thead><tr>';
@@ -1336,7 +1370,7 @@ var ExchangeBrands = {
                 var curItem = data.Price.getPrice(data.Wares[j][0], data.Supplier[k][0]);
                 tbody += '<td group-id="' + curItem[1]+'">';
                 tbody += '<div class="flex">';
-                tbody += '<input ' + readOnly + ' class="checkbox isActive" data-old="' + (curItem[3] === 1 ? 'true' : 'false') + '" type="checkbox" ' + (curItem[3] === 1 ? 'checked' : '') + '/>';
+                tbody += '<input ' + readOnly + 'id="' + j +'_'+ k + '" name="' + j + '" class="checkbox isActive" data-old="' + (curItem[3] === 1 ? 'true' : 'false') + '" type="checkbox" ' + (curItem[3] === 1 ? 'checked' : '') + '/>';
                 tbody += '<input ' + readOnly + '  class="form-control price" data-old="' + curItem[2] + '" type="number" value="' + curItem[2] + '" ' + (curItem[3] !== 1 ? 'disabled' : '') + '/>';
                 tbody += '</div>';
                 tbody += '</td>';
@@ -1348,9 +1382,22 @@ var ExchangeBrands = {
 
         $('#ExchangeBrandWaresTable').html(thead + tbody);
     },
+
+    // біржові бренди/біржові товари в бренді - реакція на зміну чекбоксів
     OnChange: function () {
         var el = $(this);
         var checked = el.prop('checked');
+        var name = 'input[name*=' + "'" + this.name.toString() + "'" +']';
+        var id = this.id.toString();
+
+        $(name).each(function () {
+            var elm = $(this);
+            if (this.id != id) {
+                elm.prop('checked', false);
+                elm.next('input').prop('disabled', true);
+                elm.closest('tr').attr('is-change', 'true');
+            }
+        });
 
         if (checked) {
             el.next('input').prop('disabled',false);
@@ -1364,6 +1411,8 @@ var ExchangeBrands = {
             el.closest('tr').attr('is-change', 'true');
         }
     },
+
+    // біржові бренди/біржові товари в бренді - реакція на зміну в полях вводу
     OnBlur: function () {
         var el = $(this);
         if (el.val() !== el.attr('data-old')) {
@@ -1372,6 +1421,8 @@ var ExchangeBrands = {
             el.closest('tr').attr('is-changed', 'false');
         }
     },
+
+    // біржові бренди/біржові товари в бренді - збереження змін
     saveWares: function () {
         if ($('#ExchangeBrands').hasClass('ReadOnly')) {
             return;
@@ -1430,19 +1481,27 @@ var ExchangeBrands = {
         });
         $('#exchange_brands_wares_input').on('select2:select', function (e) {
             var data = e.params.data;
-            ExchangeBrands.getWaresExchange(data.id);
+            IdExchangeBrandsData = data.id;
+            ExchangeBrands.getWaresExchange();
+        });
+        $('#exchange_gpwarehouse_wares_input').on('select2:select', function (e) {
+            var data = e.params.data;
+            IdExchangeWarehouseData = data.id;
+            ExchangeBrands.getWaresExchange();
         });
         $('#exchange_brand_brands').on('click', '.removeSupplierBrand', ExchangeBrands.removeSuplierBrand);
         $('#exchange_brand_brands').on('click', '.cancleSupplierBrand', ExchangeBrands.cancleSupplierBrand);
         $('#saveExchangeBrands').click(ExchangeBrands.saveBrands);
-        $('a[href="#GPSExchangeBrandsTab"]').on('shown.bs.tab', function (event) {
-            ExchangeBrands.bindBrandWaresSearching();
-        });
         $('#ExchangeBrandWaresTable').on('change', '.checkbox', ExchangeBrands.OnChange);
         $('#ExchangeBrandWaresTable').on('blur', '.checkbox', ExchangeBrands.OnBlur);
         $('#SaveExchangeWares').click(ExchangeBrands.saveWares);
     }
 };
+
+var ExchangeWarehouseData = {};
+var ExchangeBrandsData = {};
+var IdExchangeWarehouseData = -1;
+var IdExchangeBrandsData = -1;
 
 ZnpConfig.addTab('Delivery', Delivery);
 ZnpConfig.addTab('Checker', Checker);
