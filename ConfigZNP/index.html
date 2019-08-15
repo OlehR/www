@@ -103,40 +103,40 @@
 
                         <div class="tab-pane fade" id="Cheker" role="tabpanel" aria-labelledby="home-tab">
                             <!--<div class="row">
-            <div id="sidebar" class="col-sm-4 col-xs-12">
-                <div class="form-group"></div>
-                <div class="form-group">
-                    <div class="ui-widget">
-                        <div class="row">
-                            <label class="col-md-3 col-sm-12">Група поставки: </label>
-                            <select id="combobox"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <nav class="nav-bar navbar-expand-lg">
-                        <div class="ui-widget brand_widget">
-                            <div class="sidebar-header">
-                                <h3>Бренди</h3>
-                            </div>
-                            <ul id="brand_menu" class="list-unstyled components "></ul>
-                        </div>
-                    </nav>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <button id="save_cheked" type="button" class="btn btn-primary">Зберегти</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-8 col-xs-12">
-                <div id="tableContentChecker">
+                                <div id="sidebar" class="col-sm-4 col-xs-12">
+                                    <div class="form-group"></div>
+                                    <div class="form-group">
+                                        <div class="ui-widget">
+                                            <div class="row">
+                                                <label class="col-md-3 col-sm-12">Група поставки: </label>
+                                                <select id="combobox"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <nav class="nav-bar navbar-expand-lg">
+                                            <div class="ui-widget brand_widget">
+                                                <div class="sidebar-header">
+                                                    <h3>Бренди</h3>
+                                                </div>
+                                                <ul id="brand_menu" class="list-unstyled components "></ul>
+                                            </div>
+                                        </nav>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <button id="save_cheked" type="button" class="btn btn-primary">Зберегти</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 col-xs-12">
+                                    <div id="tableContentChecker">
 
-                </div>
-            </div>
-        </div>-->
+                                    </div>
+                                </div>
+                            </div>-->
                         </div>
 
                         <div class="tab-pane fade" id="Supplier" role="tabpanel" aria-labelledby="home-tab">
@@ -363,7 +363,7 @@
                                                     <div id="exchange_brand_container" class="ui-widget">
                                                         <div class="row">
                                                             <div class="col-sm-12">
-                                                                <label >Біржові бренди: </label>
+                                                                <label>Біржові бренди: </label>
                                                                 <div class="ui-widget brand_widget">
                                                                     <ul id="exchange_brand_brands"></ul>
                                                                     <div class="form-group"></div>
@@ -396,14 +396,20 @@
                                     </div>
                                     <div class="tab-pane fade" id="GPSExchangeBrandsTab" role="tabpanel" aria-labelledby="home-tab">
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-12">
                                                 <div class="form-group"></div>
                                                 <div class="form-group">
                                                     <div id="exchange_brands_wares_container" class="ui-widget">
                                                         <div class="row">
-                                                            <div class="col-sm-12">
+                                                            <div class="col-sm-12 col-md-4">
                                                                 <label for="exchange_brands_wares_input">Бренд: </label>
-                                                                <select class="form-control" id="exchange_brands_wares_input">
+                                                                <select class="col-sm-12 col-md-6" id="exchange_brands_wares_input">
+                                                                    <option value="-1"></option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-12 col-md-8">
+                                                                <label for="exchange_gpwarehouse_wares_input">Групи складів: </label>
+                                                                <select class="col-sm-12 col-md-6" id="exchange_gpwarehouse_wares_input">
                                                                     <option value="-1"></option>
                                                                 </select>
                                                             </div>
@@ -414,9 +420,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <table class="table table-bordered table-striped" id="ExchangeBrandWaresTable">
-
-                                                </table>
+                                                <table class="table table-bordered table-striped" id="ExchangeBrandWaresTable"></table>
                                             </div>
                                             <div class="col-sm-12 text-center">
                                                 <button id="SaveExchangeWares" type="button" class="btn btn-success">Зберегти</button>
@@ -425,7 +429,7 @@
                                     </div>
                                 </div>
                             </div>
-                                
+
                         </div>
                     </div>
                 </div>
@@ -639,7 +643,7 @@
                     this.element.val(value);
 
                     var selected = this.element.children(":selected"),
-                            value = selected.val() ? selected.text() : "";
+                        value = selected.val() ? selected.text() : "";
                     this.input.val(value);
                     this._trigger("change");
                 }

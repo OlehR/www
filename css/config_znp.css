@@ -67,8 +67,14 @@
     -webkit-filter: grayscale(0%);
     filter: grayscale(0%);
 }
-.old-value{
-    margin-left:5px;
+#exchange_brands_wares_input{
+    width: 200px;
+}
+#exchange_gpwarehouse_wares_input {
+    width: 200px;
+}
+.old-value {
+    margin-left: 5px;
 }
 .dropdown-toggle{
     display: block;
