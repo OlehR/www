@@ -11,10 +11,11 @@
     display: none;
 }
 
-#warehouse_settings_bar td, #warehouse_settings_bar th {
+    #warehouse_settings_bar td, #warehouse_settings_bar th {
         vertical-align: middle;
         width: 25%;
-}
+    }
+
 @media (max-width: 991px) {
     #warehouse_settings_bar {
         width: 100%;
@@ -24,20 +25,24 @@
         overflow-y: scroll;
     }
 }
+
 #tableContent {
     position: absolute;
     top: 50%;
-    z-index: 1;
+    z-index: 4;
     left: 0px;
     overflow: auto;
     height: 50%;
+    background-color: white;
 }
+
 #tableWares {
     position: fixed;
     background-color: white;
     height: 43%;
-    z-index:3;
+    z-index: 3;
 }
+
 #tableWaresScroll {
     overflow: auto;
     height: 85%;
@@ -46,4 +51,63 @@
 #treeWaresScroll {
     overflow: auto;
     height: 85%;
+}
+.clickable-row-on {
+    cursor: pointer;
+    background-color: #ffc3af;
+}
+#sidebarWH {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - 226px);
+    flex-direction: column;
+    border-right: 2px solid #007bff;
+}
+
+#sidebarWH .form-group {
+    width: 100%;
+}
+
+#brand_menuWH {
+    height: calc(100vh - 4.5rem - 280px);
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+}
+
+#save_chekedWH {
+    margin: 0 auto;
+    width: 118px;
+    display: block;
+}
+
+#brand_menuWH .nav-link {
+    border-bottom: 1px solid #007bff;
+    position: relative;
+}
+
+    #brand_menuWH .nav-link.checked:after {
+        content: "\221A";
+        position: absolute;
+        font-size: 20px;
+        line-height: calc(40px - 1rem);
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+    #brand_menuWH .nav-link:focus, #brand_menuWH .nav-link:hover, #brand_menuWH .nav-link.checked {
+        background: #50A4E5;
+        color: #fff;
+    }
+
+
+#tableContentCheckerWH {
+    height: calc(100vh - 226px);
+    overflow-y: auto;
+}
+
+#WarehouseGPS {
+    height: calc(100vh - 226px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }

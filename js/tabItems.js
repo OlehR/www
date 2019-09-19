@@ -47,7 +47,7 @@
         obj.data = {};
         obj.data.CodeGroupSupply = Checker.GP;
         obj.data.CodeData = 121;
-        obj.data = JSON.stringify(obj.data);
+        obj.data = JSON.stringify(obj.data);        
 
         $.ajax({
             url: apiUrl,
@@ -58,18 +58,7 @@
             },
             success: function (data) {
                 Checker.JSON = data;
-                var arrLength = Checker.JSON.Brand.length;
-                var list = '';
-                for (var i = 0; i < arrLength; i++) {
-                    list += '<li class="nav-item"><a class="nav-link" data-val="' + Checker.JSON.Brand[i][0] + '" href="javascript:void(0)">' + Checker.JSON.Brand[i][1] + '</a></li>';
-                }
-                $('#brand_menu').html(list);
-                $('#sidebar .custom-combobox-input').blur();
-                if (Checker.isSave) {
-                    $('.nav-link[data-val="' + Checker.WR + '"]').click();
-                    $('#overlay').css('display', 'none');
-                    Checker.isSave = false;
-                }
+                Checker.bildBrandList(Checker.JSON.Brand);               
             },
             error: function () {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
@@ -111,6 +100,45 @@
         }
         tHead = tHead.replace(/id="select_all"/g, 'id="select_all" ' + checked);
         $('#tableContentChecker').html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
+
+    },
+    selectBrandWH: function () {
+        $('#tableContentCheckerWH').html('<div class"loader"></div>');
+        if ($('.nav-link.checked').length > 0)
+            $($('.nav-link.checked')[0]).removeClass('checked');
+        var el = $(this);
+        el.addClass('checked');
+        Checker.WR = el.data('val');
+        var arrWH = Checker.JSON.Warehouse;
+        var arrD = Checker.JSON.Data.filter(el => el[1] == Checker.WR);
+        var arrLengthWH = arrWH.length;
+
+        for (var i = 0; i < arrLengthWH; i++) {// провірити умову
+            if (arrD.find(el => el[0] == arrWH[i][0]) == undefined) { arrWH[i].push(0); } else { arrWH[i].push(1); }
+        }
+
+        var readOnly = $('#Cheker').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
+        var tBody = '';
+        var tHead = '<tr>';
+
+        tHead += '<th>Код складу</th>';
+        tHead += '<th>Склад</th>';
+        tHead += '<th>Заблокувати<br/><div class="form-check"><lable for="select_all" class="form-check-label small"><input ' + readOnly + ' id="select_all" type="checkbox" class="form-check-input"/> Всі</lable></div></th>';
+        tHead += '</tr>';
+
+        var checked = 'checked';
+        for (var i = 0; i < arrLengthWH; i++) {
+            tBody += '<tr>';
+            tBody += '<td>' + arrWH[i][0] + '</td>';
+            tBody += '<td>' + arrWH[i][1] + '</td>';
+            tBody += '<td><input ' + readOnly + ' data-old="' + arrWH[i][2] + '" type="checkbox" class="checkbox" ' + (parseInt(arrWH[i][2]) == 1 ? 'checked' : '') + ' value="' + arrWH[i][2] + '"/></td>';
+            tBody += '</tr>';
+            if (parseInt(arrWH[i][2]) != 1) {
+                checked = '';
+            }
+        }
+        tHead = tHead.replace(/id="select_all"/g, 'id="select_all" ' + checked);
+        $('#tableContentCheckerWH').html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
 
     },
     changeStatus: function () {
@@ -155,6 +183,90 @@
                 console.log(result);
                 if (parseInt(result.Sate) != -1) {
                     Checker.getWarhouses(true);
+                    $('#overlay').css('display', 'none');
+                } else {
+                    alert(result.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+                $('#overlay').css('display', 'none');
+            }
+        });
+    },
+    bildBrandList: function (arr) {
+        var brand_menu;
+        var sidebar;
+        if (Checker_supplier == 'wares') {
+            brand_menu = '#brand_menu';
+            sidebar = '#sidebar .custom-combobox-input';
+        } else {
+            brand_menu = '#brand_menuWH';
+            sidebar = '#sidebarWH .custom-combobox-input';
+        }
+
+        var list = '';
+        for (var i = 0; i < arr.length; i++) {
+            list += '<li class="nav-item"><a class="nav-link" data-val="' + arr[i][0] + '" href="javascript:void(0)">' + arr[i][1] + '</a></li>';
+        }
+        $(brand_menu).html(list);
+        $(sidebar).blur();
+        if (Checker.isSave) {
+            $('.nav-link[data-val="' + Checker.WR + '"]').click();
+            $('#overlay').css('display', 'none');
+            Checker.isSave = false;
+        }
+    },
+    selectGroupWH: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeGS = Checker.GP;
+        obj.data.CodeData = 242;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                Checker.JSON = data;
+                Checker.bildBrandList(Checker.JSON.Brand);
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    saveCheckWH: function () {
+        var rows = $('#GPSwarehouse tr[is-change="true"]');
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 243;
+        obj.data.CodeGS = Checker.GP;
+        obj.data.Data = [];
+
+        var arrLength = rows.length;
+        for (var i = 0; i < arrLength; i++) {
+            obj.data.Data.push([$(rows[i]).find('td:first-child').text(), Checker.WR, $(rows[i]).find('input').val()]);
+        }
+        obj.data = JSON.stringify(obj.data);
+        $('#overlay').css('display', 'flex');
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                result = data;
+                console.log(result);
+                if (parseInt(result.Sate) != -1) {
+                    Checker.getWarhouses(true);
+                    $('#overlay').css('display', 'none');
                 } else {
                     alert(result.TextError);
                 }
@@ -178,11 +290,21 @@
                 $(this).prop('checked', checked).trigger('change');
             });
         });
+
+        $('#sidebarWH').on('click', '.custom-combobox-input', function () {
+            $(this).val('');
+        });
+        $('#sidebarWH').on('click', '.nav-link', Checker.selectBrandWH);
+        $('#tableContentCheckerWH').on('change', 'input:not([id="select_all"])', Checker.changeStatus);
+        $('#save_chekedWH').click(Checker.saveCheckWH);
+        $('#tableContentCheckerWH').on('change', 'input[id="select_all"]', function () {
+            var checked = $(this).prop('checked');
+            $('input:not([id="select_all"])').each(function () {
+                $(this).prop('checked', checked).trigger('change');
+            });
+        });
     },
     init: function () {
-        /*if (window.isLogin) {
-            Checker.getWarhouses();
-        }*/
         this.controlsInit();
     }
 };
@@ -617,6 +739,106 @@ var GroupSupplies = {
             }
         });
     },
+    getWarehouseGroupSupplier: function () {
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 236;
+        obj.data.CodeGS = GroupSupplies.curGS;
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if (parseInt(data.State) === 0) {
+                    GroupSupplies.bildWarehouseGPS(data.Warehouse);
+                    $('a[href="#WarehouseGPS"]').tab('show');
+                } else {
+                    alert(data.TextError);
+                }               
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    bildWarehouseGPS: function (arr) {
+        $('#tableContentWarehouseGPS').html('<div class"loader"></div>');
+        var arrLength = arr.length;
+        var tBody = '';
+        var tHead = '<tr>';
+        tHead += '<th>Код складу</th>';
+        tHead += '<th>Назва</th>';
+        tHead += '<th>Заблокувати<br/></th>';
+        tHead += '</tr>';
+
+        for (var i = 0; i < arrLength; i++) {
+            tBody += '<tr>';
+            tBody += '<td>' + arr[i][0] + '</td>';
+            tBody += '<td>' + arr[i][1] + '</td>';
+            tBody += '<td><input ' + ' data-old="' + arr[i][2] + '" type="checkbox" class="checkbox" ' + (parseInt(arr[i][2]) == 1 ? 'checked' : '') + ' value="' + arr[i][2] + '"/></td>';
+            tBody += '</tr>';
+        }
+        $('#tableContentWarehouseGPS').html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
+
+    },
+    saveWarehouseGPS: function () {
+        var rows = $('#tableContentWarehouseGPS tr[is-change="true"]');
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 237;
+        obj.data.CodeGS = GroupSupplies.curGS;
+        obj.data.Warehouse = [];
+
+        var arrLength = rows.length;
+        for (var i = 0; i < arrLength; i++) {
+            obj.data.Warehouse.push([$(rows[i]).find('td:first-child').text(), $(rows[i]).find('input').val()]);
+        }
+        obj.data = JSON.stringify(obj.data);
+        $('#overlay').css('display', 'flex');
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                result = data;
+                console.log(result);
+                if (parseInt(result.Sate) != -1) {
+                    GroupSupplies.getWarehouseGroupSupplier();
+                    $('#overlay').css('display', 'none');
+                } else {
+                    alert(result.TextError);
+                }
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+                $('#overlay').css('display', 'none');
+            }
+        });
+    },
+    changeStatus: function () {
+        var el = $(this);
+        var parRow = $(el.closest('tr'));
+
+        if (el.prop('checked')) {
+            el.val(1);
+        } else {
+            el.val(0);
+        }
+
+        if (el.data('old') != el.val()) {
+            parRow.attr('is-change', true);
+        } else {
+            parRow.removeAttr('is-change');
+        }
+    },
     getGroupSupplierData: function () {
         var obj = {};
         obj.data = {};
@@ -671,7 +893,15 @@ var GroupSupplies = {
         $('a[href="#GPSwares"]').tab('show');
         Checker.init();
         Checker.GP = GroupSupplies.curGS;
+        Checker_supplier = 'wares';
         Checker.selectGroup();
+    },
+    supplierWHChecker: function () {
+        $('a[href="#GPSwarehouse"]').tab('show');
+        Checker.init();
+        Checker.GP = GroupSupplies.curGS;
+        Checker_supplier = 'warehouse';
+        Checker.selectGroupWH();
     },
     getTabsData: function (isCurrent, id) {
 
@@ -699,8 +929,14 @@ var GroupSupplies = {
             case 'GPSbrand':
                 GroupSupplies.getBrandGroupSupplier();
                 break;
+            case 'WarehouseGPS':
+                GroupSupplies.getWarehouseGroupSupplier();
+                break;
             case 'GPSwares':
                 GroupSupplies.supplierChecker();
+                break;
+            case 'GPSwarehouse':
+                GroupSupplies.supplierWHChecker();
                 break;
         }
     },
@@ -840,8 +1076,10 @@ var GroupSupplies = {
             e.preventDefault();
             GroupSupplies.getTabsData(false, $(this).attr('href').replace(/#/g,''));
         });
+        $('#tableContentWarehouseGPS').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
         $('#saveGSdata').click(GroupSupplies.saveGSdata);
         $('#saveGSbrandData').click(GroupSupplies.saveGSbrandData);
+        $('#saveWarehouseGPS').click(GroupSupplies.saveWarehouseGPS);
         $('#EditGPS, #GPSbrandList').on('change', 'input[type="checkbox"]', function () {
             var el = $(this);
             if (el.prop('checked')) {
@@ -1502,6 +1740,7 @@ var ExchangeWarehouseData = {};
 var ExchangeBrandsData = {};
 var IdExchangeWarehouseData = -1;
 var IdExchangeBrandsData = -1;
+var Checker_supplier;
 
 ZnpConfig.addTab('Delivery', Delivery);
 ZnpConfig.addTab('Checker', Checker);
