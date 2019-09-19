@@ -769,6 +769,8 @@ var GroupSupplies = {
     bildWarehouseGPS: function (arr) {
         $('#tableContentWarehouseGPS').html('<div class"loader"></div>');
         var arrLength = arr.length;
+
+        var readOnly = $('#GroupSupplies').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
         var tBody = '';
         var tHead = '<tr>';
         tHead += '<th>Код складу</th>';
@@ -780,7 +782,7 @@ var GroupSupplies = {
             tBody += '<tr>';
             tBody += '<td>' + arr[i][0] + '</td>';
             tBody += '<td>' + arr[i][1] + '</td>';
-            tBody += '<td><input ' + ' data-old="' + arr[i][2] + '" type="checkbox" class="checkbox" ' + (parseInt(arr[i][2]) == 1 ? 'checked' : '') + ' value="' + arr[i][2] + '"/></td>';
+            tBody += '<td><input ' + readOnly + ' data-old="' + arr[i][2] + '" type="checkbox" class="checkbox" ' + (parseInt(arr[i][2]) == 1 ? 'checked' : '') + ' value="' + arr[i][2] + '"/></td>';
             tBody += '</tr>';
         }
         $('#tableContentWarehouseGPS').html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
