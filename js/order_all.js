@@ -29,35 +29,50 @@ var Table = {
     },
     tableWares: function (data) {
         var arrLength = data.length;
-        var sum = 0;
-        var table = '<table class="table table-bordered table-striped table-responsive table-hover">';
-        table += '<thead>';
-        table += '<tr>';
-        table += '<th id="sort_by_brand">Код</th>';
-        table += '<th id="sort_by_title">Товар</th>';
-        table += '<th>сума</th>';
-        table += '</tr>';
-        table += '</thead>';
-        table += '<tbody>';
+        var sum = 0;        
+        var indexCW = Table.Data.OrderDetail.InfoColumn.indexOf('CODEWARES');
+        var indexQ = Table.Data.OrderDetail.InfoColumn.indexOf('QUANTITY');
+        var table = '<table class="table table-bordered table-striped table-hover">';
+        if (arrLength > 0) {
+            table += '<thead>';
+            table += '<tr>';
+            table += '<th id="sort_by_brand">Код</th>';
+            table += '<th id="sort_by_title">Товар</th>';
+            table += '<th>Загальна кількість</th>';
+            table += '</tr>';
+            table += '</thead>';
+            table += '<tbody id="Tbody">';
 
-        data = naturalSort(data, 3);
-        for (var i = 0; i < arrLength; i += 1) {
-            if (Table.seeBrands && (Table.prevBrand !== data[i][3])) {
-                table += '<tr>';
-                table += '<td colspan="15" class="font-weight-bold">' + data[i][3] + '</td>';
-                table += '</tr>';
+            data = naturalSort(data, 3);
+
+            for (var i = 0; i < arrLength; i += 1) {
+                if (Table.seeBrands && (Table.prevBrand !== data[i][3])) {
+                    table += '<tr>';
+                    table += '<td colspan="15" class="font-weight-bold">' + data[i][3] + '</td>';
+                    table += '</tr>';
+                }
+                Table.prevBrand = data[i][3];
+
+                var sumArr = [];
+                var tempArr = [];
+
+                tempArr = Table.Data.OrderDetail.Data.filter(el => el[indexCW] == data[i][0]);
+                if (tempArr.length > 0) {
+                    for (var j = 0; j < tempArr.length; j += 1) {
+                        sumArr.push(tempArr[j][indexQ]);
+                    }
+                    sum = sumArr.reduce((accumulator, currentValue) => accumulator + currentValue);
+                }
+                table += '<tr id="' + data[i][0] + '" class="clickable-row ' + '" onclick="Table.tableWarehouse(this.id)">';
+                table += '<td>' + data[i][0] + '</td>';
+                table += '<td>' + data[i][1] + '</td>';
+                table += '<td>' + sum + '</td>';
+
             }
-            Table.prevBrand = data[i][3];
-            table += '<tr id="' + data[i][0] + '" class="clickable-row ' + '" onclick="Table.tableWarehouse(this.id)">';
-            table += '<td>' + data[i][0] + '</td>';
-            table += '<td>' + data[i][1] + '</td>';
-            table += '<td>' + sum + '</td>';
-
+            table += '</tbody>';
+            table += '</table>';
+            $('#tableWaresScroll').html(table);
         }
-        table += '</tbody>';
-        table += '</table>';
-        $('#tableWaresScroll').html(table);
-
     },
     tableWarehouse: function (data) {
 
@@ -321,7 +336,6 @@ var Table = {
         Table.RenderSettingsCokies();
     },
     renderDesctopOrder: function () {
-        var arrLength = this.Data.OrderDetail.Data.length;
         var title = 'день';
 
         if (Table.sort != 'days') {
@@ -329,85 +343,87 @@ var Table = {
         }
         var arr = this.WaresList;
         var table = '<table class="table table-bordered table-striped table-responsive detail" style="margin-top:15px">';
-        table += '<thead>';
-        table += '<tr>';
+        if (Table.WaresList.length>0) {
+            table += '<thead>';
+            table += '<tr>';
 
-        Table.renderSettings.colspan = 0;
-        for (var i = 0; i < Table.renderSettings.length; i++) {
-            if (Table.renderSettings[i][1] == 1) {
-                Table.renderSettings.colspan++;
-                switch (i) {
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('CODEWARES'):
-                        table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('NAME_WARES'):
-                        table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
-                        if (Table.sort == 'days')
+            Table.renderSettings.colspan = 0;
+            for (var i = 0; i < Table.renderSettings.length; i++) {
+                if (Table.renderSettings[i][1] == 1) {
+                    Table.renderSettings.colspan++;
+                    switch (i) {
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('CODEWARES'):
                             table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_2'):
-                        if (Table.sort == 'days')
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('NAME_WARES'):
                             table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_3'):
-                        if (Table.sort == 'days')
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
+                            if (Table.sort == 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_2'):
+                            if (Table.sort == 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_3'):
+                            if (Table.sort == 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_4'):
+                            if (Table.sort == 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_5'):
+                            if (Table.sort == 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_1'):
+                            if (Table.sort != 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_2'):
+                            if (Table.sort != 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_3'):
+                            if (Table.sort != 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_4'):
+                            if (Table.sort != 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_5'):
+                            if (Table.sort != 'days')
+                                table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY'):
                             table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_4'):
-                        if (Table.sort == 'days')
+                            table += '<th>заказ уп.</th>';
+                            break;
+                        case Table.Data.OrderDetail.InfoColumn.indexOf('PACK'):
                             table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('D_SALE_5'):
-                        if (Table.sort == 'days')
+                            table += '<th>логістична к-сть п.</th>';
+                            break;
+                        default:
                             table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_1'):
-                        if (Table.sort != 'days')
-                            table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_2'):
-                        if (Table.sort != 'days')
-                            table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_3'):
-                        if (Table.sort != 'days')
-                            table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_4'):
-                        if (Table.sort != 'days')
-                            table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('N_SALE_5'):
-                        if (Table.sort != 'days')
-                            table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY'):
-                        table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        table += '<th>заказ уп.</th>';
-                        break;
-                    case Table.Data.OrderDetail.InfoColumn.indexOf('PACK'):
-                        table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        table += '<th>логістична к-сть п.</th>';
-                        break;
-                    default:
-                        table += '<th>' + Table.Data.OrderField.Data[i][3] + '</th>';
-                        break;
+                            break;
+                    }
                 }
             }
+
+            table += '</tr>';
+            table += '</thead>';
+            table += '<tbody>';
+
+            table += Table.renderRawDsc(this.WaresList.length, arr, title);
+
+            table += '</tbody>';
+            table += '</table>';
+
+            $('#tableContent').html(table);
         }
-
-        table += '</tr>';
-        table += '</thead>';
-        table += '<tbody>';
-
-        table += Table.renderRawDsc(this.WaresList.length, arr, title);
-
-        table += '</tbody>';
-        table += '</table>';
-
-        $('#tableContent').html(table);
         $('#tableContent').after('<div id="info" class="desctopInfo bg-primary"><div class="container"><div></div>');
     },
     renderRawDsc: function (arrLength, arr, title) {
@@ -678,16 +694,17 @@ var Table = {
         var el = $(this);
         if (el.hasClass('pack')) {
             Table.packCalculate(el.val());
-            Table.Data.OrderDetail.Data[Table.globalCurrentRow][Table.Data.OrderDetail.InfoColumn.indexOf('QUANTITY')] = Table.Quantity;
+            Table.Data.OrderDetail.Data[Table.globalCurrentRow][Table.Data.OrderDetail.InfoColumn.indexOf('QUANTITY')] = parseFloat(Table.Quantity);
         }
         if (el.hasClass('logistic')) {
             Table.logisticCalculate(el.val());
-            Table.Data.OrderDetail.Data[Table.globalCurrentRow][Table.Data.OrderDetail.InfoColumn.indexOf('QUANTITY')] = Table.Quantity;
+            Table.Data.OrderDetail.Data[Table.globalCurrentRow][Table.Data.OrderDetail.InfoColumn.indexOf('QUANTITY')] = parseFloat(Table.Quantity);
         }
         if (el.hasClass('quantyty')) {
             Table.quantytyCalculate(el.val());
-            Table.Data.OrderDetail.Data[Table.globalCurrentRow][Table.Data.OrderDetail.InfoColumn.indexOf('QUANTITY')] = Table.Quantity;
+            Table.Data.OrderDetail.Data[Table.globalCurrentRow][Table.Data.OrderDetail.InfoColumn.indexOf('QUANTITY')] = parseFloat(Table.Quantity);
         }
+        Table.tableWares(Table.Data.Wares);
     },
     changeStateOrder: function () {
         if ($('#stateOrder').val() == 1 && $('#status').val() == -1) {

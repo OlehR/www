@@ -28,24 +28,26 @@
 
 #tableContent {
     position: absolute;
-    top: 50%;
+    top: calc(50% + 60px);
     z-index: 4;
     left: 0px;
     overflow: auto;
-    height: 50%;
+    height: calc(50% - 60px);
     background-color: white;
 }
 
 #tableWares {
-    position: fixed;
+    position: absolute;
     background-color: white;
-    height: 43%;
+    top: 60px;
+    left: 0px;
+    bottom: calc(50% - 60px);
     z-index: 3;
 }
 
 #tableWaresScroll {
     overflow: auto;
-    height: 85%;
+    height: calc(50vh - 80px);
 }
 
 #treeWaresScroll {
@@ -110,4 +112,8 @@
     height: calc(100vh - 226px);
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+#orderHeader {
+    padding-top: 48px;
 }
