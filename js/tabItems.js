@@ -1,4 +1,4 @@
-﻿var Checker = {
+var Checker = {
     GP: -1,
     WR: -1,
     contextKey: '',

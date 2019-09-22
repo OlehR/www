@@ -49,6 +49,7 @@ var Table = {
             },
             success: function (data) {
                 Table.JSON = data;
+                if (typeof Table.JSON.State !== typeof undefined && parseInt(Table.JSON.State) === -1) return;
                 Table.sortByColumn = Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND');
                 Table.OriginalTableJSON = JSON.parse(JSON.stringify(data));
                 if ((typeof Table.JSON.OrderHead !== typeof undefined)) {

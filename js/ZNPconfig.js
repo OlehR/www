@@ -1,4 +1,4 @@
-﻿var ZnpConfig = {
+var ZnpConfig = {
     Tabs: [],
     addTab: function (contextKey, object) {
         object.contextKey = contextKey;
