@@ -1,4 +1,4 @@
-﻿var Monitoring = {
+var Monitoring = {
     codeDoc:0,
     getListWares: function (withRender) {
         var obj = {};

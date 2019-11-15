@@ -1,4 +1,4 @@
-﻿$(function ()
+$(function ()
  {
     $.widget("custom.combobox", {
         _create: function () {
