@@ -1107,7 +1107,7 @@ var Table = {
         data.CodeData = 9;
         data.NumberOrder = Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY;
         data.EMail = $('#send_mail_addr').val();
-        data.Boby = html;
+        //data.Boby = html;
 
         obj.data = JSON.stringify(data);
 
