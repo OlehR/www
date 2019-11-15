@@ -1,4 +1,4 @@
-var Table = {
+﻿var Table = {
     StateOrder: -1,
     globalCurrentRow: -1,
     JSON: {},
@@ -26,13 +26,13 @@ var Table = {
                 obj.data.DateEnd = Date_To;
                 $('#date_to').val(Date_To);
             }
-                
+
             obj.data.DateBegin = $('#date_from').val();
             if (typeof Date_From !== typeof undefined) {
                 obj.data.DateBegin = Date_From;
                 $('#date_from').val(Date_From);
             }
-                
+
         } else {
             obj.data.CodeData = 6;
             obj.data.NumberOrder = REQUEST.getField('order');
@@ -63,11 +63,11 @@ var Table = {
                     $('#delivery_date').attr('is-change', 'false');
                     $('#delivery_date').datepicker("update", d);
                     $('#delivery_date').attr('is-change', 'true');
-                    if (Table.JSON.OrderHead.STATE_ORDER === 1) { 
+                    if (Table.JSON.OrderHead.STATE_ORDER === 1) {
                         $('#delivery_date').prop('disabled', false);
                     }
                     if (Table.JSON.OrderHead.STATE_ORDER !== 0) {
-                        $('#print_doc').css('display','block');
+                        $('#print_doc').css('display', 'block');
                     }
                 }
                 if (typeof Table.JSON.Is_Supplier !== typeof undefined) {
@@ -153,11 +153,32 @@ var Table = {
                     }
                     return result;
                 };
+                Table.JSON.OrderDetail.Data.__proto__.indexOfIsEdit = function (search) {
+                    for (var i = 0; i < this.length; i++) {
+                        var type = this[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISEDIT')] === search;
+                        if (type) {
+                            return true;
+                        }
+                        this[i][this[i].length + 1] = i;
+                    }
+                    return false;
+                };
+                Table.JSON.OrderDetail.Data.__proto__.GetByIsEdit = function (search) {
+                    var result = [];
+                    for (var i = 0; i < this.length; i++) {
+                        var type = this[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISEDIT')] === search;
+                        if (type) {
+                            this[i][this[i].length + 1] = i;
+                            result.push(this[i]);
+                        }
+                    }
+                    return result;
+                };
                 if (sendMail) {
                     Table.sendMail(true);
                 }
                 if (type === "orders")
-                Table.sortByLogistic();
+                    Table.sortByLogistic();
                 if (withRender) {
                     Table.renderTable();
                 }
@@ -169,7 +190,7 @@ var Table = {
     },
     changeRndSetting: function () {
         var el = $(this);
-        
+
         Table.renderSettings.__proto__.indexOfW = function (search) {
             for (var i = 0; i < this.length; i++) {
                 if (parseInt(this[i][0]) == parseInt(search)) {
@@ -199,9 +220,9 @@ var Table = {
         for (var i = 0; i < arrLength; i++) {
             settings += '<tr>';
             settings += '<td>' + Table.JSON.OrderField.Data[Table.renderSettings[i][Table.JSON.OrderField.InfoColumn.indexOf("CODE")] - 1][Table.JSON.OrderField.InfoColumn.indexOf("TRANSLATE")] + '</td>';
-            settings += '<td><input data-field-code="' + Table.renderSettings[i][0] + '" class="rnd_setting_control" type="radio" name="rnd_setting_' + Table.renderSettings[i][0] +'" value="1"  ' + (Table.renderSettings[i][1] == 1 ? 'checked' : '') + '/></td>';
-            settings += '<td><input data-field-code="' + Table.renderSettings[i][0] + '" class="rnd_setting_control" type="radio" name="rnd_setting_' + Table.renderSettings[i][0] +'" value="2"  ' + (Table.renderSettings[i][1] == 2 ? 'checked' : '') + '/></td>';
-            settings += '<td><input data-field-code="' + Table.renderSettings[i][0] + '" class="rnd_setting_control" type="radio" name="rnd_setting_' + Table.renderSettings[i][0] +'" value="0"  ' + (Table.renderSettings[i][1] == 0 ? 'checked' : '') + '/></td>';
+            settings += '<td><input data-field-code="' + Table.renderSettings[i][0] + '" class="rnd_setting_control" type="radio" name="rnd_setting_' + Table.renderSettings[i][0] + '" value="1"  ' + (Table.renderSettings[i][1] == 1 ? 'checked' : '') + '/></td>';
+            settings += '<td><input data-field-code="' + Table.renderSettings[i][0] + '" class="rnd_setting_control" type="radio" name="rnd_setting_' + Table.renderSettings[i][0] + '" value="2"  ' + (Table.renderSettings[i][1] == 2 ? 'checked' : '') + '/></td>';
+            settings += '<td><input data-field-code="' + Table.renderSettings[i][0] + '" class="rnd_setting_control" type="radio" name="rnd_setting_' + Table.renderSettings[i][0] + '" value="0"  ' + (Table.renderSettings[i][1] == 0 ? 'checked' : '') + '/></td>';
             settings += '</tr>';
         }
         $('#render_settings_bar tbody').html(settings);
@@ -235,9 +256,9 @@ var Table = {
                 $("html, body").animate({
                     scrollTop: ($('#' + REQUEST.getField('last_order')).offset().top - 110) + "px"
                 }, {
-                    duration: 500,
-                    easing: "swing"
-                });
+                        duration: 500,
+                        easing: "swing"
+                    });
             }
         } else {
 
@@ -328,7 +349,7 @@ var Table = {
         table += '</tr>';
         table += '</thead>';
         table += '<tbody>';
-        for (var i = 0; i < arrLength; i += 1){
+        for (var i = 0; i < arrLength; i += 1) {
             switch (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')]) {
                 case 0:
                     mark = "*";
@@ -427,361 +448,397 @@ var Table = {
         $('#tableContent').after('<div id="info" class="mobileInfo bg-primary"><div class="container"><div></div>');
     },
     renderDesctopOrder: function () {
-    var arrLength = this.JSON.OrderDetail.Data.length;
-    var title = 'день';
+        var arrLength = this.JSON.OrderDetail.Data.length;
+        var title = 'день';
 
-    if (Table.sort != 'days') {
-        title = 'тиждень';
-    }
-    $('#orderHeader').html('№ ' + this.JSON.OrderHead.NUMBER_ORDER_SUPPLY + ', ' + this.JSON.OrderHead.NAME + ', ' + this.JSON.OrderHead.GROUP_NAME + '(' + this.JSON.OrderHead.CODE_GROUP_SUPPLY + ')');
-    var arr = this.JSON.OrderDetail.Data;
-    var table = '<table class="table table-bordered table-striped table-responsive detail" style="margin-top:15px">';
-    table += '<thead>';
-    table += '<tr>';
-
-    Table.renderSettings.colspan = 0;
-    for (var i = 0; i < Table.renderSettings.length; i++) {
-        if (Table.renderSettings[i][1] == 1) {
-            Table.renderSettings.colspan++;
-            switch (i) {
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('CODEWARES'):
-                    table += '<th id="sort_by_brand">' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_WARES'):
-                    table += '<th id="sort_by_title">' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
-                    if (Table.sort == 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_2'):
-                    if (Table.sort == 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_3'):
-                    if (Table.sort == 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_4'):
-                    if (Table.sort == 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_5'):
-                    if (Table.sort == 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_1'):
-                    if (Table.sort != 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_2'):
-                    if (Table.sort != 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_3'):
-                    if (Table.sort != 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_4'):
-                    if (Table.sort != 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_5'):
-                    if (Table.sort != 'days')
-                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY'):
-                    table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    table += '<th>заказ уп.</th>';
-                    break;
-                case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
-                    table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    table += '<th>логістична к-сть п.</th>';
-                    break;
-                default:
-                    table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
-                    break;
-            }
+        if (Table.sort != 'days') {
+            title = 'тиждень';
         }
-    }
+        $('#orderHeader').html('№ ' + this.JSON.OrderHead.NUMBER_ORDER_SUPPLY + ', ' + this.JSON.OrderHead.NAME + ', ' + this.JSON.OrderHead.GROUP_NAME + '(' + this.JSON.OrderHead.CODE_GROUP_SUPPLY + ')');
+        var arr = this.JSON.OrderDetail.Data;
+        var table = '<table class="table table-bordered table-striped table-responsive detail" style="margin-top:15px">';
+        table += '<thead>';
+        table += '<tr>';
 
-    table += '</tr>';
-    table += '</thead>';
-    table += '<tbody>';
-
-    if (arr.indexOfType(2)) {
-        var arrType2 = arr.GetByType(2);
-        var arrType2Length = arrType2.length;
-        table += Table.renderRawDsc(arrType2Length, arrType2, title);
-        table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger">Позиції які не потрапили в автозамовлення!</td></tr>';
-        var arrTypeOther = arr.GetByType(0, 1);
-        var arrTypeOtherLength = arrTypeOther.length;
-        if (arrTypeOtherLength > 0) {
-            table += Table.renderRawDsc(arrTypeOtherLength, arrTypeOther, title);
-        }
-    } else {
-        table += Table.renderRawDsc(arrLength, arr, title);
-    }
-    table += '</tbody>';
-    table += '</table>';
-
-    $('#tableContent').html(table);
-    $('#tableContent').after('<div id="info" class="desctopInfo bg-primary"><div class="container"><div></div>');
-},
-    renderRawMob: function (arrLength, arr, title) {
-    var isEdit = Table.JSON.OrderHead.ISEDIT;
-    var table = '';
-    for (var i = 0; i < arrLength; i += 1) {
-        table += '<div rowIndex="' + arr[i][arr[i].length - 1] + '" class="row dataRow';
-        if (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('COLOR_WARES')] != "") {
-            table += ' no_bg_style';
-            switch (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('COLOR_WARES')]) {
-                case 'y':
-                    table += ' table-warning';
-                    break;
-                case 'r':
-                    table += ' table-danger';
-                    break;
-                case 'g':
-                    table += ' table-success';
-                    break;
-            }
-        }
-        table += '">';
-        if (Table.seeBrands && (Table.prevBrand !== arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')])) {
-            table += '<div class="col-12 brand_name font-weight-bold text-center border border-top-0 border-left-0 border-right-0 border-dark"><h5>' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')] + '</h5></div>';
-        }
-        Table.prevBrand = arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')];
-
-        for (var j = 0; j < Table.renderSettings.length; j++) {
-            if (Table.renderSettings[j][1] == 1) {
-
-                var classes = [];
-
-                if (Table.JSON.OrderField.Data[j][6] == "b") {
-                    classes.push("font-weight-bold");
-                }
-
-                switch (Table.JSON.OrderField.Data[j][7]) {
-                    case "i":
-                        classes.push("text-info");
-                        break;
-                    case "w":
-                        classes.push("text-warning");
-                        break;
-                    case "d":
-                        classes.push("text-danger");
-                        break;
-                    case "s":
-                        classes.push("text-success");
-                        break;
-                }
-
-                switch (j) {
+        Table.renderSettings.colspan = 0;
+        for (var i = 0; i < Table.renderSettings.length; i++) {
+            if (Table.renderSettings[i][1] == 1) {
+                Table.renderSettings.colspan++;
+                switch (i) {
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('CODEWARES'):
-                        table += '<div id="sort_by_brand" class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                        table += '<th id="sort_by_brand">' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_WARES'):
-                        table += '<div id="sort_by_title" class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY'):
-                        classes.push('orderCount');
-                        table += '<div id="sort_by_title" class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + '  class="form-control quantyty" data-field-type="quantyty" type="number" value="' + arr[i][j] + '"/></div>';
+                        table += '<th id="sort_by_title">' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
-                        if (Table.sort == 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_2'):
-                        if (Table.sort == 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_3'):
-                        if (Table.sort == 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_4'):
-                        if (Table.sort == 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_5'):
-                        if (Table.sort == 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_1'):
-                        if (Table.sort != 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_2'):
-                        if (Table.sort != 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_3'):
-                        if (Table.sort != 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_4'):
-                        if (Table.sort != 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_5'):
-                        if (Table.sort != 'days') {
-                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        }
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
-                        table += '<div class="col-4">заказ уп.:</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" data-field-type="pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></div>';
-                        table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        table += '<div class="col-4">логістична к-сть п.:</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" data-field-type="logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) * parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></div>';
-                        break;
-                    default:
-                        table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                        table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
-                        break;
-                }
-            }
-        }
-        table += '</div>';
-    }
-    return table;
-},
-    renderRawDsc: function (arrLength, arr, title) {
-    var table = '';
-    var isEdit = this.JSON.OrderHead.ISEDIT;
-    for (var i = 0; i < arrLength; i += 1) {
-        if (Table.seeBrands && (Table.prevBrand !== arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')])) {
-            table += '<tr>';
-            table += '<td colspan="15" class="font-weight-bold">' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')] + '</td>';
-            table += '</tr>';
-        }
-        Table.prevBrand = arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')];
-        table += '<tr rowIndex="' + arr[i][arr[i].length - 1] + '" class="dataRow';
-        if (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('COLOR_WARES')] != "") {
-            switch (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('COLOR_WARES')]) {
-                case 'y':
-                    table += ' table-warning';
-                    break;
-                case 'r':
-                    table += ' table-danger';
-                    break;
-                case 'g':
-                    table += ' table-success';
-                    break;
-            }
-        }
-        table += '">';
-
-        for (var j = 0; j < Table.renderSettings.length; j++) {
-            if (Table.renderSettings[j][1] == 1) {
-                var classes = [];
-
-                if (Table.JSON.OrderField.Data[j][6] == "b") {
-                    classes.push("font-weight-bold");
-                }
-
-                switch (Table.JSON.OrderField.Data[j][7]) {
-                    case "i":
-                        classes.push("text-info");
-                        break;
-                    case "w":
-                        classes.push("text-warning");
-                        break;
-                    case "d":
-                        classes.push("text-danger");
-                        break;
-                    case "s":
-                        classes.push("text-success");
-                        break;
-                }
-                switch (j) {
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY'):
-                        classes.push('orderCount');
-                        table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '><input ' + (!isEdit ? 'readonly' : '') + '  class="form-control quantyty" data-field-type="quantyty" type="number" value="' + arr[i][j] + '"/></td>';
-                        break;
-                    case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
-                        if(Table.sort == 'days')
-                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                        if (Table.sort == 'days')
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_2'):
                         if (Table.sort == 'days')
-                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_3'):
                         if (Table.sort == 'days')
-                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_4'):
                         if (Table.sort == 'days')
-                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_5'):
                         if (Table.sort == 'days')
-                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_1'):
                         if (Table.sort != 'days')
-                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_2'):
                         if (Table.sort != 'days')
-                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_3'):
                         if (Table.sort != 'days')
-                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_4'):
                         if (Table.sort != 'days')
-                            table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_5'):
                         if (Table.sort != 'days')
-                            table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY'):
-                        table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
-                        table += '<td><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" data-field-type="pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></td>';
+                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
+                        table += '<th>заказ уп.</th>';
                         break;
                     case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
-                        table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
-                        table += '<td><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" data-field-type="logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></td>';
+                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
+                        table += '<th>логістична к-сть п.</th>';
                         break;
                     default:
-                        table += '<td '+(classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '')+'>' + arr[i][j] + '</td>';
+                        table += '<th>' + Table.JSON.OrderField.Data[i][3] + '</th>';
                         break;
                 }
             }
         }
-        table += '</tr>';
-    }
 
-    return table;
-},
+        table += '</tr>';
+        table += '</thead>';
+        table += '<tbody>';
+
+        if (arr.indexOfIsEdit(1)) {
+            var arrIsEdit = arr.GetByIsEdit(1);
+            if (this.JSON.OrderHead.ISEDIT == 1) table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Дозволені до редагування</td></tr>';
+            if (arrIsEdit.indexOfType(2)) {
+                var arrType2 = arrIsEdit.GetByType(2);
+                var arrType2Length = arrType2.length;
+                table += Table.renderRawDsc(arrType2Length, arrType2, title);
+                var arrTypeOther = arrIsEdit.GetByType(0, 1);
+                var arrTypeOtherLength = arrTypeOther.length;
+                if (arrTypeOtherLength > 0) {
+                    table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Позиції які не потрапили в автозамовлення!</td></tr>';
+                    table += Table.renderRawDsc(arrTypeOtherLength, arrTypeOther, title);
+                }
+            } else {
+                table += Table.renderRawDsc(arrLength, arrIsEdit, title);
+            }
+            if (arr.indexOfIsEdit(0)) {
+                arrIsEdit = arr.GetByIsEdit(0);
+                if (this.JSON.OrderHead.ISEDIT == 1) table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Заборонені до редагування</td></tr>';
+                if (arrIsEdit.indexOfType(2)) {
+                    var arrType2 = arrIsEdit.GetByType(2);
+                    var arrType2Length = arrType2.length;
+                    table += Table.renderRawDsc(arrType2Length, arrType2, title);
+                    var arrTypeOther = arrIsEdit.GetByType(0, 1);
+                    var arrTypeOtherLength = arrTypeOther.length;
+                    if (arrTypeOtherLength > 0) {
+                        table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Позиції які не потрапили в автозамовлення!</td></tr>';
+                        table += Table.renderRawDsc(arrTypeOtherLength, arrTypeOther, title);
+                    }
+                } else {
+                    table += Table.renderRawDsc(arrLength, arrIsEdit, title);
+                }
+            }
+        } else {
+            if (arrIsEdit.indexOfType(2)) {
+                var arrType2 = arrIsEdit.GetByType(2);
+                var arrType2Length = arrType2.length;
+                table += Table.renderRawDsc(arrType2Length, arrType2, title);
+                table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger">Позиції які не потрапили в автозамовлення!</td></tr>';
+                var arrTypeOther = arrIsEdit.GetByType(0, 1);
+                var arrTypeOtherLength = arrTypeOther.length;
+                if (arrTypeOtherLength > 0) {
+                    table += Table.renderRawDsc(arrTypeOtherLength, arrTypeOther, title);
+                }
+            } else {
+                table += Table.renderRawDsc(arrLength, arrIsEdit, title);
+            }
+        }
+        
+        table += '</tbody>';
+        table += '</table>';
+
+        $('#tableContent').html(table);
+        $('#tableContent').after('<div id="info" class="desctopInfo bg-primary"><div class="container"><div></div>');
+    },
+    renderRawMob: function (arrLength, arr, title) {
+        var isEdit = Table.JSON.OrderHead.ISEDIT;
+        var table = '';
+        for (var i = 0; i < arrLength; i += 1) {
+            table += '<div rowIndex="' + arr[i][arr[i].length - 1] + '" class="row dataRow';
+            if (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('COLOR_WARES')] != "") {
+                table += ' no_bg_style';
+                switch (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('COLOR_WARES')]) {
+                    case 'y':
+                        table += ' table-warning';
+                        break;
+                    case 'r':
+                        table += ' table-danger';
+                        break;
+                    case 'g':
+                        table += ' table-success';
+                        break;
+                }
+            }
+            table += '">';
+            if (Table.seeBrands && (Table.prevBrand !== arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')])) {
+                table += '<div class="col-12 brand_name font-weight-bold text-center border border-top-0 border-left-0 border-right-0 border-dark"><h5>' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')] + '</h5></div>';
+            }
+            Table.prevBrand = arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')];
+
+            for (var j = 0; j < Table.renderSettings.length; j++) {
+                if (Table.renderSettings[j][1] == 1) {
+
+                    var classes = [];
+
+                    if (Table.JSON.OrderField.Data[j][6] == "b") {
+                        classes.push("font-weight-bold");
+                    }
+
+                    switch (Table.JSON.OrderField.Data[j][7]) {
+                        case "i":
+                            classes.push("text-info");
+                            break;
+                        case "w":
+                            classes.push("text-warning");
+                            break;
+                        case "d":
+                            classes.push("text-danger");
+                            break;
+                        case "s":
+                            classes.push("text-success");
+                            break;
+                    }
+
+                    switch (j) {
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('CODEWARES'):
+                            table += '<div id="sort_by_brand" class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_WARES'):
+                            table += '<div id="sort_by_title" class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY'):
+                            classes.push('orderCount');
+                            table += '<div id="sort_by_title" class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                            table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + '  class="form-control quantyty" data-field-type="quantyty" type="number" value="' + arr[i][j] + '"/></div>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
+                            if (Table.sort == 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_2'):
+                            if (Table.sort == 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_3'):
+                            if (Table.sort == 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_4'):
+                            if (Table.sort == 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_5'):
+                            if (Table.sort == 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_1'):
+                            if (Table.sort != 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_2'):
+                            if (Table.sort != 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_3'):
+                            if (Table.sort != 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_4'):
+                            if (Table.sort != 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_5'):
+                            if (Table.sort != 'days') {
+                                table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                                table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            }
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
+                            table += '<div class="col-4">заказ уп.:</div>';
+                            table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" data-field-type="pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></div>';
+                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            table += '<div class="col-4">логістична к-сть п.:</div>';
+                            table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" data-field-type="logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) * parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></div>';
+                            break;
+                        default:
+                            table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
+                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+                            break;
+                    }
+                }
+            }
+            table += '</div>';
+        }
+        return table;
+    },
+    renderRawDsc: function (arrLength, arr, title) {
+        var table = '';
+        var isEdit = this.JSON.OrderHead.ISEDIT;
+        for (var i = 0; i < arrLength; i += 1) {
+            if (Table.seeBrands && (Table.prevBrand !== arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')])) {
+                table += '<tr>';
+                table += '<td colspan="15" class="font-weight-bold">' + arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')] + '</td>';
+                table += '</tr>';
+            }
+            Table.prevBrand = arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')];
+            table += '<tr rowIndex="' + arr[i][arr[i].length - 1] + '" class="dataRow';
+            if (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('COLOR_WARES')] != "") {
+                switch (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('COLOR_WARES')]) {
+                    case 'y':
+                        table += ' table-warning';
+                        break;
+                    case 'r':
+                        table += ' table-danger';
+                        break;
+                    case 'g':
+                        table += ' table-success';
+                        break;
+                }
+            }
+            table += '">';
+
+            for (var j = 0; j < Table.renderSettings.length; j++) {
+                if (Table.renderSettings[j][1] == 1) {
+                    var classes = [];
+
+                    if (Table.JSON.OrderField.Data[j][6] == "b") {
+                        classes.push("font-weight-bold");
+                    }
+
+                    switch (Table.JSON.OrderField.Data[j][7]) {
+                        case "i":
+                            classes.push("text-info");
+                            break;
+                        case "w":
+                            classes.push("text-warning");
+                            break;
+                        case "d":
+                            classes.push("text-danger");
+                            break;
+                        case "s":
+                            classes.push("text-success");
+                            break;
+                    }
+                    switch (j) {
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY'):
+                            classes.push('orderCount');
+                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '><input ' + (!isEdit || arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISEDIT')]==0 ? 'readonly' : '') + '  class="form-control quantyty" data-field-type="quantyty" type="number" value="' + arr[i][j] + '"/></td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_1'):
+                            if (Table.sort == 'days')
+                                table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_2'):
+                            if (Table.sort == 'days')
+                                table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_3'):
+                            if (Table.sort == 'days')
+                                table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_4'):
+                            if (Table.sort == 'days')
+                                table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('D_SALE_5'):
+                            if (Table.sort == 'days')
+                                table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_1'):
+                            if (Table.sort != 'days')
+                                table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_2'):
+                            if (Table.sort != 'days')
+                                table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_3'):
+                            if (Table.sort != 'days')
+                                table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_4'):
+                            if (Table.sort != 'days')
+                                table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('N_SALE_5'):
+                            if (Table.sort != 'days')
+                                table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY'):
+                            table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<td><input ' + (!isEdit || arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISEDIT')] == 0 ? 'readonly' : '') + ' class="form-control pack" data-field-type="pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></td>';
+                            break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
+                            table += '<td  ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            table += '<td><input ' + (!isEdit || arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISEDIT')] == 0 ? 'readonly' : '') + ' class="form-control logistic" data-field-type="logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></td>';
+                            break;
+                        default:
+                            table += '<td ' + (classes.length > 0 ? 'class="' + classes.join(' ') + '"' : '') + '>' + arr[i][j] + '</td>';
+                            break;
+                    }
+                }
+            }
+            table += '</tr>';
+        }
+
+        return table;
+    },
     packCalculate: function (val) {
         var maxedit = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('MAX_EDIT')];
         var minedit = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('MIN_EDIT')];
@@ -834,7 +891,7 @@ var Table = {
                 u = old;
             }
         }
-       
+
         $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val(u);
 
         p = parseFloat(u) / parseFloat(ppack);
@@ -888,30 +945,30 @@ var Table = {
         $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.logistic').val(parseFloat(l.toFixed(2)));
     },
     onFocus: function () {
-    var el = $(this);
-    if (el.val() != '' && !el.prop('readonly'))
-        el.attr('data-old', el.val());
-    var row = el.closest('.dataRow');
-    row.addClass('table-info');
-    var rowIndex = parseInt(row.attr('rowIndex'));
-    Table.globalCurrentRow = rowIndex;
-    var infoContent = '<div class="row"><div class="col-12">';
-    infoContent += '<span>';
+        var el = $(this);
+        if (el.val() != '' && !el.prop('readonly'))
+            el.attr('data-old', el.val());
+        var row = el.closest('.dataRow');
+        row.addClass('table-info');
+        var rowIndex = parseInt(row.attr('rowIndex'));
+        Table.globalCurrentRow = rowIndex;
+        var infoContent = '<div class="row"><div class="col-12">';
+        infoContent += '<span>';
 
-    var contenrRows = [];
-    for (var i = 0; i < Table.renderSettings.length; i++) {
-        if (Table.renderSettings[i][1] == 2) {
+        var contenrRows = [];
+        for (var i = 0; i < Table.renderSettings.length; i++) {
+            if (Table.renderSettings[i][1] == 2) {
                 contenrRows.push(Table.JSON.OrderField.Data[i][3] + ':' + Table.JSON.OrderDetail.Data[rowIndex][i]);
+            }
         }
-    }
-    infoContent += contenrRows.join(', ');
-    infoContent += '</span>';
-    infoContent += '</div></div>';
-    if (!el.prop('readonly'))
-        el.select();
-    $('#info .container').html(infoContent);
-    $('#info').css('display','block');
-},
+        infoContent += contenrRows.join(', ');
+        infoContent += '</span>';
+        infoContent += '</div></div>';
+        if (!el.prop('readonly'))
+            el.select();
+        $('#info .container').html(infoContent);
+        $('#info').css('display', 'block');
+    },
     onBlur: function () {
         var el = $(this);
         var row = el.closest('.dataRow');
@@ -1005,7 +1062,7 @@ var Table = {
         html += '</tr><tr>';
         html += '</tr><tr>';
         html += '<td class="gtm caption"><b>Склад постачання:</b></td>';
-        html += '<td>'+FullName+'</td>';
+        html += '<td>' + FullName + '</td>';
         html += '</tr><tr>';
         html += '</tr><tr>';
         html += '<td class="gtm caption"><b>Адреса постачання:</b></td>';
@@ -1128,7 +1185,7 @@ var Table = {
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert('errorCode:' +xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+                alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
             }
         });
     },
@@ -1147,7 +1204,7 @@ var Table = {
             isMobile = false;
         }
 
-        for (var i = 0; i < rows.length; i++){
+        for (var i = 0; i < rows.length; i++) {
             item = [];
             if (isMobile) {
                 item.push($($(rows[i]).find('#sort_by_brand + div')[0]).html());
@@ -1174,7 +1231,7 @@ var Table = {
         if ($("#status").val() == -1) {
             delete Data.DateDelivery;
         }
-		
+
         //Data.data = JSON.stringify(Data.data);
 
         var obj = {};
@@ -1212,7 +1269,7 @@ var Table = {
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert('errorCode:' +xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+                alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
                 Table.getData(true);
             }
         });
@@ -1239,8 +1296,8 @@ var Table = {
             Table.getData(true);
         });
         $('#warehouse').change(function () {
-                Cookies.set('Warehouse', $(this).val(), { expires: 99999 });
-                Table.getData(true);
+            Cookies.set('Warehouse', $(this).val(), { expires: 99999 });
+            Table.getData(true);
         });
         /*$('#status, #delivery_date').change(function () {
             if ($(this).attr('is-change') !== 'false') {
@@ -1284,7 +1341,7 @@ var Table = {
         });
     },
     init: function () {
-        if (window.isLogin){
+        if (window.isLogin) {
             this.getData(true);
         }
         this.controlsInit();
