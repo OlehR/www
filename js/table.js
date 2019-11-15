@@ -49,9 +49,11 @@
             },
             success: function (data) {
                 Table.JSON = data;
-                if (typeof Table.JSON.State !== typeof undefined && parseInt(Table.JSON.State) === -1) return;
                 Table.sortByColumn = Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND');
                 Table.OriginalTableJSON = JSON.parse(JSON.stringify(data));
+                for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
+                    Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.Data[i].length] = i;
+                }
                 if ((typeof Table.JSON.OrderHead !== typeof undefined)) {
                     var d = DateHelper.formatJsDate(Table.JSON.OrderHead.DELIVERY);
                     $('#status').attr('is-change', 'false');
@@ -136,7 +138,6 @@
                         if (type) {
                             return true;
                         }
-                        this[i][this[i].length + 1] = i;
                     }
                     return false;
                 };
@@ -148,7 +149,6 @@
                             type = this[i][Table.JSON.OrderDetail.InfoColumn.indexOf('TYPE')] === aprove;
                         }
                         if (type) {
-                            this[i][this[i].length + 1] = i;
                             result.push(this[i]);
                         }
                     }
@@ -160,7 +160,6 @@
                         if (type) {
                             return true;
                         }
-                        this[i][this[i].length + 1] = i;
                     }
                     return false;
                 };
@@ -169,7 +168,6 @@
                     for (var i = 0; i < this.length; i++) {
                         var type = this[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISEDIT')] === search;
                         if (type) {
-                            this[i][this[i].length + 1] = i;
                             result.push(this[i]);
                         }
                     }
@@ -531,25 +529,27 @@
         table += '</thead>';
         table += '<tbody>';
 
-        if (arr.indexOfIsEdit(1)) {
-            var arrIsEdit = arr.GetByIsEdit(1);
-            if (this.JSON.OrderHead.ISEDIT == 1) table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Дозволені до редагування</td></tr>';
-            if (arrIsEdit.indexOfType(2)) {
-                var arrType2 = arrIsEdit.GetByType(2);
-                var arrType2Length = arrType2.length;
-                table += Table.renderRawDsc(arrType2Length, arrType2, title);
-                var arrTypeOther = arrIsEdit.GetByType(0, 1);
-                var arrTypeOtherLength = arrTypeOther.length;
-                if (arrTypeOtherLength > 0) {
-                    table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Позиції які не потрапили в автозамовлення!</td></tr>';
-                    table += Table.renderRawDsc(arrTypeOtherLength, arrTypeOther, title);
+        if (this.JSON.OrderHead.ISEDIT == 1) {
+            if (arr.indexOfIsEdit(1)) {
+                var arrIsEdit = arr.GetByIsEdit(1);
+                table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Дозволені до редагування</td></tr>';
+                if (arrIsEdit.indexOfType(2)) {
+                    var arrType2 = arrIsEdit.GetByType(2);
+                    var arrType2Length = arrType2.length;
+                    table += Table.renderRawDsc(arrType2Length, arrType2, title);
+                    var arrTypeOther = arrIsEdit.GetByType(0, 1);
+                    var arrTypeOtherLength = arrTypeOther.length;
+                    if (arrTypeOtherLength > 0) {
+                        table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Позиції які не потрапили в автозамовлення!</td></tr>';
+                        table += Table.renderRawDsc(arrTypeOtherLength, arrTypeOther, title);
+                    }
+                } else {
+                    table += Table.renderRawDsc(arrLength, arrIsEdit, title);
                 }
-            } else {
-                table += Table.renderRawDsc(arrLength, arrIsEdit, title);
             }
             if (arr.indexOfIsEdit(0)) {
                 arrIsEdit = arr.GetByIsEdit(0);
-                if (this.JSON.OrderHead.ISEDIT == 1) table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Заборонені до редагування</td></tr>';
+                table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger font-weight-bold">Заборонені до редагування</td></tr>';
                 if (arrIsEdit.indexOfType(2)) {
                     var arrType2 = arrIsEdit.GetByType(2);
                     var arrType2Length = arrType2.length;
@@ -565,21 +565,21 @@
                 }
             }
         } else {
-            if (arrIsEdit.indexOfType(2)) {
-                var arrType2 = arrIsEdit.GetByType(2);
+            if (arr.indexOfType(2)) {
+                var arrType2 = arr.GetByType(2);
                 var arrType2Length = arrType2.length;
                 table += Table.renderRawDsc(arrType2Length, arrType2, title);
                 table += '<tr><td colspan="' + Table.renderSettings.colspan + '" class="text-danger">Позиції які не потрапили в автозамовлення!</td></tr>';
-                var arrTypeOther = arrIsEdit.GetByType(0, 1);
+                var arrTypeOther = arr.GetByType(0, 1);
                 var arrTypeOtherLength = arrTypeOther.length;
                 if (arrTypeOtherLength > 0) {
                     table += Table.renderRawDsc(arrTypeOtherLength, arrTypeOther, title);
                 }
             } else {
-                table += Table.renderRawDsc(arrLength, arrIsEdit, title);
+                table += Table.renderRawDsc(arrLength, arr, title);
             }
         }
-        
+
         table += '</tbody>';
         table += '</table>';
 
