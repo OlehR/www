@@ -1213,6 +1213,14 @@ var Supplier = {
                     }
 
                     $('#group_supplier ul').html(groupList);
+
+                    var contractList = '';
+                    for (var j = 0; j < data.SupplierRegister.length; j++) {
+                        contractList += '<option value="' + data.SupplierRegister[j][0] + '">' + data.SupplierRegister[j][1] + '</option>';
+                    }
+
+                    $('#new_group_supplier select').html(contractList);
+
                 } else {
                     alert(data.TextError);
                 }
@@ -1321,6 +1329,33 @@ var Supplier = {
         });
     },
 
+    // постачальники - додати групу постачання
+    addGroupSupplier: function () {
+        var supplier = Supplier.currSupplier;
+        var obj = {};
+        obj.data = {};
+        obj.data.CodeData = 244;
+        obj.data.NameGS = $("#name_group_supplier").val();
+        obj.data.CodeSR = $('select[name=contract]').val();
+
+        obj.data = JSON.stringify(obj.data);
+
+        $.ajax({
+            url: apiUrl,
+            method: "POST",
+            data: obj,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function () {
+                $('#name_group_supplier').val('');
+                Supplier.getSupplierBrands(supplier);
+            },
+            error: function () {
+                alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
 
     startGS: function () {
         var el = $(this);
@@ -1345,6 +1380,7 @@ var Supplier = {
         $('#supplier_brands').on('click', '.cancleSupplierBrand', Supplier.cancleSupplierBrand);
         $('#saveSupplierBrands').click(Supplier.saveBrands);
         $('#group_supplier').on('click', '.GroupSuppliesStart', Supplier.startGS);
+        $('#add_group_supplier').click(Supplier.addGroupSupplier);
     }
 };
 

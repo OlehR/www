@@ -969,6 +969,37 @@
             el.select();
         $('#info .container').html(infoContent);
         $('#info').css('display', 'block');
+
+        var X = el.offset().left; 
+        var Y = el.offset().top;
+        var Width = el.width();
+
+        $('#min').css('display', 'block');
+        $('#max').css('display', 'block');
+
+        var maxedit = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('MAX_EDIT')];
+        var minedit = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('MIN_EDIT')];
+        var ppack = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')];
+        var lpack = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')];
+
+        if (el.hasClass('pack')) {
+            $('#min').html(minedit / parseFloat(ppack));
+            $('#max').html(maxedit / parseFloat(ppack));
+        }
+        if (el.hasClass('logistic')) {
+            $('#min').html(minedit / parseFloat(lpack));
+            $('#max').html(maxedit / parseFloat(lpack));
+        }
+        if (el.hasClass('quantyty')) {
+            $('#min').html(parseFloat(minedit));
+            $('#max').html(parseFloat(maxedit));
+        }
+
+        $('#min').width(Width);
+        $('#max').width(Width);
+
+        $('#min').offset({ top: Y - 27, left: X });
+        $('#max').offset({ top: Y + 27, left: X });
     },
     onBlur: function () {
         var el = $(this);
@@ -981,6 +1012,11 @@
         }
         $('#info').css('display', 'none');
         Table.globalCurrentRow = -1;
+
+        $('#min').css('display', 'none');
+        $('#max').css('display', 'none');
+        $('#min').html('');
+        $('#max').html('');
     },
     onChange: function () {
         if (Table.globalCurrentRow == -1) return;
