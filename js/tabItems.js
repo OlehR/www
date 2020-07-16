@@ -1348,6 +1348,7 @@ var Supplier = {
                 withCredentials: true
             },
             success: function () {
+                $('#name_group_supplier').val('');
                 Supplier.getSupplierBrands(supplier);
             },
             error: function () {
