@@ -71,7 +71,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                 </tbody>
                             </table>
                             <div class="text-center form-group">
@@ -91,7 +90,7 @@
                     <div id="filters" class="col-md-12 form-group hidden-sm-down">
                         <div class="row">
                             <div class="col-md-3 col-sm-12 date-delivery-col">
-                                <input id="delivery_date" class="form-control" disabled/>
+                                <input id="delivery_date" class="form-control" disabled />
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <select id="status" class="form-control form-group">
@@ -121,8 +120,13 @@
             <div class="" id="tableContent" data-type="order">
                 <div class="loader"></div>
             </div>
+
         </div>
     </div>
+
+    <div id="min" class="hide_min_max"></div>
+    <div id="max" class="hide_min_max">бувай</div>
+
     <div id="loginForm">
         <form class="form-signin">
             <h2 class="form-signin-heading">Зайдіть в кабінет</h2>
@@ -146,7 +150,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="send_mail_addr">Введіть e-mail для відправки</label>
-                        <input id="send_mail_addr" type="email" name="email" class="form-control" autocomplete="on"/>
+                        <input id="send_mail_addr" type="email" name="email" class="form-control" autocomplete="on" />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -159,7 +163,7 @@
     <script>
         var hours = "";
         for (var i = 8; i <= 18; i++) {
-            hours += '<option value="' + (i < 10 ? "0"+i : i) + '">' + i +'</option>';
+            hours += '<option value="' + (i < 10 ? "0" + i : i) + '">' + i + '</option>';
         }
         $('#status').append(hours);
         if (window.isLogin) {
@@ -171,16 +175,16 @@
     <script src="../js/bootstrap-datepicker.js"></script>
     <script src="../js/bootstrap-datepicker.uk.js"></script>
     <link href="../css/datepicker/bootstrap-datepicker.css" type="text/css" rel="stylesheet" />
-<script src="../config/helpers.js"></script>
-<script src="../js/table.js"></script>
-<script src="../js/user.js"></script>
-<script>
-    $('#delivery_date').datepicker({
-        format: 'dd-mm-yyyy',
-        language: 'uk'
-    });
-    $('#delivery_date').attr('is-change','false');
-    $('#delivery_date').datepicker("update", new Date());
-    $('#delivery_date').attr('is-change', 'true');
-</script>
+    <script src="../config/helpers.js"></script>
+    <script src="../js/table.js"></script>
+    <script src="../js/user.js"></script>
+    <script>
+        $('#delivery_date').datepicker({
+            format: 'dd-mm-yyyy',
+            language: 'uk'
+        });
+        $('#delivery_date').attr('is-change', 'false');
+        $('#delivery_date').datepicker("update", new Date());
+        $('#delivery_date').attr('is-change', 'true');
+    </script>
 </body>
