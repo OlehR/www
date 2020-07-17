@@ -103,8 +103,8 @@
                             <div class="col-md-3 col-sm-12 form-group hidden-sm-down">
                                 <div class="row">
                                     <div class="col-12 text-center btn-group">
-                                        <button type="button" class="btn btn-info w-50 m-0 float-left" onclick="$(this).siblings('button').removeClass('active'); $(this).addClass('active'); Table.sort = 'days'; Table.getData();">дням</button>
-                                        <button type="button" class="btn btn-info w-50 m-0 active" onclick="$(this).siblings('button').removeClass('active'); $(this).addClass('active'); Table.sort.sort = 'weeks'; Table.getData();">тижням</button>
+                                        <button type="button" class="btn btn-info w-50 m-0 float-left" onclick="$(this).siblings('button').removeClass('active'); $(this).addClass('active'); Table.sort = 'days'; Table.renderDesctopOrder();">дням</button>
+                                        <button type="button" class="btn btn-info w-50 m-0 active" onclick="$(this).siblings('button').removeClass('active'); $(this).addClass('active'); Table.sort = 'weeks'; Table.renderDesctopOrder();">тижням</button>
                                     </div>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
     </div>
 
     <div id="min" class="hide_min_max"></div>
-    <div id="max" class="hide_min_max">бувай</div>
+    <div id="max" class="hide_min_max"></div>
 
     <div id="loginForm">
         <form class="form-signin">

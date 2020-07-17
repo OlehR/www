@@ -972,15 +972,19 @@
 
         var X = el.offset().left; 
         var Y = el.offset().top;
-        var Width = el.width();
-
-        $('#min').css('display', 'block');
-        $('#max').css('display', 'block');
+        var Width = el.width();       
 
         var maxedit = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('MAX_EDIT')];
         var minedit = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('MIN_EDIT')];
         var ppack = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')];
         var lpack = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')];
+
+        if (!minedit == '' || minedit == 0) {
+            $('#min').css('display', 'block');
+        }
+        if (!maxedit == '' || maxedit == 0) {
+            $('#max').css('display', 'block');
+        }
 
         if (el.hasClass('pack')) {
             $('#min').html(minedit / parseFloat(ppack));
