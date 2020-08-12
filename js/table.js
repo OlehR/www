@@ -1002,8 +1002,8 @@
         $('#min').width(Width);
         $('#max').width(Width);
 
-        $('#min').offset({ top: Y - 27, left: X });
-        $('#max').offset({ top: Y + 27, left: X });
+        $('#min').offset({ top: Y + 27, left: X });
+        $('#max').offset({ top: Y - 27, left: X });
     },
     onBlur: function () {
         var el = $(this);
