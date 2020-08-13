@@ -1,6 +1,7 @@
 ﻿var Table = {
     StateOrder: -1,
     globalCurrentRow: -1,
+	BeforeVal:0.0,
     JSON: {},
     OriginalTableJSON: {},
     sortByColumn: 0,
@@ -906,6 +907,7 @@
         var unit = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('UNIT')];
 
         var old = $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val();
+		old = Table.BeforeVal;
 
         var ppack = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')];
         var lpack = this.JSON.OrderDetail.Data[this.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')];
@@ -933,10 +935,10 @@
             }
         }
         if (unit == "шт") {
-            u = u.toFixed(0);
+            u = parseFloat(u).toFixed();
         }
         else {
-            u = parseFloat(u.toFixed(3));
+            u = parseFloat(u).toFixed(3);
         }
         $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val(u);
 
@@ -953,6 +955,11 @@
         row.addClass('table-info');
         var rowIndex = parseInt(row.attr('rowIndex'));
         Table.globalCurrentRow = rowIndex;
+		if(Table.globalCurrentRow>0)
+		 Table.BeforeVal = row.find('.orderCount input').val();
+	     else
+		  Table.BeforeVal =	 0;
+	  
         var infoContent = '<div class="row"><div class="col-12">';
         infoContent += '<span>';
 
