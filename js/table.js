@@ -852,13 +852,13 @@
 
         var u = parseFloat(val) * parseFloat(ppack);
 
-        if (!maxedit == '') {
+        if (!(maxedit == null)) {
             if (u > maxedit) {
                 u = old;
             }
         }
 
-        if (!minedit == '') {
+        if (!(minedit == null)) {
             if (u < minedit) {
                 u = old;
             }
@@ -882,13 +882,13 @@
 
         var u = parseFloat(val) * parseFloat(lpack);
 
-        if (!maxedit == '') {
+        if (!(maxedit == null)) {
             if (u > maxedit) {
                 u = old;
             }
         }
 
-        if (!minedit == '') {
+        if (!(minedit == null)) {
             if (u < minedit) {
                 u = old;
             }
@@ -923,13 +923,13 @@
             $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').removeClass('text-danger bg-warning font-weight-bold');
         }
 
-        if (!maxedit == '') {
+        if (!(maxedit == null)) {
             if (u > maxedit) {
                 u = old;
             }
         }
 
-        if (!minedit == '') {
+        if (!(minedit == null)) {
             if (u < minedit) {
                 u = old;
             }
@@ -986,10 +986,10 @@
         var ppack = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')];
         var lpack = Table.JSON.OrderDetail.Data[Table.globalCurrentRow][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')];
 
-        if (!minedit == '' || minedit == 0) {
+        if ( !(minedit == null) ) {
             $('#min').css('display', 'block');
         }
-        if (!maxedit == '' || maxedit == 0) {
+        if ( !(maxedit == null) ) {
             $('#max').css('display', 'block');
         }
 
@@ -1009,8 +1009,8 @@
         $('#min').width(Width);
         $('#max').width(Width);
 
-        $('#min').offset({ top: Y + 27, left: X });
-        $('#max').offset({ top: Y - 27, left: X });
+        $('#min').offset({ top: Y + 27, left: X+30 });
+        $('#max').offset({ top: Y - 27, left: X+30 });
     },
     onBlur: function () {
         var el = $(this);
