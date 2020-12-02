@@ -22,6 +22,8 @@
                 for (var i = 0; i < arrLength; i++) {
                     options += '<option value="' + result.Warehouse.Data[i][0] + '">' + result.Warehouse.Data[i][1] + '</option>';
                 }
+				if(result.Is_ManagerHead==1)
+					$('#import_xl').prop('disabled', false);
                 $("#combobox").html(options);
                 $("#combobox").combobox({
                     change: Order.selectWarehouse

@@ -361,7 +361,18 @@ var AMatrix = {
             success: function (data) {
                 var result = data;
                 console.log(result);
-                if (result.TextError == "Ok") {
+                if (result.TextError == "Ok") {					
+					
+					
+					if(result.BadWares.length>0) 
+					   alert('У вас нема доступу до наступних товарів=>'+result.BadWares);
+				    else
+					if(result.BadWareHouse.length>0)
+						  alert('У вас нема доступу до наступних складів=>'+result.BadWareHouse);
+					  else
+					if(result.BadLimit.length>1)
+						alert('Перелімітили =>\n'+result.BadLimit);
+					else
                     alert('Данні успішно збережено!');
                 } else {
                     alert('Помилка: ' + result.TextError);

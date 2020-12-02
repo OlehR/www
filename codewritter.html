@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link href="codewritter.css" type="text/css" rel="stylesheet" />
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="codewritter.js"></script>
+    <script src="../config/config.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="JsBarcode.ean-upc.min.js"></script>
+</head>
+<body>
+
+    <div id="codewrite">
+
+        <center>
+            <button id="myb" @click="getData">штрихкод</button>
+
+            <h1 id="myt" v-html="wareName">{{ wareName }}</h1>
+            <svg id="barcode"></svg>
+        </center>
+    </div>
+
+
+
+
+    <script src="../js/popper.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.dragtable.js"></script>
+    <script src="../js/bootstrap-datepicker.js"></script>
+    <script src="../js/bootstrap-datepicker.uk.js"></script>
+</body>
+</html>

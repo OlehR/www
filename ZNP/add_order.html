@@ -8,6 +8,7 @@
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/cookie.js"></script>
     <script src="../config/config.js"></script>
+	
     <script>
         window.isLogin = typeof Cookies.get('isLogin') != typeof undefined;
     </script>
@@ -19,7 +20,18 @@
                 <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#TopMenu" aria-controls="TopMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
+<div class="col-md-2 col-sm-12 form-group">
+                        <button title="Формат CSV => КОД Групи,Код магазину 1,Код магазину 2, Код магазину 3.
+Код товару, к-ть 1 маг,к-ть 2 маг,к-ть 3 маг
+256,3,9,15,22,57,68
+123,0,1,1,1,1,1,1
+212,11,0,0,1,1,0,0
+233,44,0,0,0,0,1,1" id="import_xl" class="btn btn-primary" type="button">
+                            CSV
+                        </button>
+                        <input id="file-upload" hidden="hidden" type="file" name="files[]" multiple=multiple />
+                    </div>
+					
                 <div class="collapse navbar-collapse" id="TopMenu">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
@@ -48,6 +60,8 @@
                         </div>
                     </div>
                 </div>
+
+					
                 <div class="form-group">
                     <div class="ui-widget GP">
                         <div class="row">
@@ -66,6 +80,8 @@
             </div>
         </div>
     </div>
+	
+	                    
 
     <div id="loginForm">
         <form class="form-signin">
@@ -88,9 +104,12 @@
     <script>
         if (isLogin) {
             $('#loginForm').hide();
+			
         }
+		
     </script>
     <script src="../js/jquery-ui.js"></script>
+	<script src="js/add_order.js"></script>
     <script>
         $(function () {
             $.widget("custom.combobox", {
