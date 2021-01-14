@@ -113,9 +113,30 @@ var AMatrix = {
                 withCredentials: true
             },
             success: function (data) {
-                AMatrix.JSON = data;
+				
+				if (data.TextError == "Ok") {			
+					
+					
+					/*if(data.BadWares.length>0) 
+					   alert('У вас нема доступу до наступних товарів=>'+data.BadWares);
+				    else
+					if(data.BadWareHouse.length>0)
+						  alert('У вас нема доступу до наступних складів=>'+data.BadWareHouse);
+					  else*/
+					if(data.BadLimit.length>1)
+						alert('Перелімітили =>\n'+data.BadLimit);
+					
+					AMatrix.JSON = data;
                 console.log(AMatrix.JSON);
                 AMatrix.renderAM();
+
+                
+				} else {
+                    alert('Помилка: ' + data.TextError);
+                }
+				
+				
+                
             },
             error: function () {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
@@ -361,7 +382,7 @@ var AMatrix = {
             success: function (data) {
                 var result = data;
                 console.log(result);
-                if (result.TextError == "Ok") {					
+                if (result.TextError == "Ok") {			
 					
 					
 					if(result.BadWares.length>0) 
