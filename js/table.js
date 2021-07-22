@@ -1,4 +1,7 @@
-﻿
+﻿function humanize(x){
+  return x.toFixed(2).replace(/\.?0*$/,'');
+}
+
 var Table = {
     StateOrder: -1,
     globalCurrentRow: -1,
@@ -659,12 +662,15 @@ var Table = {
                                 table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
                             }
                             break;
- 
-                        case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):
-                            table += '<div class="col-4">заказ уп.:</div>';
+							
+						case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY'):
+							table += '<div class="col-4">заказ уп.:</div>';
                             table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control pack" data-field-type="pack" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) / parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK_SUPPLY')])) + '" /></div>';
                             table += '<div class="col-4">' + Table.JSON.OrderField.Data[j][3] + ':</div>';
-                            table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+							table += '<div class="col-8 ' + classes.join(' ') + '">' + arr[i][j] + '</div>';
+							break;
+                        case Table.JSON.OrderDetail.InfoColumn.indexOf('PACK'):                          
+                            
                             table += '<div class="col-4">логістична к-сть п.:</div>';
                             table += '<div class="col-8 ' + classes.join(' ') + '"><input ' + (!isEdit ? 'readonly' : '') + ' class="form-control logistic" data-field-type="logistic" type="number" value="' + (parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('QUANTITY')]) * parseFloat(arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('PACK')])) + '" /></div>';
                             break;
@@ -904,12 +910,20 @@ var Table = {
         p = parseFloat(u) / parseFloat(ppack);
         l = parseFloat(u) / parseFloat(lpack);
 		if(MidlSale>0 || NRest>0 )
-			day_rest=(u+NRest)/MidlSale;
+			day_rest=(parseFloat(u)+parseFloat(NRest))/parseFloat(MidlSale);
 		Table.BeforeVal=u;
+		var pS= humanize(p);
+		var lS=humanize(l);
+		/*var pS=p.toString();
+		if(pS.indexOf('.')>=0)
+			pS=pS.match(/\d+\.\d{2}/)[0];
+		var lS=l.toString();
+		if(lS.indexOf('.')>=0)
+			lS=lS.match(/\d+\.\d{2}/)[0];*/
 		
 		$(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.orderCount input').val(u);		
-        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.pack').val(p.toString().match(/\d+\.\d{2}/)[0]);
-        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.logistic').val(l.toString().match(/\d+\.\d{2}/)[0]);
+        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.pack').val(pS);
+        $(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.logistic').val(lS);
 		$(".dataRow[rowIndex='" + this.globalCurrentRow + "']").find('.day_rest').val(parseFloat(day_rest.toFixed(2)));
     },
 	
@@ -1015,6 +1029,7 @@ var Table = {
         html += '<tbody>';
         var dataArr = Table.JSON.OrderDetail.Data;
         var arrLength = dataArr.length;
+        var ii=0;
         Table.seeBrands = true;
         Table.prevBrand = '';
         for (var i = 0; i < arrLength; i++) {
@@ -1026,7 +1041,7 @@ var Table = {
                 }
                 Table.prevBrand = dataArr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND')];
                 html += '<tr>';
-                html += '<td>' + (i + 1) + '</td>';
+                html += '<td>' + (++ii) + '</td>';
                 html += '<td>' + dataArr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('CODEWARES')] + '</td>';
                 html += '<td>' + dataArr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('TOUCH_CODE')] + '</td>';
                 html += '<td>' + dataArr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_WARES')] + '</td>';
@@ -1052,14 +1067,14 @@ var Table = {
         html += '<tr height="5">';
         html += '<td colspan="5"></td>';
         html += '</tr>';
-        html += '<tr>';
+/*        html += '<tr>';
         html += '<td colspan="4"><b>Сумма без ПДВ (грн.):</b></td>';
         html += '<td><b>' + totalSum.toFixed(2) + '</b></td>';
         html += '</tr>';
         html += '<tr>';
         html += '<td colspan="4"><b>ПДВ (грн.):</b></td>';
         html += '<td><b>0</b></td>';
-        html += '</tr>';
+        html += '</tr>'; */
         html += '<tr>';
         html += '<td colspan="4"><b>Всього (грн.):</b></td>';
         html += '<td><b>' + totalSum.toFixed(2) + '</b></td>';
