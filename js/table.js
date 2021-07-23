@@ -15,6 +15,7 @@ var Table = {
     seeBrands: true,
     prevBrand: '',
     isSuppplier: false,
+	isLogistic:false,
     renderSettings: [],
     getData: function (withRender, sendMail) {
         var type = $('#tableContent').attr("data-type");
@@ -138,7 +139,7 @@ var Table = {
                 var sortState = Cookies.get('Sort_State');
                 if (typeof sortState != typeof undefined && type != 'order') {
                     $('#state').val(sortState);
-                    Table.sortByState();
+                    Table.RenderOrders();
                     return;
                 }
                 Table.JSON.OrderDetail.Data.__proto__.indexOfType = function (search) {
@@ -186,7 +187,7 @@ var Table = {
                     Table.sendMail(true);
                 }
                 if (type === "orders")
-                    Table.sortByLogistic();
+                    Table.RenderOrders();
                 if (withRender) {
                     Table.renderTable();
                 }
@@ -359,6 +360,10 @@ var Table = {
         table += '<tbody>';
         for (var i = 0; i < arrLength; i += 1) {
             switch (arr[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')]) {
+				case -1:
+				case -9:
+                    mark = "-";
+                    break;
                 case 0:
                     mark = "*";
                     break;
@@ -388,47 +393,22 @@ var Table = {
         table += '</table>';
         $('#tableContent').html(table);
     },
-    sortByState: function () {
+    RenderOrders: function () {
         var state = parseInt($('#state').val());
         Table.JSON = JSON.parse(JSON.stringify(Table.OriginalTableJSON));
         console.log();
-        if (state !== -1) {
+
             var newArr = [];
             for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
-                if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')] === state)
+				var St= parseInt(Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')]);
+                if (( (state==-99 && St>0) || state==St) && Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISLC')] ==  (isLogistic?1:0) )
                     newArr.push(Table.JSON.OrderDetail.Data[i]);
-            }
-            Table.JSON.OrderDetail.Data = newArr;
+            
         }
+		Table.JSON.OrderDetail.Data = newArr;
         Table.renderTable();
     },
-    sortByLogistic: function () {
-        var isLogistic = Cookies.get('isLogistick');
-        if (typeof isLogistic == typeof undefined) {
-            isLogistic = false;
-            $('#logistic').prop('checked', false);
-        } else {
-            isLogistic = true;
-            $('#logistic').prop('checked', true);
-        }
-        Table.JSON = JSON.parse(JSON.stringify(Table.OriginalTableJSON));
-        if (isLogistic) {
-            var newArr = [];
-            for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
-                if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISLC')] == 1)
-                    newArr.push(Table.JSON.OrderDetail.Data[i]);
-            }
-            Table.JSON.OrderDetail.Data = newArr;
-        } else {
-            var newArr = [];
-            for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
-                if (Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISLC')] == 0)
-                    newArr.push(Table.JSON.OrderDetail.Data[i]);
-            }
-            Table.JSON.OrderDetail.Data = newArr;
-        }
-        Table.renderTable();
-    },
+    
     renderMobileOrder: function () {
         var arrLength = Table.JSON.OrderDetail.Data.length;
         var title = 'день';
@@ -1224,13 +1204,24 @@ var Table = {
     changeLogistic: function () {
         if ($('#logistic').prop('checked')) {
             Cookies.set('isLogistick', true);
+			isLogistic = true;
         } else {
             Cookies.remove('isLogistick');
+			isLogistic = false;
         }
 
-        Table.sortByLogistic();
+        Table.RenderOrders();
     },
     controlsInit: function () {
+		var IsLogistic = Cookies.get('isLogistick');
+        if (typeof IsLogistic == typeof undefined) {
+            isLogistic = false;
+            $('#logistic').prop('checked', false);
+        } else {
+            isLogistic = true;
+            $('#logistic').prop('checked', true);
+        }
+		
         $(document).on('focus', '#tableContent input', Table.onFocus);
         $(document).on('change', '#tableContent input', Table.onChange);
         $(document).on('blur', '#tableContent input', Table.onBlur);
@@ -1264,7 +1255,7 @@ var Table = {
         $('#render_settings_bar').on('change', '.rnd_setting_control', Table.changeRndSetting);
         $('#state').change(function () {
             Cookies.set('Sort_State', $(this).val());
-            Table.sortByState();
+            Table.RenderOrders();
         });
         $('#render_settings, .close_render_settings').click(function () {
             $('#render_settings_bar').toggle(300);
