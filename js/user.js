@@ -2,27 +2,25 @@ var User = {
     login: function () {
         var apiUrl = window.apiUrl;
         var btn = $(this);
-        var loginData = {};
-        loginData.data = {};
-
+        
         btn.prop('disabled', true);
         btn.html('Зачекайте');
-
-        loginData.data.Login = $('#inputLogin').val();
-        loginData.data.PassWord = $('#inputPassword').val();
-        loginData.data.CodeData = 1;
-        loginData.data = JSON.stringify(loginData.data);
-
+        
         $.ajax({
-            url: apiUrl,
+           /* url: apiUrl,
+            contentType:"application/json; charset=utf-8",
             method: "POST",
+            
             xhrFields: {
                 withCredentials: true
             },
-            data: loginData,
+			crossDomain: true,
+	        processData: false,
+            dataType: 'json',*/
+            data: JSON.stringify({CodeData:1,Login:$('#inputLogin').val(),PassWord : $('#inputPassword').val()}),
             success: function (data) {
                 if (data.TextError === "Ok") {
-                    Cookies.set('isLogin', 'true');
+                    Cookies.set('isLogin', 'true',{ expires: '' });
                     window.isLogin = true;
                     $('#loginForm').hide();
                     switch ($('body').data('page')) {

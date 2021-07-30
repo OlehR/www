@@ -2,19 +2,11 @@
     GP: -1,
     WH: -1,
     getWarhouses: function () {
-        var data = {};
-        data.CodeData = 5;
-
-        var obj = {};
-        obj.data = JSON.stringify(data);
-
+        
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify({CodeData : 5}),
+            
             success: function (data) {
                 var result = data;
                 var arrLength = result.Warehouse.Data.length;
@@ -34,23 +26,14 @@
             }
         });
     },
-    selectWarehouse: function () {
-        var data = {};
-        data.CodeWarehouse = $(this).val();
-        data.CodeData = 4;
+    selectWarehouse: function () {        
 
-        Order.WH = data.CodeWarehouse;
-
-        var obj = {};
-        obj.data = JSON.stringify(data);
-
+        Order.WH = $(this).val();
+       
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+
+            data: JSON.stringify({CodeData : 4,CodeWarehouse:Order.WH}),
+            
             success: function (data) {
                 var result = data;
                 var arrLength = result.GroupSupply.length;
@@ -74,21 +57,11 @@
         $('#add_order').show();
     },
     add_order: function () {
-        var data = {};
-        data.CodeWarehouse = Order.WH;
-        data.CodeGroupSupply = Order.GP;
-        data.CodeData = 8;
-
-        var obj = {};
-        obj.data = JSON.stringify(data);
-
+        
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+			
+            data: JSON.stringify({CodeData : 8, CodeWarehouse : Order.WH, CodeGroupSupply : Order.GP}),
+            
             success: function (data) {
                 var result = data;
                 document.location = 'order.html?order=' + result.Order;

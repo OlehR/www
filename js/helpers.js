@@ -1,4 +1,4 @@
-var REQUEST = {
+﻿var REQUEST = {
     getField: function (name) {
         if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
             return decodeURIComponent(name[1]);
@@ -185,6 +185,9 @@ var OrderHelper = {
         $.ajax({
             url: apiUrl,
             method: "POST",
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
             data: data,
             xhrFields: {
                 withCredentials: true
@@ -218,6 +221,9 @@ function TestConnection() {
     $.ajax({
         url: apiUrl,
         method: "POST",
+		contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
         data: data,
         xhrFields: {
             withCredentials: true

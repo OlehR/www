@@ -1,23 +1,19 @@
-var Index = {
+﻿var Index = {
     getMenuList: function () {
-        var obj = {};
-        obj.data = {};
-
-        obj.data.CodeData = -1;
-        obj.data = JSON.stringify(obj.data);
-
-        console.log(obj);
-
+       
         $.ajax({
             url: apiUrl,
             method: "POST",
-            xhrFields: {
-                withCredentials: true
-            },
-            data: obj,
+            xhrFields: {withCredentials: true},
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+			crossDomain: true,
+
+            data:  JSON.stringify({CodeData :-1}),
             success: function (data) {
                 var result = data;
-                if (result.TextError === "Ok") {
+                if (result.TextError == "Ok") {
                     var list = '<ul class="site-menu">';
                     for (var i = 0; i < result.Sites.length; i++) {
                         list += '<li><a href="' + result.Sites[i][1] + '">' + result.Sites[i][0] + '</a></li>';

@@ -4,20 +4,12 @@ var Checker = {
     contextKey: '',
     JSON: {},
     isSave: false,
-    getWarhouses: function (save) {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 302;
-        obj.data.Warehouse = -1;
-        obj.data = JSON.stringify(obj.data);
+    getWarhouses: function (save) {        
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify({CodeData:302,Warehouse:-1}),
+            
             success: function (data) {
                 Checker.JSON = data;
                 var arrLength = Checker.JSON.data.length;
@@ -41,21 +33,12 @@ var Checker = {
             }
         });
     },
-    selectGroup: function () {
-        //Checker.GP = $(this).val();
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeGroupSupply = Checker.GP;
-        obj.data.CodeData = 121;
-        obj.data = JSON.stringify(obj.data);        
+    selectGroup: function () {            
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify({CodeData:121,CodeGroupSupply : Checker.GP}),
+            
             success: function (data) {
                 Checker.JSON = data;
                 Checker.bildBrandList(Checker.JSON.Brand);               
@@ -158,26 +141,19 @@ var Checker = {
         }
     },
     saveCheck: function () {
-        var rows = $('#GPSwares tr[is-change="true"]');
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 122;
-        obj.data.CodeGroupSupply = Checker.GP;
-        obj.data.Data = [];
-
+        var rows = $('#GPSwares tr[is-change="true"]'); 
+        
+		var Data = [];
         var arrLength = rows.length;
         for (var i = 0; i < arrLength; i++) {
-            obj.data.Data.push([$(rows[i]).find('td:first-child').text(), $(rows[i]).find('input').val()]);
-        }
-        obj.data = JSON.stringify(obj.data);
+            Data.push([$(rows[i]).find('td:first-child').text(), $(rows[i]).find('input').val()]);
+        }        
+		
         $('#overlay').css('display', 'flex');
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify({CodeData : 122,CodeGroupSupply : Checker.GP,Data:Data}),
+            
             success: function (data) {
                 result = data;
                 console.log(result);
@@ -217,20 +193,12 @@ var Checker = {
             Checker.isSave = false;
         }
     },
-    selectGroupWH: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeGS = Checker.GP;
-        obj.data.CodeData = 242;
-        obj.data = JSON.stringify(obj.data);
+    selectGroupWH: function () {      
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify({CodeData : 242,CodeGS : Checker.GP}),
+            
             success: function (data) {
                 Checker.JSON = data;
                 Checker.bildBrandList(Checker.JSON.Brand);
@@ -242,25 +210,18 @@ var Checker = {
     },
     saveCheckWH: function () {
         var rows = $('#GPSwarehouse tr[is-change="true"]');
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 243;
-        obj.data.CodeGS = Checker.GP;
-        obj.data.Data = [];
+        var Data = [];
 
         var arrLength = rows.length;
         for (var i = 0; i < arrLength; i++) {
-            obj.data.Data.push([$(rows[i]).find('td:first-child').text(), Checker.WR, $(rows[i]).find('input').val()]);
+            Data.push([$(rows[i]).find('td:first-child').text(), Checker.WR, $(rows[i]).find('input').val()]);
         }
-        obj.data = JSON.stringify(obj.data);
+        
         $('#overlay').css('display', 'flex');
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify({CodeData : 243,CodeGS : Checker.GP,Data:Data}),
+            
             success: function (data) {
                 result = data;
                 console.log(result);
@@ -314,18 +275,12 @@ var Delivery = {
     contextKey: '',
     JSON: {},
     getStartPageDeliverySchedule: function (save) {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 210;
-        obj.data = JSON.stringify(obj.data);
+        
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+      
+            data: JSON.stringify({CodeData : 210}),
+            
             success: function (data) {
                 var json = data;
 
@@ -366,23 +321,13 @@ var Delivery = {
         $('#Delivery .Type').val(-1);
         $('#tableContent' + Delivery.contextKey).html('<div class="loader"></div>');
 
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 211;
-        obj.data.Warehouse = $('#Delivery .Warehouse').val();
-
-        if (parseInt(obj.data.Warehouse) == -1)
+        if (parseInt($('#Delivery .Warehouse').val()) == -1)
             return;
-
-        obj.data = JSON.stringify(obj.data);
-
+        
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+        
+            data: JSON.stringify({CodeData : 211,Warehouse : $('#Delivery .Warehouse').val()}),
+            
             success: function (data) {
                 Delivery.JSON = data;
 
@@ -592,21 +537,11 @@ var Delivery = {
 
             items.push(item);
         }
-
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 212;
-        obj.data.Warehouse = $('#Delivery .Warehouse').val();
-        obj.data.DeliverySchedule = items;
-        obj.data = JSON.stringify(obj.data);
-
+        
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data:  JSON.stringify({CodeData : 212,Warehouse : $('#Delivery .Warehouse').val(),DeliverySchedule : items}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');
@@ -663,20 +598,12 @@ var GroupSupplies = {
         $('#group_supplier_input').select2({
             minimumInputLength: 3,
             ajax: {
-                url: apiUrl,
-                dataType: 'json',
-                type: "POST",
-                xhrFields: {
-                    withCredentials: true
-                },
-                data: function (params) {
-                    var obj = {};
-                    obj.data = {};
-                    obj.data.CodeData = 302;
-                    obj.data.NameGS = params.term;
-                    obj.data = JSON.stringify(obj.data);
-                    return obj;
-                },
+               method: "POST",
+                data:  function (params) {
+                    return  JSON.stringify({CodeData : 302, NameGS : params.term});
+					},
+				//JSON.stringify({CodeData : 302,NameGS : params.term}),                     
+                
                 processResults: function (data) {
                     var dataArr = [{ id: '', text: '' }];
                     if (parseInt(data.State) === 0) {
@@ -695,19 +622,11 @@ var GroupSupplies = {
         });
     },
     getBrandGroupSupplier: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 232;
-        obj.data.CodeGS = GroupSupplies.curGS;
-        obj.data = JSON.stringify(obj.data);
-
+    
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data: JSON.stringify({CodeData : 232,CodeGS : GroupSupplies.curGS}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     var readOnly = $('#GroupSupplies').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
@@ -739,20 +658,12 @@ var GroupSupplies = {
             }
         });
     },
-    getWarehouseGroupSupplier: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 236;
-        obj.data.CodeGS = GroupSupplies.curGS;
-        obj.data = JSON.stringify(obj.data);
+    getWarehouseGroupSupplier: function () {        
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+          
+			data: JSON.stringify({CodeData : 236,CodeGS : GroupSupplies.curGS}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     GroupSupplies.bildWarehouseGPS(data.Warehouse);
@@ -790,25 +701,18 @@ var GroupSupplies = {
     },
     saveWarehouseGPS: function () {
         var rows = $('#tableContentWarehouseGPS tr[is-change="true"]');
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 237;
-        obj.data.CodeGS = GroupSupplies.curGS;
-        obj.data.Warehouse = [];
+        var Warehouse = [];
 
         var arrLength = rows.length;
         for (var i = 0; i < arrLength; i++) {
-            obj.data.Warehouse.push([$(rows[i]).find('td:first-child').text(), $(rows[i]).find('input').val()]);
+            Warehouse.push([$(rows[i]).find('td:first-child').text(), $(rows[i]).find('input').val()]);
         }
-        obj.data = JSON.stringify(obj.data);
+
         $('#overlay').css('display', 'flex');
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data: JSON.stringify({CodeData : 237,CodeGS : GroupSupplies.curGS,Warehouse:Warehouse}),
+            
             success: function (data) {
                 result = data;
                 console.log(result);
@@ -842,19 +746,11 @@ var GroupSupplies = {
         }
     },
     getGroupSupplierData: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 234;
-        obj.data.CodeGS = GroupSupplies.curGS;
-        obj.data = JSON.stringify(obj.data);
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+         
+			data: JSON.stringify({CodeData : 234,CodeGS : GroupSupplies.curGS}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     var options = '';
@@ -1008,17 +904,10 @@ var GroupSupplies = {
         });
         data.CodeData = 235;
 
-        var obj = {};
-        obj.data = data;
-        obj.data = JSON.stringify(obj.data);
-
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data: JSON.stringify(data),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');
@@ -1035,25 +924,16 @@ var GroupSupplies = {
         if ($('#GroupSupplies').hasClass('ReadOnly')) {
             return;
         }
-        var data = {};
-        data.Brand = [];
+        var Brand = [];
         $('#GPSbrandList input[type="checkbox"]').each(function () {
             var el = $(this);
-            data.Brand.push([el.attr('id'), el.val()]);
+            Brand.push([el.attr('id'), el.val()]);
         });
-        data.CodeData = 233;
-        data.CodeGS = GroupSupplies.curGS;
-
-        var obj = {};
-        obj.data = JSON.stringify(data);
-
+        
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+
+			data: JSON.stringify({CodeData : 233, CodeGS : GroupSupplies.curGS,Brand:Brand}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');
@@ -1103,20 +983,13 @@ var Supplier = {
         $('#brands_input').select2({
             minimumInputLength: 3,
             ajax: {
-                url: apiUrl,
-                dataType: 'json',
-                type: "POST",
-                xhrFields: {
-                    withCredentials: true
-                },
+				 method: "POST",
+		contentType:"application/json; charset=utf-8",
+        processData: false,
+               
                 data: function (params) {
-                    var obj = {};
-                    obj.data = {};
-                    obj.data.CodeData = 301;
-                    obj.data.Brand = params.term;
-                    obj.data = JSON.stringify(obj.data);
-                    return obj;
-                },
+                    return  JSON.stringify({CodeData : 301, Brand : params.term});
+					},//JSON.stringify({CodeData : 301,Brand : params.term}),
                 processResults: function (data) {
                     var dataArr = [{ id: '', text: '' }];
                     if (parseInt(data.State) === 0) {
@@ -1140,20 +1013,14 @@ var Supplier = {
         $('#supplier_input').select2({
             minimumInputLength: 3,
             ajax: {
-                url: apiUrl,
-                dataType: 'json',
-                type: "POST",
-                xhrFields: {
-                    withCredentials: true
+                 method: "POST",
+				 contentType:"application/json; charset=utf-8",
+				 processData: false,
+                data: //JSON.stringify({CodeData : 300, Supplier : params.term}),
+				function (params) {
+                    return  JSON.stringify({CodeData : 300, Supplier : params.term});
                 },
-                data: function (params) {
-                    var obj = {};
-                    obj.data = {};
-                    obj.data.CodeData = 300;
-                    obj.data.Supplier = params.term;
-                    obj.data = JSON.stringify(obj.data);
-                    return obj;
-                },
+				
                 processResults: function (data) {
                     var dataArr = [{ id: '', text: '' }];
                     if (parseInt(data.State) === 0) {
@@ -1175,19 +1042,11 @@ var Supplier = {
     // постачальники -  отримання списку брендів постачальника
     getSupplierBrands: function (supplier) {
         Supplier.currSupplier = supplier;
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 230;
-        obj.data.CodeSupplier = supplier;
-        obj.data = JSON.stringify(obj.data);
-
+       
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data:JSON.stringify({CodeData : 230, CodeSupplier : supplier}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     var readOnly = $('#Supplier').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
@@ -1301,20 +1160,11 @@ var Supplier = {
                 data.push([el.attr('brand-id'), 0]);
         });
 
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 231;
-        obj.data.CodeSupplier = Supplier.currSupplier;
-        obj.data.Brand = data;
-        obj.data = JSON.stringify(obj.data);
-
+        
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data: JSON.stringify({CodeData : 231,CodeSupplier : Supplier.currSupplier,Brand : data}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     alert('Дані збережено.');
@@ -1331,22 +1181,12 @@ var Supplier = {
 
     // постачальники - додати групу постачання
     addGroupSupplier: function () {
-        var supplier = Supplier.currSupplier;
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 244;
-        obj.data.NameGS = $("#name_group_supplier").val();
-        obj.data.CodeSR = $('select[name=contract]').val();
-
-        obj.data = JSON.stringify(obj.data);
+        var supplier = Supplier.currSupplier;        
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data: JSON.stringify({CodeData : 244, NameGS : $("#name_group_supplier").val(), CodeSR : $('select[name=contract]').val()}),
+            
             success: function () {
                 $('#name_group_supplier').val('');
                 Supplier.getSupplierBrands(supplier);
@@ -1392,20 +1232,11 @@ var ExchangeBrands = {
         $('#exchange_brands_input').select2({
             minimumInputLength: 3,
             ajax: {
-                url: apiUrl,
-                dataType: 'json',
-                type: "POST",
-                xhrFields: {
-                    withCredentials: true
-                },
+                method: "POST",
                 data: function (params) {
-                    var obj = {};
-                    obj.data = {};
-                    obj.data.CodeData = 301;
-                    obj.data.Brand = params.term;
-                    obj.data = JSON.stringify(obj.data);
-                    return obj;
-                },
+                    return  JSON.stringify({CodeData : 301, Brand : params.term});
+                },// JSON.stringify({CodeData : 301, Brand : params.term}),
+				
                 processResults: function (data) {
                     var dataArr = [{ id: '', text: '' }];
                     if (parseInt(data.State) === 0) {
@@ -1427,18 +1258,11 @@ var ExchangeBrands = {
     // біржові бренди/біржові бренди&біржові товари в бренді 
     // отримання списку біржових брендів, груп складів; створення списку біржових брендів
     getExchangeBrands: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 238;
-        obj.data = JSON.stringify(obj.data);
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data: JSON.stringify({CodeData : 238}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     var readOnly = $('#ExchangeBrands').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
@@ -1527,20 +1351,14 @@ var ExchangeBrands = {
             else
                 data.push([el.attr('brand-id'), 0]);
         });
-
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 239;
-        obj.data.Brand = data;
-        obj.data = JSON.stringify(obj.data);
+        
+        data.CodeData = 239;
+        data.Brand = data;
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data: JSON.stringify(data),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     alert('Дані збережено.');
@@ -1557,20 +1375,12 @@ var ExchangeBrands = {
 
     // біржові бренди/біржові товари в бренді - отримання даних для таблиці
     getWaresExchange: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 240;
-        obj.data.CodeBrand = IdExchangeBrandsData;
-        obj.data.CodeGroupWarehouse = IdExchangeWarehouseData;
-        obj.data = JSON.stringify(obj.data);
+        
         if (IdExchangeBrandsData != -1 && IdExchangeWarehouseData != -1) {
             $.ajax({
-                url: apiUrl,
-                method: "POST",
-                data: obj,
-                xhrFields: {
-                    withCredentials: true
-                },
+                
+			data:JSON.stringify({CodeData : 240, CodeBrand : IdExchangeBrandsData, CodeGroupWarehouse : IdExchangeWarehouseData}),
+                
                 success: function (data) {
                     if (parseInt(data.State) === 0) {
                         data.Price.__proto__.getPrice = function (waresIndex, gpIndex) {
@@ -1722,19 +1532,10 @@ var ExchangeBrands = {
             }
         }
 
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 241;
-        obj.data.Price = Price;
-        obj.data = JSON.stringify(obj.data);
-
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+			data: JSON.stringify({CodeData : 241,Price : Price}),
+            
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     alert('Дані успішно збережено.');

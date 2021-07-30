@@ -1,4 +1,4 @@
-var Monitoring = {
+﻿var Monitoring = {
     codeDoc:0,
     getListWares: function (withRender) {
         var obj = {};
@@ -9,7 +9,10 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -50,7 +53,10 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -117,7 +123,10 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+            data: obj.data,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
             xhrFields: {
                 withCredentials: true
             },
@@ -145,7 +154,10 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -214,7 +226,10 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -241,7 +256,10 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -320,7 +338,10 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -358,7 +379,10 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -441,7 +465,11 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
+
             xhrFields: {
                 withCredentials: true
             },
@@ -473,6 +501,9 @@ var Monitoring = {
         $.ajax({
             url: apiUrl,
             method: "POST",
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
             data: obj,
             xhrFields: {
                 withCredentials: true

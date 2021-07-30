@@ -1,22 +1,16 @@
-var ZnpConfig = {
+﻿var ZnpConfig = {
     Tabs: [],
     addTab: function (contextKey, object) {
         object.contextKey = contextKey;
         this.Tabs.push({obj:object});
     },
     getAccessTab: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 200;
-        obj.data = JSON.stringify(obj.data);
+        
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify({CodeData : 200}),
+            
             success: function (data) {
                 var json = data;
                 console.log(json);

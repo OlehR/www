@@ -1,0 +1,274 @@
+Parameters Post metod 
+  data={"CodeData"=XXX,Data={}}
+  CodeData => -1  ListSite
+		 => {"State":0, "TextError": "Ok","Sites":[[Site Name,Site Path],...]}
+  CodeData => 0 - This Info
+  
+  --Сайт ZNP
+  CodeData==1(Login) (Перший метод, активує зєднання з базою на час сесії) 
+			 => {"CodeData"=1,"PassWord"="pass","Login"="login"}
+  CodeData==2 (setPassWord) (Міняє пароль текучого користувача)
+			 =>data={"CodeData":2,"NewPassWord":"Pasword"}
+             => return {"State":0, "TextError": "Ok"}
+  CodeData==3 (RemamberPassWord) (Відновлення пароля на email)
+			 => Don't Work Yet
+  CodeData==4 (GetListGroupSupply)( Отримуємо список Груп постачання)
+			 =>data={"CodeData":4,"CodeWarehouse":9}
+             => return {"State": 1,"GroupSupply":[["1","Coka-Cola"],["3","Баядера"]]}
+  CodeData==5 (GetOrders) (Отримуємо список замовлень)
+			 =>data={"CodeData":5,"CodeWarehouse":9,"DateBegin":"01-01-2018","DateEnd":"31-12-2018"}  ---warehouse(Post or Cookes) , date_from,date_to
+			 => return 
+  CodeData==6 (GetOrderDetail)  ( Отримуємо детальну інформацію щодо замовлення)
+			 =>data={"CodeData":6,"NumberOrder":112222) ---NumberOrder
+			 => return 
+  CodeData==7 (SaveOrder) (Зберігаємо замовлення)
+			=> data= {"CodeData":7, "NumberOrder":"12333","StateOrder":1, "DateDelivery":"2018-02-17 10:45" ,"DATA":[[123,10],[213,18],[1111,4]]}
+			 де NumberOrder - номер замовлення, StateOrder - Стан замовлення(0,1) не обов'язковий параметр, DateDelivery - дата доставки - необов'язковий параметр, DATA - масив пар [код товару,кількість]
+			 => return {"State":0, "TextError": "Ok"}
+  CodeData==8 (CreateOrder) (Створюємо замовлення)
+			=> {"CodeData":7,"CodeWarehouse":9 , "CodeGroupSupply":12}
+            => return {"State":0, "Order":"xxxxxx"}			
+  CodeData==9 (Send E-mail ) Відправляємо E-mail 
+            =>data={"CodeData":9,"NumberOrder":"12345","EMail":"user@mail.cc"}
+			=> return {"State":0,"TextError": "Ok"}			
+  CodeData==10 (GetAudInfoOrder ) Розширена інформація про замовлення
+			=>{"CodeData":10,"NumberOrder":112345}
+			=> return {"State":0, "TextError": "Ok","AudInfo":[["18-09-2017 11:20:04","EDI",1,"Ok"],["18-09-2017 11:20:12","EDI",3,"Ok"]]}						
+  CodeData==11 (GetMultiOrder ) Вертає дерево і ГП
+			=>{"CodeData":11}
+			=> return {"State":0, "TextError": "Ok","GroupWares":{},}						
+
+  CodeData==12 (GetMultiOrderDetail ) Вертає потоварну інформацію по ГП або групі товарів.
+			=>{"CodeData":12,CodeGroupWares:1234||CodeGroupSupply:123}
+			=> return {"State":0, "TextError": "Ok","GroupWares":{},}		
+  CodeData==13 (SaveMultiOrder )	
+            => {"CodeData":13, "StateOrder":1, "DateDelivery":"2018-02-17 10:45","Orders":[123,1223,1111,...] "DATA":[[NumberOrder:12311122,CodeWares:333324,quantity:10],...]  
+			=> return {"State":0, "TextError": "Ok"}
+			
+  --Сайт /report
+  CodeData==20 (GetReports )
+             =>data={"CodeData":20}
+             => return {"State":0, "TextError": "Ok",Reports[[code_report,name_report,param],...]}						
+  CodeData==21 (GetReportsParamList )
+             =>data={"CodeData":21,"ParamName":"code_firm"}
+             => return {"State":0, "TextError": "Ok",LispParam[[code,name],...]}						
+  CodeData==22 (ExecuteReports )
+             =>data={"CodeData":22,CodeReport:13,Parameters[[ParamName,ParamValue],...]} 
+             => return {"State":0, "TextError": "Ok",Data:{}}						
+
+  --Сайт /DocWares			  
+  CodeData==31 (GetListDocWares )
+             =>data={"CodeData":31,"DateBegin":"31-12-2017","DateEnd":"31-12-2018"} 
+             => return {"State":0, "TextError": "Ok",Data:{}}						
+  CodeData==32 (NewDocWares )
+             =>data={"CodeData":32} 
+			 => return {"State":0, "TextError": "Ok","Warehouse":[[code,name],....]],"CodeChar":[[1,"A"],[2,"B"],[13,"Моніторинг"]] }
+  CodeData==33 (ImportXlsDocWares)
+             =>data={"CodeData":33,"ImportXls":"1,11,111,222, ....."} 
+			 => return {"State":0, "TextError": "Ok","Articl":"0,1","Wares":[[123,"Сир"],[1233,"Молоко"]],... }
+  CodeData==34 (GetDocWares )
+             =>data={"CodeData":34,"CodeDocWares":1222} 
+			 => return {"State":0, "TextError": "Ok","CodeDoc":123,"CodeWarehouse":3,"CodeChar":16,"DateBegin":"01-01-2018","DateEnd":"31-12-2018", "Wares":[12,122,...] }
+  CodeData==35 (SaveDocWares)
+              => data={"CodeData":35,"CodeDoc":0,"CodeWarehouse":3, "CodeChar":16,"DateBegin":"01-01-2018","DateEnd":"31-12-2018", "Wares":[12,122,...]} 
+			  => return {"State":0, "TextError": "Ok"}
+  CodeData==36 (SetStateDocWares)
+			 => data={"CodeData":36,"CodeDoc":123,State:9}
+             => return {"State": 0,"TextError": "Ok"}
+
+-- Сайт /plan			 
+  CodeData==101 (GetGroup) Отриманяя переліку груп для планування. 
+            => return {"State": 0,"TextError": "Ok","GroupWares": [[150104,"1463 ТМ Наминайко"],[123377,"2031 Продукцiя Форнеттi"]]}
+  CodeData==102 (GetPlan) Отриманяя запланованих даних. 
+			=> data={"CodeWarehouse":3,"CodeGroupWares":2,"CodeMonth":201803)}
+			=> return {"State":0,"TextError": "Ok","DataPlan":[[code_wares,name_wares,plan_day1,plan_day2,....plan_day31],...]}						
+  CodeData==103 (SavePlan) Збереження запланованих даних. 
+			=>data={"CodeWarehouse":3,"CodeMonth":201803,"Data":[[code_wares,plan_day1,plan_day2,....plan_day31],...]}
+			=> return {"State":0,"TextError": "Ok"}		
+			
+  -- Сайт /AM
+  CodeData==110 (GetStartInfoForAM) Отриманяя переліку груп для АМ. 			
+            =>data={"CodeData"=110} 
+            =>{"State": 0 ,"GroupWares":[[code,code_up,name],....],"Manager":[[code,name],...]
+  CodeData==111 (GetAM) Отриманяя АМ 			
+            =>data={"CodeData":111,"Type":0(1-АМ,1-Новинка) ,CodeGroup|CodeWares:"1,2,3"|CodeManager:11111|ImportXls:"1,11,111,222, ....."}
+			=> Формат CSV => КОД ТОВАРУ, Код товару який закривається,Код магазину 1,Код магазину 2, Код магазину 3
+	        =>{"State":0,"TextError": "Ok","IsAccept":0, ,Warehouse:[] , "Data":[[code_wares,code_old_wares,name_old_wares,state(-1,0,1),
+			   sort(-1 - добавили ,0 - видалили,1-без змін),DATE_CHANGE,name_user,DATE_ACCEPT,ewh,wh,dwh(-1-Червоний,1-Зелений,0 -звичайний )]]}
+  CodeData==112 (SaveAM) Збереження АМ 			
+            =>data={"CodeData":112,"Type":1(0-АМ,1-Новинка) ,"Warehouse":[3,15,22],Data:[[code_wares,code_old_wares|date_to(Новинка),state(-1,0,1),wh1,wh2,...  ],...]  }
+	        =>{"State":0,"TextError": "Ok"}
+  CodeData==113 (DeleteChangeAM) Видалення внесених змін АМ 			
+            =>data={"CodeData":113,"Warehouse":[3,15,22],Wares:[code_wares,...]  }
+	        =>{"State":0,"TextError": "Ok"}
+			
+  --!!!!!Треба Перенести в 200-300!!!!!!!
+  CodeData==120 (GetListGroupSupply) --302
+			=> data={"CodeData":120,"Warehouse":"-1")
+ 			=> result {"State": 1,"data"=[["1","Coka-Cola"],["3","Баядера"]]}
+  CodeData==121 (GetDataGroupSupply)
+            =>data={"CodeData":121,CodeGroupSupply:123}  
+			=> return {"State":0, "TextError": "Ok",Brand:[[11,"Торчин"],[22,"Чумак"]],Wares:[[Code_wares,Code_Brand,(0,1)],...]}			
+  CodeData==122 (SaveGroupSupplyBlockWares)	
+           =>data={"CodeData":122,CodeGroupSupply:123, Data:[[CodeWares,(0|1)],...}  
+		   => return {"State":0, "TextError": "Ok"}
+  
+  --Сайт /monitoring		   
+  CodeData==130 (GetConcurent) 		   
+         =>data={"CodeData":130}  
+		 =>return {"State":0, "TextError": "Ok",Concurrent:[[1,"Велмарт"],[2,"Базар"]]}
+  CodeData==131 (GetMonitoring) 		   
+         =>data={"CodeData":131,Concurrent:11}  
+		 =>return {"State":0, "TextError": "Ok",Monitoring:[[1,"Щотижневий Овочі"],[2,"Психологічний асортимент"]]}
+   CodeData==132 (GetDataMonitoring)		 
+            =>data={"CodeData":132,Concurrent:1,Monitoring:2}  
+		    =>return {"State":0, "TextError": "Ok","Data":[[1,"Фанта",0.00],[1,"Пепсі",5.50],[1,"Швепс",1.50]] }
+   CodeData==133 (SaveMonitoring)		 
+            =>data={"CodeData":133,Concurrent:1,Monitoring:2,Data:[[1,0.44],[444,16.33],...]}  
+		    =>return {"State":0, "TextError": "Ok"}
+
+   
+   --DCT
+   CodeData==141 (SaveLogPrice)
+         =>data={"CodeData":141,"Warehouse":"-1","LogPrice":[[bar_code-"1234-1233", is_good-(0,1),DT_insert-"YYYY-MM-DD HH24:MI:SS"],....]}
+		 =>return {"State":0, "TextError": "Ok"}
+		 GetDataInventory
+   
+   CodeData==150 (GetDataBD)
+         =>data={"CodeData":150,"SerialNumber":"123-11234-112","Warehouse":"9","TypeDoc":0(0-all,1- Ревізія,2-Прихід,3-Переміщення,4-Списання,5-повернення,6-Розхідна)}
+		 =>return (insert\update\replace SQL)
+   
+   CodeData==151 (GetListDoc)
+         =>data={"CodeData":151,"Warehouse":"9","TypeDoc":1}
+		 =>return {"State":0, "TextError": "Ok","ListDoc:{{18.10.2018 9:11:20-data_time,"ПСЮ00005905"-number_inventory,"Пресерви рибні; Сaлати   "-ext_info,"Прощарук Христина Георгіївна" - name_user}}}
+   
+   CodeData==152 (GetDataDoc)
+         =>data={"CodeData":152,"Warehouse":"-1","TypeDoc":1,"NumberDoc":"ПСЮ00000125" }
+		 =>return {"State":0, "TextError": "Ok"}
+
+   CodeData==153 (SaveDataDoc)
+         =>data={"CodeData":153,"SN":"XXM123-321-333","TypeDoc":1 (1- Ревізія,2-Прихід,3-Переміщення,4-Списання,5-повернення,6-Розхідна),"TypeDoc":1 ,"NumberDoc":"ПСЮ00000125",Wares:[[nn,code_wares,quantity],...] }
+		 =>return {"State":0, "TextError": "Ok"}
+
+   CodeData==154 (GetPrice)
+         =>data={"CodeData":154,"CodeWarehouse":9,"CodeWares":1119|"BarCode":"2201637902001" }
+		 =>return {"State":0, "TextError": "Ok","Code":164903,"Name":"Рогалик з ірискою ваг.","Article":"00094582","Unit":"Килограмм","Price":73.90,"QuantityOpt":0,"Rest":7.02,"ActionType":0,"PriceBase":22.87,"MinPercent":0,"PriceMin":0,"PriceIndicative":0}			
+
+   CodeData==155 (GetListPrice) --Перелік всіх Списків для друку.
+         =>data={"CodeData":155,"CodeWarehouse":9 }
+		 =>return {"State":0, "TextError": "Ok","ListPrice":[["232423-1","",12,0(0-не друковано,1-друковано)],]}	
+   CodeData==156 (GetWaresForPrint) --Перелік всіх Списків для друку.
+         =>data={"CodeData":155,"CodeWarehouse":9 }
+		 =>return {"State":0, "TextError": "Ok","Wares":[13,1111,333]}		 
+    
+ -- Коефіцієнти сезонності 
+ CodeData==160 (GetStartInfoForCS) Отриманяя переліку груп для SM. 			
+            =>data={"CodeData"=160} 
+            =>{"State": 0 ,"GroupWares":[[code,code_up,name],....]]
+  CodeData==161 (GetCS) Отриманяя АМ 			
+            =>data={"CodeData":161,"Type":0(1-АМ,1-Новинка) ,CodeGroup|CodeWares:"1123""}			
+	        =>{"State":0,"TextError": "Ok","IsAccept":0, ,Warehouse:[[code_warehouse,name_warehouse]] , 
+			"CodeGroupOrWares":55000, "Name":"Мигдаль \"Корисна колекція\" 150г /Сантавіта/",
+			"Week":[[code_week,name_week]]
+			"Data":[[code_week,code_warehouse,coef]]}
+  CodeData==162 (SaveCS) Збереження CS 			
+            =>data={"CodeData":112,CodeGroupOrWares:55000 ,"Warehouse":[3,15,22],"StartWeek":12222,Data:[[1.2,2,1.6,1.44,...],...]  }
+	        =>{"State":0,"TextError": "Ok"}
+
+ 
+	
+	-- Ведення ГП та Графіків.
+   CodeData==200 (GetListPageConfigZNP) Перелік закладок Доступних користувачу  !!!Треба Змінити блок 120		
+     =>data={"CodeData":200} 
+	 =>return {"State":0, "TextError": "Ok","Pages":[[1,"Графіки Доставки","On/ReadOnly/Off"],[2,"Групи постачання","On"],...]}
+   CodeData==210 (GetStartPageDeliverySchedule) Необхідна інформація для Закладки Графіки Доставки
+     =>data={"CodeData":210}
+	 =>return {"State":0, "TextError": "Ok",Warehouse:[[22,"Токіо"],...],TypePrognosisOrder:[[0,Тільки ручні 0],[6,Кросдокінг],...]}
+   CodeData==211 (GetDeliverySchedule) Отримати Графіки по складу
+     =>data={"CodeData":211}
+	 =>return{"State":0, "TextError": "Ok","DeliverySchedule":[[],...]}
+   CodeData==212 (SaveDeliverySchedule) Збереження графіків доставки
+     =>data={"CodeData":212,"Warehouse":9,"DeliverySchedule":[[123,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","2018.01.01","14-period","2 Day to Supply"],...]}
+     =>return{"State":0, "TextError": "Ok"}
+   
+   CodeData==230 (GetDataSuppier) Отримуємо перелік брендів, які постачальник возить
+     =>data={"CodeData":230,"CodeSupplier":123}
+     =>return{"State":0, "TextError": "Ok","Brand":[[12,"Неміров"],...],"GroupSupplier":[[1,"Неміров ГП"],...]}
+   CodeData==231 (SaveBrandSuppier) Зберігаємо перелік брендів, які постачальник возить
+     =>data={"CodeData":231,"CodeSupplier":123,"Brand":[[123,1-add,0 - del],...]}
+     =>return{"State":0, "TextError": "Ok"}
+		
+    CodeData==232 (GetBrandGroupSuppier) Отримуємо перелік брендів, які постачальник возить, і їх статус в ГП
+	 =>data={"CodeData":232,"CodeGS":123}	
+	 =>return{"State":0, "TextError": "Ok","Brand":[[12,"Неміров",(0- не включено,1 -включено) ],...]}
+    CodeData==233 (SaveBrandGroupSuppier) Зберігаємо перелік брендів, які постачальник возить
+     =>data={"CodeData":233,"CodeGS":123,"Brand":[[123,1-add,0 - del],...]}
+     =>return{"State":0, "TextError": "Ok"}
+	CodeData==234 (GetGroupSuppier) Дані по ГП
+	 =>data={"CodeData":234,"CodeGS":123}	
+	 =>return{"State": 0,"TextError":"Ok","GS": {"CODE_GROUP_SUPPLY":123,"CODE_SUPPLAGR_REGISTER":7171,"NAME_GROUP_SUPPLY":"ФОП Кочан І.І. (Основна ГП)","STATE_ORDER":1,"TIME_CRATE_1":7,"TIME_CRATE_2":0,"TIME_CRATE_3":0,"TIME_CREATE_PERCENT1":100,"TIME_CREATE_PERCENT2":0,"TIME_CREATE_PERCENT3":0,"TERM_EDIT":9,"GP_WAREHOUSE":0,"TYPE_PROGNOSIS_ORDER":2,"TYPE_ORDER":0,"COEF_INSURANCE_STOCK_GP":0,"PERCENT_MIN_DELTA":0,"PERCENT_MAX_DELTA":0,"QUANTITY_WEEKS_FOR_MIDL_NSALE":4,"MIN_ZAL_TP":-1,"MAX_ZAL_TP":-1,"PERIODICITY_STATIONARY":0,"REST_WITH_TP":0,"COUNT_SKU_IN_ORDER":0,"IS_AUTO_PRISE":0,"DATE_CREATE":"11.07.2017","USER_CREATE":-109,"EMAIL":"Povnakomora.office@gmail.com      ","TYPE_WARES":0,"DESCRIPTION":"","PERCENT_INCREASE_QUANTITY":null,"AUTO_CLOSE":0},"Comment":   [ ["AUTO_CLOSE","1- автозакриття,0 - без автозакриття"],["CODE_GROUP_SUPPLY","Код групи постачання C.DOC.GenCodeGroupSupply"],["CODE_SUPPLAGR_REGISTER","Код додатку до договору"],["NAME_GROUP_SUPPLY","Назва групи постачання"],["STATE_ORDER",""],["TIME_CRATE_1","Час створення 1"],["TIME_CRATE_2","Час створення 2"],["TIME_CRATE_3","Час створення 3"],["TIME_CREATE_PERCENT1","% від денного завмовлення 1"],["TIME_CREATE_PERCENT2","% від денного завмовлення 2"],["TIME_CREATE_PERCENT3","% від денного завмовлення 3"],["TERM_EDIT","Термін редагування АЗ в годинах"],["GP_WAREHOUSE","Склад пост (для ЛЦ)"],["TYPE_PROGNOSIS_ORDER","Прогноз Замовлення (select * from   c.data_name dn where dn.data_level=20)"],["TYPE_ORDER",""],["COEF_INSURANCE_STOCK_GP","Коеф. страхового запасу"],["PERCENT_MIN_DELTA","% max відхилення"],["PERCENT_MAX_DELTA","% max відхилення"],["QUANTITY_WEEKS_FOR_MIDL_NSALE","К-ть тижднів для СДП"],["MIN_ZAL_TP","Мін. зал. %"],["MAX_ZAL_TP","Макс. зал. %"],["PERIODICITY_STATIONARY","Періодичність постачання (не враховувати графіки)"],["REST_WITH_TP","1- Без протерм. залишків"],["COUNT_SKU_IN_ORDER","кількість SKU в замовленні !!!невідомо чи десь використовується"],["IS_AUTO_PRISE","Чи бере участь в автоматичному ціноутворенні."],["DATE_CREATE",""],["USER_CREATE",""],["EMAIL","Поштова адреса для ГП"],["TYPE_WARES","Тип товару (0- всі,1- штучний,2-ваговий)"],["DESCRIPTION","Примітка"],["PERCENT_INCREASE_QUANTITY","Процент збільшення null - не контролювати, 0- не можна перевищувати, 1-1000 - відсоток %"]],"TYPE_PROGNOSIS_ORDER":   [ [0,"Тільки ручні 0"],[1,"Завжди 0"],[2,"Ніколи 0"],[3,"Заборона ручні"],[4,"Авто до максимального"],[5,"Авто-постачальник"],[6,"Кросдокінг"],[7,"Тільки в ручному режимі"]],"TYPE_WARES":[[0,"всі"],[1,"штучний"],[2,"ваговий"]] }
+    CodeData==235 (SaveGroupSuppier) Дані по ГП
+	 =>data={"CodeData":235,"CODE_GROUP_SUPPLY":123,"CODE_SUPPLAGR_REGISTER":7171,"NAME_GROUP_SUPPLY":"ФОП Кочан І.І. (Основна ГП)","STATE_ORDER":1,"TIME_CRATE_1":7,"TIME_CRATE_2":0,"TIME_CRATE_3":0,"TIME_CREATE_PERCENT1":100,"TIME_CREATE_PERCENT2":0,"TIME_CREATE_PERCENT3":0,"TERM_EDIT":9,"GP_WAREHOUSE":0,"TYPE_PROGNOSIS_ORDER":2,"TYPE_ORDER":0,"COEF_INSURANCE_STOCK_GP":0,"PERCENT_MIN_DELTA":0,"PERCENT_MAX_DELTA":0,"QUANTITY_WEEKS_FOR_MIDL_NSALE":4,"MIN_ZAL_TP":-1,"MAX_ZAL_TP":-1,"PERIODICITY_STATIONARY":0,"REST_WITH_TP":0,"COUNT_SKU_IN_ORDER":0,"IS_AUTO_PRISE":0,"DATE_CREATE":"11.07.2017","USER_CREATE":-109,"EMAIL":"Povnakomora.office@gmail.com      ","TYPE_WARES":0,"DESCRIPTION":"","PERCENT_INCREASE_QUANTITY":null,"AUTO_CLOSE":0}
+
+	 CodeData==236 (GetWarehouseGroupSuppier) Отримуємо перелік Складів, на які поставляє дана ГП
+	 =>data={"CodeData":236,"CodeGS":123}	
+	 =>return{"State":0, "TextError": "Ok","Warehouse":[[9,"Новий",(0- не включено,1 -включено) ],...]}
+    
+	CodeData==237 (SaveWarehouseGroupSuppier) Зберігаємо перелік складів на які йде поставка згідно ГП
+     =>data={"CodeData":237,"CodeGS":123,"Warehouse":[[123,(1-add,0 - del)],...]}
+     =>return{"State":0, "TextError": "Ok"}
+
+    CodeData==238 (GetBrandBirge) Отримуємо перелік "Біржових" брендів
+     =>data={"CodeData":238}
+     =>return{"State":0, "TextError": "Ok","Brand":[[12,"Неміров"],...]}
+    CodeData==239 (SaveBrandBirge) Отримуємо перелік "Біржових" брендів
+     =>data={"CodeData":239}
+     =>return{"State":0, "TextError": "Ok","Brand":[[123,(1-add;0 - del)],...],...]}
+	CodeData==240 (GetWaresBirge) Отримуємо перелік товарів "Біржових" брендів
+     =>data={"CodeData":240,"CodeBrand":12}
+     =>return{"State":0, "TextError": "Ok",GP:[[12,Савсервісе],...],"Wares":[[1,"Банани"],...], "Price":[[12(code_wares),1213(code_group_supply),(price)12.33,0(1-активна)],...]}
+    CodeData==241 (SavePriceBirge) Зберігаємо ціни біржових товарів
+     =>data={"CodeData":241,"Price":[[12(code_wares),1213(code_group_supply)123.33(price),0],...]}
+     =>return{"State":0, "TextError": "Ok"}	 
+
+	CodeData==242 (GetBannedBrands) Отримуємо перелік Заблокованих брендів
+     =>data={"CodeData":232,"CodeGS":123}
+     =>return{"State":0, Warehouse:[[22,"Токіо"],...],Brand:[[11,"Торчин"],[22,"Чумак"]], Data:[[Code_warehouse,Code_brand]]}
+    
+	CodeData==243 (SaveBannedBrands Зберігаємо Заблоковані бренди
+     =>data={"CodeData":243,"CodeGS":123,"Data":[[CodeWarehouse,CodeBrand,(1-add;0 - del) ],...]
+   
+	
+	 
+ --Довідники  
+   CodeData==300 (GetSupplier) Список постачальників
+     =>data={"CodeData":300,"Supplier":"Баяд"}
+     =>return{"State":0, "TextError": "Ok","Supplier":[[12,"Баядер"]]}
+   CodeData==301 (GetBrand) Список Брендів
+     =>data={"CodeData":301,"Brand":"Нем"}
+     =>return{"State":0, "TextError": "Ok","Brand":[[123,"Неміров"]]}
+   CodeData==302 (GetGroupSupply) Список Груп постачання.
+     =>data={"CodeData":302,"NameGS":"Нем","Warehouse":"-1"} --Warehouse необов'язковий параметр.
+     =>return{"State":0, "TextError": "Ok","Brand":[[123,"Неміров"]]}
+
+--Права доступу
+	CodeData==400 (GetListUsers) Список Користувачів
+     =>data={"CodeData":400}
+     =>return{"State":0, "TextError": "Ok","Users":[[12-code,0-type,"login","name"],...],Accees:[[1-code,0-code_up,"Групи Постачання"-name]]}
+	CodeData==401 (AddUser) Добавити Користувача
+     =>data={"CodeData":401,"Login":"log","PassWord":"pass","Name":"Пупкін Василь"}
+     =>return{"State":0, "TextError": "Ok"}
+	CodeData==402 (BlockUser) Заблокувати Користувача
+     =>data={"CodeData":402,"CodeUser":102}
+     =>return{"State":0, "TextError": "Ok"}
+    CodeData==403 (GetUserAccess) Отримуємо права користувача
+     =>data={"CodeData":402,"CodeUser":1}
+     =>return{"State":0, "TextError": "Ok","Accees":[[1,4]]}	 	 
+    CodeData==404 (SaveUserAccess) Зберегти права користувача
+     =>data={"CodeData":402,"Accees":[[1,4]]}
+     =>return{"State":0, "TextError": "Ok"}	
+
+	 
+	 
+	 
+	

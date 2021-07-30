@@ -11,7 +11,10 @@ var Report = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -151,7 +154,10 @@ var Report = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },
@@ -238,7 +244,10 @@ var Report = {
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: obj.data,
             xhrFields: {
                 withCredentials: true
             },

@@ -1,4 +1,4 @@
-
+﻿
 window.onload = function () {
 
     var myTreeData = {
@@ -122,7 +122,11 @@ window.onload = function () {
             $.ajax({
                 url: apiUrl,
                 method: "POST",
-                data: obj,
+                contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+			crossDomain: true,
+            data: obj.data,
                 xhrFields: {
                     withCredentials: true
                 },

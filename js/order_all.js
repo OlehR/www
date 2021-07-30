@@ -90,44 +90,44 @@ var Table = {
     },
     getData: function (withRender, sendMail) {
         var type = $('#tableContent').attr("data-type");
-        var obj = {};
-        obj.data = {};
+        var data = {};
         var coockieHouse = Cookies.get('Warehouse');
         var Date_From = Cookies.get('Date_From');
         var Date_To = Cookies.get('Date_To');
         if (type === "orders") {
-            obj.data.CodeWarehouse = $('#warehouse').val();
+            data.CodeWarehouse = $('#warehouse').val();
             if (typeof coockieHouse !== typeof undefined)
-                obj.data.CodeWarehouse = coockieHouse;
-            obj.data.CodeData = 5;
-            obj.data.DateEnd = $('#date_to').val();
+                data.CodeWarehouse = coockieHouse;
+            data.CodeData = 5;
+            data.DateEnd = $('#date_to').val();
             if (typeof Date_To !== typeof undefined) {
-                obj.data.DateEnd = Date_To;
+                data.DateEnd = Date_To;
                 $('#date_to').val(Date_To);
             }
 
-            obj.data.DateBegin = $('#date_from').val();
+            data.DateBegin = $('#date_from').val();
             if (typeof Date_From !== typeof undefined) {
-                obj.data.DateBegin = Date_From;
+                data.DateBegin = Date_From;
                 $('#date_from').val(Date_From);
             }
 
         } else {
-            obj.data.CodeData = 12;
+            data.CodeData = 12;
             var GetArr = Table.parseGetParams();
 
             if (GetArr.CodeGroupWares)
-                obj.data.CodeGroupWares = REQUEST.getField('CodeGroupWares');
+                data.CodeGroupWares = REQUEST.getField('CodeGroupWares');
             if (GetArr.CodeGroupSupply)
-                obj.data.CodeGroupSupply = REQUEST.getField('CodeGroupSupply');
+                data.CodeGroupSupply = REQUEST.getField('CodeGroupSupply');
         }
-
-        obj.data = JSON.stringify(obj.data);
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(data),
             xhrFields: {
                 withCredentials: true
             },
@@ -865,24 +865,19 @@ var Table = {
         $('#send_mail_addr').val(Table.JSON.OrderHead.GROUP_EMAIL);
         $('#SendMailModal').modal('show');
     },
-    sendMail: function (save) {
-        var obj = {};
-        var data = {};
+    sendMail: function (save) { 
         var html = '<body>';
         html += '<style> body,table{font:12px Helvetica}@media screen{#page{width:800px}}@media print{#page{width:100%}}*{margin:0;padding:0}body{margin:10px}td.right{text-align:right}td.left{text-align:left}td.center{text-align:center}table{width:100%}td.caption{text-align:right;padding-right:8px}table.detail,table.detail td,table.detail th{border:1px solid #000;border-collapse:collapse;padding:2px 3px;font-size:11px}table.summary,table.summary td{border:1px solid #fff;border-collapse:collapse;padding:3px;text-align:right}h3,h4{display:block;text-align:center}h4{font:14px Tahoma;font-weight:700;margin-top:5px;margin-bottom:5px}h3{font:18px Tahoma;font-weight:700;margin-top:10px;margin-bottom:25px}strong{font:16px Tahoma}';
         html += '</style>';
         html += Table.renderOrderDoc() + '</body>';
-        data.CodeData = 9;
-        data.NumberOrder = Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY;
-        data.EMail = $('#send_mail_addr').val();
-        data.Boby = html;
-
-        obj.data = JSON.stringify(data);
-
+        d
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(CodeData:9,NumberOrder : Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY,EMail:$('#send_mail_addr').val(),Boby : html),
             xhrFields: {
                 withCredentials: true
             },
@@ -928,18 +923,16 @@ var Table = {
 
         if ($("#status").val() == -1) {
             delete Data.DateDelivery;
-        }
-
-        //Data.data = JSON.stringify(Data.data);
-
-        var obj = {};
-        obj.data = JSON.stringify(Data);
+        }           
 
         $('#tableContent').html('<div class="loader"></div>');
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(Data),
             xhrFields: {
                 withCredentials: true
             },
@@ -1035,14 +1028,16 @@ var Table = {
     getWarhouses: function () {
         var data = {};
         data.CodeData = 5;
-
-        var obj = {};
-        obj.data = JSON.stringify(data);
+        data = JSON.stringify(data);
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+			crossDomain: true,
+            data: JSON.stringify({CodeData:5}),
             xhrFields: {
                 withCredentials: true
             },

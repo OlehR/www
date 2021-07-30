@@ -19,42 +19,38 @@ var Table = {
     renderSettings: [],
     getData: function (withRender, sendMail) {
         var type = $('#tableContent').attr("data-type");
-        var obj = {};
-        obj.data = {};
+       
+        data = {};
         var coockieHouse = Cookies.get('Warehouse');
         var Date_From = Cookies.get('Date_From');
         var Date_To = Cookies.get('Date_To');
         if (type === "orders") {
-            obj.data.CodeWarehouse = $('#warehouse').val();
+            data.CodeWarehouse = $('#warehouse').val();
             if (typeof coockieHouse !== typeof undefined)
-                obj.data.CodeWarehouse = coockieHouse;
-            obj.data.CodeData = 5;
-            obj.data.DateEnd = $('#date_to').val();
+                data.CodeWarehouse = coockieHouse;
+            data.CodeData = 5;
+            data.DateEnd = $('#date_to').val();
             if (typeof Date_To !== typeof undefined) {
-                obj.data.DateEnd = Date_To;
+                data.DateEnd = Date_To;
                 $('#date_to').val(Date_To);
             }
 
-            obj.data.DateBegin = $('#date_from').val();
+            data.DateBegin = $('#date_from').val();
             if (typeof Date_From !== typeof undefined) {
-                obj.data.DateBegin = Date_From;
+                data.DateBegin = Date_From;
                 $('#date_from').val(Date_From);
             }
 
         } else {
-            obj.data.CodeData = 6;
-            obj.data.NumberOrder = REQUEST.getField('order');
+            data.CodeData = 6;
+            data.NumberOrder = REQUEST.getField('order');
         }
 
-        obj.data = JSON.stringify(obj.data);
+
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            data: JSON.stringify(data),
+
             success: function (data) {
                 Table.JSON = data;
                 Table.sortByColumn = Table.JSON.OrderDetail.InfoColumn.indexOf('NAME_BRAND');
@@ -401,7 +397,7 @@ var Table = {
             var newArr = [];
             for (var i = 0; i < Table.JSON.OrderDetail.Data.length; i++) {
 				var St= parseInt(Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('STATE_ID')]);
-                if (( (state==-99 && St>0) || state==St) && Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISLC')] ==  (isLogistic?1:0) )
+                if (( (state==-99 && St>=0) || state==St) && Table.JSON.OrderDetail.Data[i][Table.JSON.OrderDetail.InfoColumn.indexOf('ISLC')] ==  (isLogistic?1:0) )
                     newArr.push(Table.JSON.OrderDetail.Data[i]);
             
         }
@@ -1081,26 +1077,16 @@ var Table = {
         $('#SendMailModal').modal('show');
     },
     sendMail: function (save) {
-        var obj = {};
-        var data = {};
+
         var html = '<body>';
         html += '<style> body,table{font:12px Helvetica}@media screen{#page{width:800px}}@media print{#page{width:100%}}*{margin:0;padding:0}body{margin:10px}td.right{text-align:right}td.left{text-align:left}td.center{text-align:center}table{width:100%}td.caption{text-align:right;padding-right:8px}table.detail,table.detail td,table.detail th{border:1px solid #000;border-collapse:collapse;padding:2px 3px;font-size:11px}table.summary,table.summary td{border:1px solid #fff;border-collapse:collapse;padding:3px;text-align:right}h3,h4{display:block;text-align:center}h4{font:14px Tahoma;font-weight:700;margin-top:5px;margin-bottom:5px}h3{font:18px Tahoma;font-weight:700;margin-top:10px;margin-bottom:25px}strong{font:16px Tahoma}';
         html += '</style>';
-        html += Table.renderOrderDoc() + '</body>';
-        data.CodeData = 9;
-        data.NumberOrder = Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY;
-        data.EMail = $('#send_mail_addr').val();
-        //data.Boby = html;
-
-        obj.data = JSON.stringify(data);
+        html += Table.renderOrderDoc() + '</body>';        
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+         
+            data: JSON.stringify({CodeData:9, NumberOrder : Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY,EMail : $('#send_mail_addr').val()}),
+            
             success: function (data) {
                 if (!save) {
                     if (data.State === 0) {
@@ -1158,20 +1144,13 @@ var Table = {
         if ($("#status").val() == -1) {
             delete Data.DateDelivery;
         }
-
-        //Data.data = JSON.stringify(Data.data);
-
-        var obj = {};
-        obj.data = JSON.stringify(Data);
+  
 
         $('#tableContent').html('<div class="loader"></div>');
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify(Data),
+            
             success: function (data) {
                 if (data.TextError === "Ok") {
                     alert('Дані успішно збережено.');

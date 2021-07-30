@@ -7,15 +7,17 @@ var Plane = {
         CodeData:102
     },
     getWarhouses: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 101;
-        obj.data = JSON.stringify(obj.data);
+
+        data = {};
+        data.CodeData = 101;        
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(obj.data),
             xhrFields: {
                 withCredentials: true
             },
@@ -221,6 +223,9 @@ var Plane = {
         $.ajax({
             url: apiUrl,
             method: "POST",
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
             data: obj,
             xhrFields: {
                 withCredentials: true

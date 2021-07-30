@@ -2,16 +2,11 @@ var AMatrix = {
     JSON: {},
     prevSort: -2,
     lastRequest:[],
-    getData: function () {
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 110;
-        obj.data = JSON.stringify(obj.data);
+    getData: function () {        
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
+           
+            data: JSON.stringify({CodeData : 110}),
             xhrFields: {
                 withCredentials: true
             },
@@ -80,35 +75,35 @@ var AMatrix = {
     getAM: function (val, manager, groups, xls) {
 
         AMatrix.lastRequest = [val, manager, groups, xls];
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 111;
-        obj.data.GodeGroup = val;
+        var data = {};
+        data.CodeData = 111;
+        data.GodeGroup = val;
 
-        obj.data.Type = parseInt($('input[name="am_type"]:checked').val());
+        data.Type = parseInt($('input[name="am_type"]:checked').val());
 
         if (val === -1) {
-            delete obj.data.GodeGroup;
-            obj.data.CodeManager = manager;
+            delete data.GodeGroup;
+            data.CodeManager = manager;
         }
         if (manager === -1 && val === -1) {
-            delete obj.data.GodeGroup;
-            delete obj.data.CodeManager;
-            obj.data.CodeWares = groups;
+            delete data.GodeGroup;
+            delete data.CodeManager;
+            data.CodeWares = groups;
         }
         if (manager === -1 && val === -1 && groups === -1) {
-            delete obj.data.GodeGroup;
-            delete obj.data.CodeManager;
-            delete obj.data.CodeWares;
-            obj.data.ImportXls = xls;
+            delete data.GodeGroup;
+            delete data.CodeManager;
+            delete data.CodeWares;
+            data.ImportXls = xls;
         }
 
-        obj.data = JSON.stringify(obj.data);
-
-        $.ajax({
+         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(data);,
             xhrFields: {
                 withCredentials: true
             },
@@ -332,13 +327,12 @@ var AMatrix = {
     saveAM: function () {
         var rows = $('tbody tr[is-change="true"]');
         var titles = $('thead th[data-ewh]:visible');
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 112;
-        obj.data.Data = [];
-        obj.data.Warehouse = [];
+        var data = {};
+        data.CodeData = 112;
+        data.Data = [];
+        data.Warehouse = [];
 
-        obj.data.Type = parseInt($('input[name="am_type"]:checked').val());
+        data.Type = parseInt($('input[name="am_type"]:checked').val());
 
         if (rows.length <= 0) {
             alert('Данні не змінилися!');
@@ -346,36 +340,39 @@ var AMatrix = {
         }
 
         for (var j = 0; j < titles.length; j++) {
-            obj.data.Warehouse.push($(titles[j]).data('ewh'));
+            data.Warehouse.push($(titles[j]).data('ewh'));
         }
 
         rows.each(function (index) {
             var el = $(this);
             var cells = el.find('td:visible');
-            obj.data.Data[index] = [];
-            obj.data.Data[index].push($(cells[0]).text());
-            obj.data.Data[index].push($(cells[2]).find('input').val());
+            data.Data[index] = [];
+            data.Data[index].push($(cells[0]).text());
+            data.Data[index].push($(cells[2]).find('input').val());
 
             if ($(cells[3]).find('div.checked').length > 0) {
-                obj.data.Data[index].push($(cells[3]).find('div.checked input').val());
+                data.Data[index].push($(cells[3]).find('div.checked input').val());
                 console.log($(cells[3]).find('div.checked input').val());
             } else {
-                obj.data.Data[index].push(0);
+                data.Data[index].push(0);
             }
 
             for (var i = 4; i < cells.length; i++) {
-                obj.data.Data[index].push($(cells[i]).find('input').val());
+                data.Data[index].push($(cells[i]).find('input').val());
             }
-            console.log(obj.data.Data);
+            console.log(data.Data);
         });
 
-        console.log(obj.data);
-        obj.data = JSON.stringify(obj.data);
+        console.log(data);
+ 
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(data);,
             xhrFields: {
                 withCredentials: true
             },
@@ -448,11 +445,10 @@ var AMatrix = {
         if (!confirm('Очистити дані?')) {
             return;
         }
-        var obj = {};
-        obj.data = {};
-        obj.data.CodeData = 113;
-        obj.data.Warehouse = [];
-        obj.data.Wares = [];
+        var data = {};
+        data.CodeData = 113;
+        data.Warehouse = [];
+        data.Wares = [];
 
         var warehouses = $('#tableContent th[data-ewh]:visible');
         var wares = $('#tableContent tbody tr:not([class="text-left"])');
@@ -462,19 +458,21 @@ var AMatrix = {
         }
 
         warehouses.each(function () {
-            obj.data.Warehouse.push(parseInt($(this).attr('data-ewh')));
+            data.Warehouse.push(parseInt($(this).attr('data-ewh')));
         });
 
         wares.each(function () {
-            obj.data.Wares.push(parseInt($(this).find('td:first-child').text()));
+            data.Wares.push(parseInt($(this).find('td:first-child').text()));
         });
-
-        obj.data = JSON.stringify(obj.data);
+        
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data: obj,
+			contentType:"application/json; charset=utf-8",
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(data),
             xhrFields: {
                 withCredentials: true
             },
