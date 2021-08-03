@@ -103,7 +103,7 @@ var AMatrix = {
 			contentType:"application/json; charset=utf-8",
             processData: false,
             dataType: 'json',
-            data: JSON.stringify(data);,
+            data: JSON.stringify(data),
             xhrFields: {
                 withCredentials: true
             },
@@ -372,7 +372,7 @@ var AMatrix = {
 			contentType:"application/json; charset=utf-8",
             processData: false,
             dataType: 'json',
-            data: JSON.stringify(data);,
+            data: JSON.stringify(data),
             xhrFields: {
                 withCredentials: true
             },
