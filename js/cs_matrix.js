@@ -5,7 +5,6 @@ var CSMatrix = {
         var data = {};
         data.CodeData = 160;
 
-
         $.ajax({
             data: JSON.stringify(data),
             success: function (data) {
@@ -95,8 +94,15 @@ var CSMatrix = {
         var WH = CSMatrix.JSON.Warehouse;
         var Week = CSMatrix.JSON.Week;
         var WeekLength = CSMatrix.JSON.Week.length;
-        var Data = CSMatrix.JSON.Data;        
-        
+        var Data = CSMatrix.JSON.Data;
+
+        CSMatrix.renderSettings(WH);
+
+        var cWaresIsVisible = Cookies.get('WaresIsVisible');
+        var WaresIsVisible = [];
+        WaresIsVisible = JSON.parse(cWaresIsVisible);
+
+
         var tHead = '<thead>';
 
         tHead += '<tr>';
@@ -110,12 +116,14 @@ var CSMatrix = {
         var tBody = '<tbody>';
 
         for (var i = 0; i < WH.length; i++) {
-            tBody += '<tr id="' + WH[i][0] +'">';
-            tBody += '<td>' + WH[i][1] +'</td>';
-            for (var j = 0; j < WeekLength; j++) {
-                tBody += '<td ><input type="number" class="form-control" value="' + CSMatrix.coef(WH[i][0], Data, Week[j][0]) + '"/></td>';
+            if (CSMatrix.WHIsVisible(WH[i][0], WaresIsVisible)) {
+                tBody += '<tr id="' + WH[i][0] + '">';
+                tBody += '<td>' + WH[i][1] + '</td>';
+                for (var j = 0; j < WeekLength; j++) {
+                    tBody += '<td ><input type="number" class="form-control" value="' + CSMatrix.coef(WH[i][0], Data, Week[j][0]) + '"/></td>';
+                }
+                tBody += '</tr>';
             }
-            tBody += '</tr>';
         }
 
         tBody += '</tbody>';
@@ -127,7 +135,6 @@ var CSMatrix = {
             el.width(el.closest('th').outerWidth() - 2);
             el.height(el.closest('th').outerHeight() - 2);
         });
-        CSMatrix.renderSettings(WH);
         $('#tableContent').scroll();
     },
     coef: function (WH, Data, Week) {
