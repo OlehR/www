@@ -30,6 +30,9 @@ var User = {
                         case "AM":
                             AMatrix.init();
                             break;
+                        case "CS":
+                            CSMatrix.init();
+                            break;
                         case "ConfigZNP":
                             ZnpConfig.getAccessTab();
                             ZnpConfig.Run();
