@@ -4,7 +4,6 @@ var CSMatrix = {
     getData: function () {
         var data = {};
         data.CodeData = 160;
-        data = JSON.stringify(obj.data);
 
 
         $.ajax({
