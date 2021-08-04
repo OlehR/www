@@ -1,4 +1,4 @@
-var Planer = {
+﻿var Planer = {
     JSON: {},
     getDataFromFile: function () {
         Planer.JSON = _Json;
