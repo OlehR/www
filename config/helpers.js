@@ -181,21 +181,12 @@ $(document).ready(function () {
 });
 
 var OrderHelper = {
-    getOrderHistory: function (number) {
-        var data = {};
-        data.CodeData = 10;
-        data.NumberOrder = number;
-
-        var obj = {};
-        obj.data = JSON.stringify(data);
+    getOrderHistory: function (number) { 
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-            data: obj,
-            xhrFields: {
-                withCredentials: true
-            },
+            
+            data: JSON.stringify({CodeData :10, NumberOrder:number}),
+            
             success: function (data) {
                 var result = data;
                 var rows = '';
@@ -219,19 +210,11 @@ var OrderHelper = {
 };
 
 function TestConnection() {
-    var data = {};
-    data.CodeData = -1;
-
-    var obj = {};
-    obj.data = JSON.stringify(data);
 
     $.ajax({
-        url: apiUrl,
-        method: "POST",
-        data: obj,
-        xhrFields: {
-            withCredentials: true
-        },
+       
+        data: JSON.stringify({CodeData : -1}),
+        
         success: function (data) {
             var result;
             

@@ -225,7 +225,8 @@ var CSMatrix = {
             success: function (data) {
                 var result = data;
                 console.log(result);
-                if (result.TextError == "Ok") {		
+                if (result.TextError == "Ok") {	
+					alert('Данні успішно збережено!');				
 					
                 } else {
                     alert('Помилка: ' + result.TextError);
