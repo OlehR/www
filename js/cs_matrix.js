@@ -5,6 +5,7 @@ var CSMatrix = {
         var data = {};
         data.CodeData = 160;
 
+
         $.ajax({
             data: JSON.stringify(data),
             success: function (data) {
@@ -47,6 +48,9 @@ var CSMatrix = {
                             .attr('aria-controls', hashCode)
                             .attr('role', 'menuitem')
                             .html(el[2] + '&nbsp;<i class="fas fa-chevron-down"></i>');
+
+                        if (el[1] != 0) li.find('a').attr('data-warhause_code', el[0]).addClass('second-level');
+
                         li.append(nestedTree).attr('role', 'presentation').addClass('have-child');
                     } else {
                         li.find('a').attr('data-warhause_code', el[0]).addClass('last_child_warhause');
@@ -61,6 +65,7 @@ var CSMatrix = {
 
         var data = {};
         data.CodeData = 161;      
+
 
         if (group != -1) {
             data.CodeGroup = group;
@@ -128,7 +133,7 @@ var CSMatrix = {
 
         tBody += '</tbody>';
 
-        $('#tableContent').html('<table class="table table-bordered table-fixed">' + tHead + tBody + '</table>');
+        $('#tableContent').html('<p><h4>' + CSMatrix.JSON.Name +'</h4></p><table class="table table-bordered table-fixed">' + tHead + tBody + '</table>');
         $('#tableContent table').dragtable();
         $('#tableContent table .thead').each(function () {
             var el = $(this);
@@ -289,6 +294,12 @@ var CSMatrix = {
             Cookies.set('tableSort', table_sort, { expires: 9999 });
         });
         $(document).on('click', '.last_child_warhause', function (event) {
+            var el = $(this);
+            var val = el.data('warhause_code');
+            var text = el.text();
+            $('#Warehouse button .dropdowntree-name').html(text);
+            CSMatrix.getCS(val);
+        }); $(document).on('dblclick', '.second-level', function (event) {
             var el = $(this);
             var val = el.data('warhause_code');
             var text = el.text();
