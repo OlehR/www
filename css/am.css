@@ -233,3 +233,18 @@ ul {
 .ln18px{
     line-height:18px;
 }
+.novelty {
+    background-color: #ffff80;
+    position: absolute;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+}
+.maxrem {
+    background-color: #ffcccc;
+    position: absolute;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+}
+#filters div {
+    padding-right: 0px;
+}

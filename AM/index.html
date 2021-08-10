@@ -93,23 +93,32 @@
                     <div class="col-md-2 col-sm-12 form-group">
                         <select id="managers" class="form-control"></select>
                     </div>
-                    <div class="col-md-2 col-sm-12 form-group">
-                        <button title="Формат CSV => КОД ТОВАРУ, Код товару який закривається,Код магазину 1,Код магазину 2, Код магазину 3.
+                    <div class="col-md-6 col-sm-12 form-group row">
+                        <div class="col-md-4">
+                            <button title="Формат CSV => КОД ТОВАРУ, Код товару який закривається,Код магазину 1,Код магазину 2, Код магазину 3.
 Code,Code,3,9,15,22,57,68
 123,0,1,1,1,1,1,1
 212,11,0,0,1,1,0,0
 233,44,0,0,0,0,1,1" id="import_xl" class="btn btn-primary" type="button">
-                            CSV
-                        </button>
-                        <input id="file-upload" hidden="hidden" type="file" name="files[]" multiple=multiple />
+                                CSV
+                            </button>
+                            <input id="file-upload" hidden="hidden" type="file" name="files[]" multiple=multiple />
 
-                        <button type="button" id="clear_am" class="btn btn-warning">Очистити</button>
-                    </div>
-                    <div class="col-md-2">
-                        <label>Мінімальні залишки</label>
-                        <input type="radio" name="am_type" value="0" checked=checked />
-                        <label>Новинка</label>
-                        <input type="radio" name="am_type" value="1" />
+                            <button type="button" id="clear_am" class="btn btn-warning">Очистити</button>
+
+                        </div>
+                        <div class="col-md-3">
+                            <label>Мін. залишки</label>
+                            <input type="radio" name="am_type" value="0" checked=checked />
+                        </div>
+                        <div class="col-md-2">
+                            <label>Новинка</label>
+                            <input type="radio" name="am_type" value="1" />
+                        </div>
+                        <div class="col-md-3">
+                            <label>Макс. залишки</label>
+                            <input type="radio" name="am_type" value="2" />
+                        </div>
                     </div>
                 </div>
             </form>

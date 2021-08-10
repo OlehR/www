@@ -6,7 +6,7 @@ var AMatrix = {
 
         $.ajax({
            
-            data: JSON.stringify({CodeData : 110}),
+            data: JSON.stringify({ CodeData: 110}),
             xhrFields: {
                 withCredentials: true
             },
@@ -78,6 +78,8 @@ var AMatrix = {
         var data = {};
         data.CodeData = 111;
         data.GodeGroup = val;
+
+
 
         data.Type = parseInt($('input[name="am_type"]:checked').val());
 
@@ -254,7 +256,17 @@ var AMatrix = {
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 1) {
-                    tBody += '<td title="' + Data[j][7] + ' / ' + Data[j][6] + '">' + Data[j][i] + '<div>' + Data[j][i] + '<div></td>';
+                    tBody += '<td title="' + Data[j][7] + ' / ' + Data[j][6] + '">' + Data[j][i] + '<div><div'
+
+                    if (parseInt($('input[name="am_type"]:checked').val()) == 1) {
+                        tBody += ' class="novelty" ';
+                    }
+
+                    if (parseInt($('input[name="am_type"]:checked').val()) == 2) {
+                        tBody += ' class="maxrem" ';
+                    }
+
+                    tBody += '> ' + Data[j][i] + '</div ></div ></td > ';
                     colspan++;
                 }
                 if (!isEWH && !isWH && !isDWH && i == 2) {
@@ -332,6 +344,7 @@ var AMatrix = {
         data.Data = [];
         data.Warehouse = [];
 
+
         data.Type = parseInt($('input[name="am_type"]:checked').val());
 
         if (rows.length <= 0) {
@@ -400,7 +413,7 @@ var AMatrix = {
                 alert('Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
             }
         });
-    },
+    }, 
     importXL: function (e) {
         e.stopPropagation();
         $input = $(this);
@@ -449,6 +462,7 @@ var AMatrix = {
         data.CodeData = 113;
         data.Warehouse = [];
         data.Wares = [];
+
 
         var warehouses = $('#tableContent th[data-ewh]:visible');
         var wares = $('#tableContent tbody tr:not([class="text-left"])');
