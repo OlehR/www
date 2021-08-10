@@ -274,12 +274,13 @@ var Checker = {
 var Delivery = {
     contextKey: '',
     JSON: {},
+    isLogistic: false,
     getStartPageDeliverySchedule: function (save) {
         
 
         $.ajax({
       
-            data: JSON.stringify({CodeData : 210}),
+            data: JSON.stringify({ CodeData: 210}),
             
             success: function (data) {
                 var json = data;
@@ -326,7 +327,7 @@ var Delivery = {
         
         $.ajax({
         
-            data: JSON.stringify({CodeData : 211,Warehouse : $('#Delivery .Warehouse').val()}),
+            data: JSON.stringify({ CodeData: 211, Warehouse: $('#Delivery .Warehouse').val()}),
             
             success: function (data) {
                 Delivery.JSON = data;
@@ -393,6 +394,9 @@ var Delivery = {
 
         var tBody = '<tbody>';
         for (var i = 0; i < arrLen; i++) {
+
+            if (Delivery.isLogistic && data[i][15] !=1) continue;
+
             var isDay = false;
             for (var j = 4; j < 10; j++) {
                 if (data[i][j] !== '') {
@@ -412,16 +416,16 @@ var Delivery = {
             tBody += '<td>' + data[i][infoColumn.indexOf('CODE_GROUP_SUPPLY')] + '</td>';
             tBody += '<td>' + data[i][infoColumn.indexOf('NAME_GROUP_SUPPLY')] + '</td>';
             tBody += '<td>' + data[i][infoColumn.indexOf('DATA_NAME')] + '</td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_1')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_2')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_3')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_4')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_5')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_6')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + (isOther ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_7')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('PERIOD_SUPPLY')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DAY_TO_SUPPLY')] + '" /></td>';
-            tBody += '<td> <input ' + readOnly + ' class="form-control DateStart Sub" ' + (isDay ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DATE_START')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + ((isOther || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_1')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + ((isOther || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_2')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + ((isOther || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_3')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + ((isOther || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_4')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + ((isOther || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_5')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + ((isOther || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_6')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Day" ' + ((isOther || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('D_7')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Sub" ' + ((isDay || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('PERIOD_SUPPLY')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control Sub" ' + ((isDay || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DAY_TO_SUPPLY')] + '" /></td>';
+            tBody += '<td> <input ' + readOnly + ' class="form-control DateStart Sub" ' + ((isDay || data[i][16] == 0) ? 'disabled="disabled"' : '') + ' value="' + data[i][infoColumn.indexOf('DATE_START')] + '" /></td>';
             tBody += '</tr>';
         }
         tBody += '</tbody>';
@@ -554,6 +558,10 @@ var Delivery = {
             }
         });
     },
+    changeLogistic: function () {
+        Delivery.isLogistic = $('#logistic').prop('checked');
+        Delivery.filter();
+    },
     controlsInit: function () {
         $('#saveDelivery').click(Delivery.saveDelivery);
 
@@ -574,6 +582,7 @@ var Delivery = {
                 'transform': 'translate3d(0,' + ($('#tableContent' + Delivery.contextKey).scrollTop()) + 'px,0)'
             });
         });
+        $('#logistic').change(Delivery.changeLogistic);
     },
     init: function () {
         Delivery.getStartPageDeliverySchedule();
