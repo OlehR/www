@@ -33,6 +33,9 @@ var User = {
                         case "CS":
                             CSMatrix.init();
                             break;
+                        case "RightsEdit":
+                            RightsEditor.init();
+                            break;
                         case "ConfigZNP":
                             ZnpConfig.getAccessTab();
                             ZnpConfig.Run();

@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="../css/fontawesome-all.css" rel="stylesheet" />
+    <link href="../css/style.css" type="text/css" rel="stylesheet" />
+    <link href="../css/cs.css" type="text/css" rel="stylesheet" />
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/cookie.js"></script>
+    <script src="../js/rights_edit.js"></script>
+    <script src="../config/config.js"></script>
+    <script>
+        window.isLogin = typeof Cookies.get('isLogin') != typeof undefined;
+    </script>
+    <style>
+        #myTab {
+            position: fixed;
+            top: 40px;
+            right: 0;
+            left: 0;
+            z-index: 99;
+            background: #fff;
+        }
+        #myTabContent {
+            position: relative;
+            top: 45px;
+            left: 20px;
+        }
+        #usersTable {
+            max-height: 85vh;
+            overflow-y: scroll;
+        }
+        #rightTree {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #profile {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        body {
+            width: 95%;
+        }
+    </style>
+</head>
+<body data-page="RightsEdit">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#TopMenu" aria-controls="TopMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="TopMenu">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a id="orders_log" class="nav-link" href="javascript:void(0)">Журнал</a>
+                        </li>
+                        <!--<li class="nav-item active">
+                            <a id="save_order" class="nav-link" href="javascript:void(0)">Записати</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a id="print_doc" class="nav-link" href="javascript:void(0)">Друк</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a id="print_form" class="nav-link" href="javascript:void(0)">Друк форми</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a id="send_mail_start" class="nav-link" href="javascript:void(0)">Повторно відправити</a>
+                        </li>-->
+                    </ul>
+                    <ul class="form-inline my-2 my-md-0 navbar-nav" href="#">
+                        <li class="nav-item active">
+                            <a id="logout" class="nav-link" href="javascript:void(0)">Вихід</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="secondary-btns">
+                    <ul class="navbar-nav flex-row mr-auto">
+                        <li class="nav-item active hidden-sm-up">
+                            <a id="filter_settings" class="nav-link" href="javascript:void(0)"><i class="fas fa-filter"></i></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a id="render_settings" class="nav-link" href="javascript:void(0)"><i class="fas fa-cogs"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="row" >
+        <div class="col-12">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#Home" role="tab" aria-controls="profile" aria-selected="false">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="home-tab" data-toggle="tab" href="#NewUser" role="tab" aria-controls="home" aria-selected="true">Створення користувача</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="home-tab" data-toggle="tab" href="#RightsEditor" role="tab" aria-controls="home" aria-selected="true">Надання прав</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane active" id="Home" role="tabpanel" aria-labelledby="profile-tab">
+            <div id="usersTable"  ></div>
+        </div>
+        <div class="tab-pane fade" id="NewUser" role="tabpanel" aria-labelledby="home-tab">
+            <label for="log">Логін</label><br />
+            <input type="text" id="log" placeholder="Логін" value="" /><br />
+            <label for="pas">Пароль</label><br />
+            <input type="text" id="pas" placeholder="Пароль" value="" /><br />
+            <label for="uname">Ім'я користувача</label><br />
+            <input type="text" id="uname" placeholder="Ім'я" value="" /><br /><br />
+            <button onclick="RightsEditor.addUser()">Створити</button>
+            <button>Скасувати</button>
+        </div>
+        <div class="tab-pane fade" id="RightsEditor" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+                <div class="col-3">
+                    <div id="users">
+                        <select placeholder="Вибір користувача">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <button id="saveUserRights1">Зберегти</button>
+                    <button id="cancelUserRights1">Скасувати</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-5">
+                    <div id="rightTree">
+                    </div>
+                </div>
+                <div class="col-1">
+                </div>
+                <div class="col-5">
+                    <div id="profile">
+                        <table>
+                            <tr>
+                                <th>Користувач: </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginForm">
+        <form class="form-signin">
+            <h2 class="form-signin-heading">Зайдіть в кабінет</h2>
+            <label for="inputLogin" class="sr-only">Логин</label>
+            <input type="text" id="inputLogin" class="form-control" placeholder="Логин" required="" autofocus="" />
+            <label for="inputPassword" class="sr-only">Пароль</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="" />
+
+            <button id="loginButton" class="btn btn-lg btn-primary btn-block" type="button">Вхід</button>
+        </form>
+    </div>
+    <script>
+        if (window.isLogin) {
+            $('#loginForm').hide();
+        }
+    </script>
+    <script src="../js/popper.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap-datepicker.js"></script>
+    <script src="../js/bootstrap-datepicker.uk.js"></script>
+    <link href="../css/datepicker/bootstrap-datepicker.css" type="text/css" rel="stylesheet" />
+    <script src="../config/helpers.js"></script>
+    <script src="../js/user.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.default.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microplugin/0.0.3/microplugin.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sifter/0.6.0/sifter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/selectize.min.js"></script>
+
+
+</body>
