@@ -53,30 +53,22 @@
         return result;
     },
     addUser: function () {
-        var obj = {};
         var ident = true;
-        obj.data = {};
-        obj.data.CodeData = 401;
+        var data = {};
+        data.CodeData = 401;
 
-        obj.data.Login = $("#log").val();
-        if (!obj.data.Login) ident = false;
+        data.Login = $("#log").val();
+        if (!data.Login) ident = false;
 
-        obj.data.PassWord = $("#pas").val();
-        if (!obj.data.PassWord) ident = false;
+        data.PassWord = $("#pas").val();
+        if (!data.PassWord) ident = false;
 
-        obj.data.Name = $("#uname").val();
-        if (!obj.data.Name) ident = false;
-
-        obj.data = JSON.stringify(obj.data);
+        data.Name = $("#uname").val();
+        if (!data.Name) ident = false;
 
         if (ident) {
             $.ajax({
-                url: apiUrl,
-                method: "POST",
-                data: obj,
-                xhrFields: {
-                    withCredentials: true
-                },
+                data: JSON.stringify(data),
                 success: function (data) {
                     if (data.State === 0) {
                         alert('Користувача створено.');
@@ -162,7 +154,6 @@
         $.ajax({
             data: JSON.stringify({ CodeData: 402, CodeUser: v}),
             success: function (data) {
-                //RightsEditor.userRightsShow(data.Accees);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
@@ -209,11 +200,11 @@
             var value = parseInt($(this).val());
             RightsEditor.selectUser(value);
         });
-        $('#saveUserRights1,#saveUserRights2').click(function () {
+        $('#saveUserRights').click(function () {
             var value = parseInt($('#UsersSelector').val());
             if (!isNaN(value)) RightsEditor.userRightsWrite(value);
         });
-        $('#cancelUserRights1,#cancelUserRights2').click(function () {
+        $('#cancelUserRights').click(function () {
             var value = parseInt($('#UsersSelector').val());
             if (!isNaN(value)) RightsEditor.selectUser(value);
         });
