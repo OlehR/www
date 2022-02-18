@@ -57,11 +57,11 @@
         var data = {};
         data.CodeData = 401;
 
-        data.Login = $("#log").val();
-        if (!data.Login) ident = false;
+        data.NewLogin = $("#log").val();
+        if (!data.NewLogin) ident = false;
 
-        data.PassWord = $("#pas").val();
-        if (!data.PassWord) ident = false;
+        data.NewPassWord = $("#pas").val();
+        if (!data.NewPassWord) ident = false;
 
         data.Name = $("#uname").val();
         if (!data.Name) ident = false;
@@ -95,18 +95,30 @@
         table += '<th>Тип користувача</th>'
         table += '<th>Логін</th>'
         table += '<th>Ім`я</th>'
+        table += '<th>1C</th>'
+        table += '<th>Дата початку</th>'
+        table += '<th>Дата кінця</th>'
 
         table += '</tr>';
         table += '</thead>';
         table += '<tbody>';
 
         for (var i = 0; i < data.length; i += 1) {
-            table += '<tr id="' + data[i][0] + 'user" class="us">';
-            table += '<td abbr="block"><img src="../img/b_block.png" width="20" height = "20" id="' + data[i][0] + 'block" class="blockImg" ></td>';
+            table += '<tr id="' + data[i][0] + 'user" class="us ';
+            table += data[i][7] == 1 ? 'blocked' : '';
+            table += '">';
+            table += '<td abbr="block"><img src="../img/b_';
+            table += data[i][7] == 1 ? 'un' : '';
+            table += 'block.png" width="20" height = "20" id="' + data[i][0] + 'block" class="';
+            table += data[i][7] == 1 ? 'un' : '';
+            table += 'blockImg" ></td>';
             table += '<td abbr="id" >' + data[i][0] + '</td>';
             table += '<td abbr="type">' + data[i][1] + '</td>';
             table += '<td abbr="login">' + data[i][2] + '</td>';
             table += '<td abbr="name">' + data[i][3] + '</td>';
+            table += '<td abbr="1C">' + data[i][6] + '</td>';
+            table += '<td abbr="begin">' + data[i][4] + '</td>';
+            table += '<td abbr="end">' + data[i][5] + '</td>';
             table += '</tr>';
         }
 
@@ -154,6 +166,18 @@
         $.ajax({
             data: JSON.stringify({ CodeData: 402, CodeUser: v}),
             success: function (data) {
+                RightsEditor.getData();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
+            }
+        });
+    },
+    unblockUser: function (v) {
+        $.ajax({
+            data: JSON.stringify({ CodeData: 405, CodeUser: v}),
+            success: function (data) {
+                RightsEditor.getData();
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert('errorCode:' + xhr.status + '\n errorMessage:' + thrownError + ' \n Підчас виконання запиту сталася помилка. Спробуйте пізніше або зверніться до техпідтримки.');
@@ -203,18 +227,25 @@
         $('#saveUserRights').click(function () {
             var value = parseInt($('#UsersSelector').val());
             if (!isNaN(value)) RightsEditor.userRightsWrite(value);
+            else alert('Виберіть користувача');
         });
         $('#cancelUserRights').click(function () {
             var value = parseInt($('#UsersSelector').val());
             if (!isNaN(value)) RightsEditor.selectUser(value);
+            else alert('Виберіть користувача');
         });
-        $(document).on('click', 'td[abbr="type"],td[abbr="id"],td[abbr="login"],td[abbr="name"]', function () {
+        $(document).on('click', 'td[abbr="type"],td[abbr="id"],td[abbr="login"],td[abbr="name"],td[abbr="1C"],td[abbr="begin"],td[abbr="end"]', function () {
             RightsEditor.selectUser(parseInt(this.parentElement.id));
             $('#myTab a[href="#RightsEditor"]').tab('show');
         });
         $(document).on('click', 'img[class="blockImg"]', function () {
             if (confirm("Бажаєте заблокувати користувача: " + $(this).parent().next('td').next('td').next('td').next('td').text())) {
                 RightsEditor.blockUser(parseInt(this.id));
+            };
+        });
+        $(document).on('click', 'img[class="unblockImg"]', function () {
+            if (confirm("Бажаєте розблокувати користувача: " + $(this).parent().next('td').next('td').next('td').next('td').text())) {
+                RightsEditor.unblockUser(parseInt(this.id));
             };
         });
     },
