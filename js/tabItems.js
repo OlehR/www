@@ -244,7 +244,8 @@ var Checker = {
         });
         $('#sidebar').on('click', '.nav-link', Checker.selectBrand);
         $('#tableContentChecker').on('change', 'input:not([id="select_all"])', Checker.changeStatus);
-        $('#save_cheked').click(Checker.saveCheck);
+		$('#save_cheked').unbind('click');
+        $('#save_cheked').on('click',Checker.saveCheck);
         $('#tableContentChecker').on('change', 'input[id="select_all"]', function () {
             var checked = $(this).prop('checked');
             $('input:not([id="select_all"])').each(function () {
@@ -257,7 +258,8 @@ var Checker = {
         });
         $('#sidebarWH').on('click', '.nav-link', Checker.selectBrandWH);
         $('#tableContentCheckerWH').on('change', 'input:not([id="select_all"])', Checker.changeStatus);
-        $('#save_chekedWH').click(Checker.saveCheckWH);
+		$('#save_chekedWH').unbind('click');
+        $('#save_chekedWH').on('click',Checker.saveCheckWH);
         $('#tableContentCheckerWH').on('change', 'input[id="select_all"]', function () {
             var checked = $(this).prop('checked');
             $('input:not([id="select_all"])').each(function () {
@@ -695,7 +697,7 @@ var GroupSupplies = {
         var tHead = '<tr>';
         tHead += '<th>Код складу</th>';
         tHead += '<th>Назва</th>';
-        tHead += '<th>Заблокувати<br/></th>';
+        tHead += '<th>Дозволити<br/></th>';
         tHead += '</tr>';
 
         for (var i = 0; i < arrLength; i++) {
@@ -762,7 +764,7 @@ var GroupSupplies = {
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
-                    var options = '';
+                    var options = '<option value="0">0</option>';
                     for (var i = 7; i <= 20; i++) {
                         options += '<option value="' + i + '">' + i + '</option>';
                     }
@@ -968,9 +970,13 @@ var GroupSupplies = {
             GroupSupplies.getTabsData(false, $(this).attr('href').replace(/#/g,''));
         });
         $('#tableContentWarehouseGPS').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
-        $('#saveGSdata').click(GroupSupplies.saveGSdata);
-        $('#saveGSbrandData').click(GroupSupplies.saveGSbrandData);
-        $('#saveWarehouseGPS').click(GroupSupplies.saveWarehouseGPS);
+        
+		$('#saveGSdata').unbind('click');
+		$('#saveGSdata').on('click',GroupSupplies.saveGSdata);
+		$('#saveGSbrandData').unbind('click');
+        $('#saveGSbrandData').on('click',GroupSupplies.saveGSbrandData);
+		$('#saveWarehouseGPS').unbind('click');
+        $('#saveWarehouseGPS').on('click',GroupSupplies.saveWarehouseGPS);
         $('#EditGPS, #GPSbrandList').on('change', 'input[type="checkbox"]', function () {
             var el = $(this);
             if (el.prop('checked')) {
@@ -1217,19 +1223,24 @@ var Supplier = {
     init: function () {
         Supplier.bindSupplierSearching();
         Supplier.bindBrandsSearching();
+		$('#supplier_input').unbind('select2:select');
         $('#supplier_input').on('select2:select', function (e) {
             var data = e.params.data;
             Supplier.getSupplierBrands(data.id);
         });
+		$('#brands_input').unbind('select2:select');
         $('#brands_input').on('select2:select', function (e) {
             var data = e.params.data;
             Supplier.addSupplierBrand(data.id, data.text);
         });
         $('#supplier_brands').on('click', '.removeSupplierBrand', Supplier.removeSuplierBrand);
         $('#supplier_brands').on('click', '.cancleSupplierBrand', Supplier.cancleSupplierBrand);
+		$('#saveSupplierBrands').unbind('click');
         $('#saveSupplierBrands').click(Supplier.saveBrands);
+		$('#group_supplier').unbind('click');
         $('#group_supplier').on('click', '.GroupSuppliesStart', Supplier.startGS);
-        $('#add_group_supplier').click(Supplier.addGroupSupplier);
+		$('#add_group_supplier').unbind('click');
+        $('#add_group_supplier').on('click',Supplier.addGroupSupplier);
     }
 };
 
@@ -1398,6 +1409,8 @@ var ExchangeBrands = {
                                     return this[i];
                                 }
                             }
+							var res= [waresIndex, gpIndex,0,0];
+							return res;
                         };
                         ExchangeBrands.renderTable(data);
                     } else {
@@ -1543,7 +1556,7 @@ var ExchangeBrands = {
 
         $.ajax({
             
-			data: JSON.stringify({CodeData : 241,Price : Price}),
+			data: JSON.stringify({CodeData : 241,CodeGroupWarehouse : IdExchangeWarehouseData,Price : Price}),
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
@@ -1577,9 +1590,11 @@ var ExchangeBrands = {
         });
         $('#exchange_brand_brands').on('click', '.removeSupplierBrand', ExchangeBrands.removeSuplierBrand);
         $('#exchange_brand_brands').on('click', '.cancleSupplierBrand', ExchangeBrands.cancleSupplierBrand);
+		$('#saveExchangeBrands').unbind('click');
         $('#saveExchangeBrands').click(ExchangeBrands.saveBrands);
         $('#ExchangeBrandWaresTable').on('change', '.checkbox', ExchangeBrands.OnChange);
         $('#ExchangeBrandWaresTable').on('blur', '.checkbox', ExchangeBrands.OnBlur);
+		$('#SaveExchangeWares').unbind('click');
         $('#SaveExchangeWares').click(ExchangeBrands.saveWares);
     }
 };

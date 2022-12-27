@@ -45,7 +45,7 @@ var AddOrder = {
 	   MultiOrder: function ( xls) {
 
 
-        var obj = {};
+      /*  var obj = {};
         obj.data = {};
         obj.data.CodeData = 14;
        
@@ -53,14 +53,16 @@ var AddOrder = {
         
 
         obj.data = JSON.stringify(obj.data);
-
+*/
         $.ajax({
-            url: apiUrl,
+            /*url: apiUrl,
             method: "POST",
             data: obj,
             xhrFields: {
                 withCredentials: true
-            },
+            },*/
+			
+			data: JSON.stringify({CodeData:14,ImportXls:xls}),
             success: function (data) {
 				if(data.State==-1)
 					alert(data.TextError);
