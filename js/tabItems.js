@@ -611,7 +611,7 @@ var GroupSupplies = {
             ajax: {
                method: "POST",
                 data:  function (params) {
-                    return  JSON.stringify({CodeData : 302, NameGS : params.term});
+                    return JSON.stringify({ CodeData: 302, NameGS: params.term, Login: "gelo", PassWord: "Nataly$75" });
 					},
 				//JSON.stringify({CodeData : 302,NameGS : params.term}),                     
                 
@@ -669,16 +669,16 @@ var GroupSupplies = {
             }
         });
     },
-    getWarehouseGroupSupplier: function () {        
+    getWarehouseGroupSupplier: function (isLC) {        
 
         $.ajax({
           
-			data: JSON.stringify({CodeData : 236,CodeGS : GroupSupplies.curGS}),
+            data: JSON.stringify({ CodeData: 236, CodeGS: GroupSupplies.curGS, IsLC: isLC, Login: "gelo", PassWord: "Nataly$75" }),
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
-                    GroupSupplies.bildWarehouseGPS(data.Warehouse);
-                    $('a[href="#WarehouseGPS"]').tab('show');
+                    GroupSupplies.bildWarehouseGPS(isLC, data.Warehouse);
+                    $('a[href="#WarehouseGPS' + (isLC == 1 ? 'LC' : '') +'"]').tab('show');
                 } else {
                     alert(data.TextError);
                 }               
@@ -688,8 +688,9 @@ var GroupSupplies = {
             }
         });
     },
-    bildWarehouseGPS: function (arr) {
-        $('#tableContentWarehouseGPS').html('<div class"loader"></div>');
+    bildWarehouseGPS: function (isLC, arr) {
+        var id = isLC == 1 ? '#tableContentWarehouseGPSLC' : '#tableContentWarehouseGPS';
+        $(id).html('<div class"loader"></div>');
         var arrLength = arr.length;
 
         var readOnly = $('#GroupSupplies').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
@@ -707,7 +708,7 @@ var GroupSupplies = {
             tBody += '<td><input ' + readOnly + ' data-old="' + arr[i][2] + '" type="checkbox" class="checkbox" ' + (parseInt(arr[i][2]) == 1 ? 'checked' : '') + ' value="' + arr[i][2] + '"/></td>';
             tBody += '</tr>';
         }
-        $('#tableContentWarehouseGPS').html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
+        $(id).html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
 
     },
     saveWarehouseGPS: function () {
@@ -728,7 +729,7 @@ var GroupSupplies = {
                 result = data;
                 console.log(result);
                 if (parseInt(result.Sate) != -1) {
-                    GroupSupplies.getWarehouseGroupSupplier();
+                    GroupSupplies.getWarehouseGroupSupplier();//параметр
                     $('#overlay').css('display', 'none');
                 } else {
                     alert(result.TextError);
@@ -760,7 +761,7 @@ var GroupSupplies = {
 
         $.ajax({
          
-			data: JSON.stringify({CodeData : 234,CodeGS : GroupSupplies.curGS}),
+            data: JSON.stringify({ CodeData: 234, CodeGS: GroupSupplies.curGS, Login: "gelo", PassWord: "Nataly$75" }),
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
@@ -839,13 +840,16 @@ var GroupSupplies = {
                 GroupSupplies.getBrandGroupSupplier();
                 break;
             case 'WarehouseGPS':
-                GroupSupplies.getWarehouseGroupSupplier();
+                GroupSupplies.getWarehouseGroupSupplier(0);
                 break;
             case 'GPSwares':
                 GroupSupplies.supplierChecker();
                 break;
             case 'GPSwarehouse':
                 GroupSupplies.supplierWHChecker();
+                break;
+            case 'WarehouseGPSLC':
+                GroupSupplies.getWarehouseGroupSupplier(1);
                 break;
         }
     },
@@ -970,6 +974,7 @@ var GroupSupplies = {
             GroupSupplies.getTabsData(false, $(this).attr('href').replace(/#/g,''));
         });
         $('#tableContentWarehouseGPS').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
+        $('#tableContentWarehouseGPSLC').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
         
 		$('#saveGSdata').unbind('click');
 		$('#saveGSdata').on('click',GroupSupplies.saveGSdata);
