@@ -122,15 +122,9 @@ var Table = {
         }
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-			contentType:"application/json; charset=utf-8",
-            processData: false,
-            dataType: 'json',
+            
             data: JSON.stringify(data),
-            xhrFields: {
-                withCredentials: true
-            },
+            
             success: function (data) {
                 Table.Data = data;
                 var arr = Table.Data.OrderDetail.Data;
@@ -872,15 +866,9 @@ var Table = {
         html += Table.renderOrderDoc() + '</body>';
         d
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-			contentType:"application/json; charset=utf-8",
-            processData: false,
-            dataType: 'json',
-            data: JSON.stringify(CodeData:9,NumberOrder : Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY,EMail:$('#send_mail_addr').val(),Boby : html),
-            xhrFields: {
-                withCredentials: true
-            },
+        
+            data: JSON.stringify({CodeData:9,NumberOrder : Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY,EMail:$('#send_mail_addr').val(),Boby : html}),
+            
             success: function (data) {
                 if (!save) {
                     if (data.State === 0) {
@@ -927,15 +915,9 @@ var Table = {
 
         $('#tableContent').html('<div class="loader"></div>');
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-			contentType:"application/json; charset=utf-8",
-            processData: false,
-            dataType: 'json',
+            
             data: JSON.stringify(Data),
-            xhrFields: {
-                withCredentials: true
-            },
+            
             success: function (data) {
                 if (data.TextError === "Ok") {
                     alert('Дані успішно збережено.');
@@ -1031,16 +1013,9 @@ var Table = {
         data = JSON.stringify(data);
 
         $.ajax({
-            url: apiUrl,
-            method: "POST",
-			contentType:"application/json; charset=utf-8",
-            processData: false,
-            dataType: 'json',
-			crossDomain: true,
+           
             data: JSON.stringify({CodeData:5}),
-            xhrFields: {
-                withCredentials: true
-            },
+           
             success: function (data) {
                 var result = data;
                 var arrLength = result.Warehouse.Data.length;

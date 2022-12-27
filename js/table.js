@@ -412,7 +412,7 @@ var Table = {
         if (Table.sort != 'days') {
             title = 'тиждень';
         }
-        $('#orderHeader').html('№ ' + Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY + ', ' + this.JSON.OrderHead.NAME + ', ' + this.JSON.OrderHead.GROUP_NAME + '(' + this.JSON.OrderHead.CODE_GROUP_SUPPLY + ')');
+        $('#orderHeader').html('№ ' + Table.JSON.OrderHead.NUMBER_ORDER_SUPPLY + ', ' + this.JSON.OrderHead.NAME + ', ' + this.JSON.OrderHead.GROUP_NAME + '(' + this.JSON.OrderHead.CODE_GROUP_SUPPLY + ')' + '(' + this.JSON.OrderHead.CODE_WAREHOUSE + ')');
         var arr = this.JSON.OrderDetail.Data;
         var table = '';
         if (arr.indexOfType(2)) {
@@ -438,7 +438,7 @@ var Table = {
         if (Table.sort != 'days') {
             title = 'тиждень';
         }
-        $('#orderHeader').html('№ ' + this.JSON.OrderHead.NUMBER_ORDER_SUPPLY + ', ' + this.JSON.OrderHead.NAME + ', ' + this.JSON.OrderHead.GROUP_NAME + '(' + this.JSON.OrderHead.CODE_GROUP_SUPPLY + ')');
+        $('#orderHeader').html('№ ' + this.JSON.OrderHead.NUMBER_ORDER_SUPPLY + ', ' + this.JSON.OrderHead.NAME + ', ' + this.JSON.OrderHead.GROUP_NAME + '(' + this.JSON.OrderHead.CODE_GROUP_SUPPLY + ')'+ '(' + this.JSON.OrderHead.CODE_WAREHOUSE + ')');
         var arr = this.JSON.OrderDetail.Data;
         var table = '<table class="table table-bordered table-striped table-responsive detail" style="margin-top:15px">';
         table += '<thead>';

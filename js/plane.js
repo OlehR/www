@@ -17,7 +17,7 @@ var Plane = {
 			contentType:"application/json; charset=utf-8",
             processData: false,
             dataType: 'json',
-            data: JSON.stringify(obj.data),
+            data: JSON.stringify(data),
             xhrFields: {
                 withCredentials: true
             },
@@ -85,13 +85,13 @@ var Plane = {
     getPlane: function () {
         $("#tableContent").html('<div class="loader"></div>');
 
-        var obj = {};
-        obj.data = JSON.stringify(Plane.Data);
+        //var obj = {};
+        //obj.data = JSON.stringify(Plane.Data);
 
         $.ajax({
             url: apiUrl,
             method: "POST",
-            data:obj,
+            data:JSON.stringify(Plane.Data),
             xhrFields: {
                 withCredentials: true
             },
@@ -217,8 +217,8 @@ var Plane = {
         console.log(JsonSend);
         JsonSend.CodeData = 103;
 
-        var obj = {};
-        obj.data = JSON.stringify(JsonSend);
+        //var obj = {};
+        //obj.data = JSON.stringify(JsonSend);
 
         $.ajax({
             url: apiUrl,
@@ -226,7 +226,7 @@ var Plane = {
 			contentType:"application/json; charset=utf-8",
             processData: false,
             dataType: 'json',
-            data: obj,
+            data: JSON.stringify(JsonSend),
             xhrFields: {
                 withCredentials: true
             },
