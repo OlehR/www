@@ -609,7 +609,7 @@ var GroupSupplies = {
             ajax: {
                method: "POST",
                 data:  function (params) {
-                    return  JSON.stringify({CodeData : 302, NameGS : params.term});
+                    return JSON.stringify({ CodeData: 302, NameGS: params.term, Login: "gelo", PassWord: "Nataly$75" });
 					},
 				//JSON.stringify({CodeData : 302,NameGS : params.term}),                     
                 
@@ -671,11 +671,12 @@ var GroupSupplies = {
 
         $.ajax({
           
-			data: JSON.stringify({CodeData : 236,CodeGS : GroupSupplies.curGS}),
+            data: JSON.stringify({ CodeData: 236, CodeGS: GroupSupplies.curGS, Login: "gelo", PassWord: "Nataly$75" }),
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
                     GroupSupplies.bildWarehouseGPS(data.Warehouse);
+                    GroupSupplies.bildWarehouseGPSLS(data.Warehouse);
                     $('a[href="#WarehouseGPS"]').tab('show');
                 } else {
                     alert(data.TextError);
@@ -738,6 +739,29 @@ var GroupSupplies = {
             }
         });
     },
+
+    bildWarehouseGPSLS: function (arr) {
+        $('#tableContentWarehouseGPSLS').html('<div class"loader"></div>');
+        var arrLength = arr.length;
+
+        var readOnly = $('#GroupSupplies').hasClass('ReadOnly') ? 'readonly onclick="return false;"' : '';
+        var tBody = '';
+        var tHead = '<tr>';
+        tHead += '<th>Код складу</th>';
+        tHead += '<th>Назва</th>';
+        tHead += '<th>Заблокувати<br/></th>';
+        tHead += '</tr>';
+
+        for (var i = 0; i < arrLength; i++) {
+            tBody += '<tr>';
+            tBody += '<td>' + arr[i][0] + '</td>';
+            tBody += '<td>' + arr[i][1] + '</td>';
+            tBody += '<td><input ' + readOnly + ' data-old="' + arr[i][2] + '" type="checkbox" class="checkbox" ' + (parseInt(arr[i][2]) == 1 ? 'checked' : '') + ' value="' + arr[i][2] + '"/></td>';
+            tBody += '</tr>';
+        }
+        $('#tableContentWarehouseGPSLS').html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
+
+    },
     changeStatus: function () {
         var el = $(this);
         var parRow = $(el.closest('tr'));
@@ -758,7 +782,7 @@ var GroupSupplies = {
 
         $.ajax({
          
-			data: JSON.stringify({CodeData : 234,CodeGS : GroupSupplies.curGS}),
+            data: JSON.stringify({ CodeData: 234, CodeGS: GroupSupplies.curGS, Login: "gelo", PassWord: "Nataly$75" }),
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
@@ -968,6 +992,7 @@ var GroupSupplies = {
             GroupSupplies.getTabsData(false, $(this).attr('href').replace(/#/g,''));
         });
         $('#tableContentWarehouseGPS').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
+        $('#tableContentWarehouseGPSLS').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
         $('#saveGSdata').click(GroupSupplies.saveGSdata);
         $('#saveGSbrandData').click(GroupSupplies.saveGSbrandData);
         $('#saveWarehouseGPS').click(GroupSupplies.saveWarehouseGPS);
