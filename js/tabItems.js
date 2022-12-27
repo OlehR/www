@@ -611,7 +611,7 @@ var GroupSupplies = {
             ajax: {
                method: "POST",
                 data:  function (params) {
-                    return JSON.stringify({ CodeData: 302, NameGS: params.term, Login: "gelo", PassWord: "Nataly$75" });
+                    return JSON.stringify({ CodeData: 302, NameGS: params.term});
 					},
 				//JSON.stringify({CodeData : 302,NameGS : params.term}),                     
                 
@@ -673,7 +673,7 @@ var GroupSupplies = {
 
         $.ajax({
           
-            data: JSON.stringify({ CodeData: 236, CodeGS: GroupSupplies.curGS, IsLC: isLC, Login: "gelo", PassWord: "Nataly$75" }),
+            data: JSON.stringify({ CodeData: 236, CodeGS: GroupSupplies.curGS, IsLC: isLC}),
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
@@ -711,8 +711,11 @@ var GroupSupplies = {
         $(id).html('<table class="table-bordered table table-striped">' + tHead + tBody + '</table>');
 
     },
-    saveWarehouseGPS: function () {
-        var rows = $('#tableContentWarehouseGPS tr[is-change="true"]');
+    saveWarehouseGPSLC() { saveWarehouseGPS(1); },
+    saveWarehouseGPS: function (isLC) {
+        if (isLC != 1)
+            isLC = 0;
+        var rows = $('#tableContentWarehouseGPS' + (isLC == 1 ? 'LC' : '') +' tr[is-change="true"]');
         var Warehouse = [];
 
         var arrLength = rows.length;
@@ -723,7 +726,7 @@ var GroupSupplies = {
         $('#overlay').css('display', 'flex');
         $.ajax({
             
-			data: JSON.stringify({CodeData : 237,CodeGS : GroupSupplies.curGS,Warehouse:Warehouse}),
+            data: JSON.stringify({ CodeData: 237, CodeGS: GroupSupplies.curGS, Warehouse: Warehouse, IsLC: isLC}),
             
             success: function (data) {
                 result = data;
@@ -761,7 +764,7 @@ var GroupSupplies = {
 
         $.ajax({
          
-            data: JSON.stringify({ CodeData: 234, CodeGS: GroupSupplies.curGS, Login: "gelo", PassWord: "Nataly$75" }),
+            data: JSON.stringify({ CodeData: 234, CodeGS: GroupSupplies.curGS}),
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
@@ -981,7 +984,9 @@ var GroupSupplies = {
 		$('#saveGSbrandData').unbind('click');
         $('#saveGSbrandData').on('click',GroupSupplies.saveGSbrandData);
 		$('#saveWarehouseGPS').unbind('click');
-        $('#saveWarehouseGPS').on('click',GroupSupplies.saveWarehouseGPS);
+        $('#saveWarehouseGPS').on('click', GroupSupplies.saveWarehouseGPS);
+        $('#saveWarehouseGPSLC').unbind('click');
+        $('#saveWarehouseGPSLC').on('click', GroupSupplies.saveWarehouseGPSLC);
         $('#EditGPS, #GPSbrandList').on('change', 'input[type="checkbox"]', function () {
             var el = $(this);
             if (el.prop('checked')) {
