@@ -611,7 +611,7 @@ var GroupSupplies = {
             ajax: {
                method: "POST",
                 data:  function (params) {
-                    return JSON.stringify({ CodeData: 302, NameGS: params.term});
+                    return JSON.stringify({ CodeData: 302, NameGS: params.term });
 					},
 				//JSON.stringify({CodeData : 302,NameGS : params.term}),                     
                 
@@ -764,7 +764,7 @@ var GroupSupplies = {
 
         $.ajax({
          
-            data: JSON.stringify({ CodeData: 234, CodeGS: GroupSupplies.curGS}),
+            data: JSON.stringify({ CodeData: 234, CodeGS: GroupSupplies.curGS }),
             
             success: function (data) {
                 if (parseInt(data.State) === 0) {
@@ -782,6 +782,8 @@ var GroupSupplies = {
                         });
                     }
                     GroupSupplies.renderGSfields(data.Comment, data);
+                    if (data.GS.TYPE_PROGNOSIS_ORDER >= 9) $('a[href="#WarehouseGPSLC"]').removeClass("disabled");
+
                     for (var k in data.GS) {
                         if (data.GS.hasOwnProperty(k)) {
                             var el = $('#' + k);
@@ -978,7 +980,12 @@ var GroupSupplies = {
         });
         $('#tableContentWarehouseGPS').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
         $('#tableContentWarehouseGPSLC').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
-        
+
+        $('#TYPE_PROGNOSIS_ORDER').on('change', function () {
+            if (this.value >= 9) $('a[href="#WarehouseGPSLC"]').removeClass("disabled");
+            else $('a[href="#WarehouseGPSLC"]').addClass("disabled");
+        });
+
 		$('#saveGSdata').unbind('click');
 		$('#saveGSdata').on('click',GroupSupplies.saveGSdata);
 		$('#saveGSbrandData').unbind('click');
