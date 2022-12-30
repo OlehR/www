@@ -611,7 +611,7 @@ var GroupSupplies = {
             ajax: {
                method: "POST",
                 data:  function (params) {
-                    return JSON.stringify({ CodeData: 302, NameGS: params.term });
+                    return JSON.stringify({ CodeData: 302, NameGS: params.term});
 					},
 				//JSON.stringify({CodeData : 302,NameGS : params.term}),                     
                 
@@ -980,8 +980,7 @@ var GroupSupplies = {
         });
         $('#tableContentWarehouseGPS').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
         $('#tableContentWarehouseGPSLC').on('change', 'input:not([id="select_all"])', GroupSupplies.changeStatus);
-
-        $('#TYPE_PROGNOSIS_ORDER').on('change', function () {
+        $(document).on('change', '#TYPE_PROGNOSIS_ORDER', function () {
             if (this.value >= 9) $('a[href="#WarehouseGPSLC"]').removeClass("disabled");
             else $('a[href="#WarehouseGPSLC"]').addClass("disabled");
         });
